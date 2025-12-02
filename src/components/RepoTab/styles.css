@@ -1,0 +1,21 @@
+@import url("https://fonts.cdnfonts.com/css/gg-sans-2");
+
+.repotab {
+    display: inline-flex;
+    padding: 0px 10px 4px 10px;
+    border-radius: 7px;
+    background-color: #252535;
+    border: 1px solid #292938;
+    transition: 250ms;
+    cursor: pointer;
+    color: white;
+    text-decoration: none;
+    margin-left: 20px;
+    margin-right: 20px;
+    display: inline-block;
+}
+
+h2 {
+    font-size: 18px;
+    text-wrap-mode: wrap;
+}
