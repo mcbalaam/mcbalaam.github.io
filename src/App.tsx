@@ -3,7 +3,7 @@ import "./index.css";
 
 import Button from "./components/Button";
 
-import pfp from "./pfp.jpg";
+import pfp from "./mcbalaam.webp";
 
 import github from "./github-tile.svg";
 import steam from "./steampowered-tile.svg";
@@ -52,7 +52,7 @@ export function App() {
               Steam ↗
             </Badge>
             <Badge href="https://soundcloud.com/mcbalaam" src={soundcloud}>
-              Soundcloud ↗
+              SoundСloud ↗
             </Badge>
             <Badge href="https://t.me/whattheactualfuckbro" src={telegram}>
               Telegram ↗
@@ -61,7 +61,7 @@ export function App() {
               Ko-Fi ↗
             </Badge>
             <Badge href="https://pay.cloudtips.ru/p/7ac675d4" src={cloudtips}>
-              Cloudtips ↗
+              CloudTips ↗
             </Badge>
           </div>
           {/*<div className="buttons">
