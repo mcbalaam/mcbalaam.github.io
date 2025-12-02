@@ -9,6 +9,7 @@ import github from "./github-tile.svg";
 import steam from "./steampowered-tile.svg";
 import extera from "./5EmxevP.png";
 import soundcloud from "./soundcloud.png";
+import telegram from "./telegram.png";
 import Badge from "./components/Badge";
 import StatusBubble from "./components/StatusBubble";
 import Timestamp from "./components/Timestamp";
@@ -51,7 +52,7 @@ export function App() {
             <Badge href="https://soundcloud.com/mcbalaam" src={soundcloud}>
               Soundcloud ↗
             </Badge>
-            <Badge href="https://t.me/whattheactualfuckbro" src={soundcloud}>
+            <Badge href="https://t.me/whattheactualfuckbro" src={telegram}>
               Telegram ↗
             </Badge>
           </div>
