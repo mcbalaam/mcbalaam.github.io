@@ -15,7 +15,6 @@
     margin-left: 10px;
     transition: 300ms ease-in-out;
     cursor: pointer;
-    color: lightslategray;
 }
 
 .status-bubble::before {
