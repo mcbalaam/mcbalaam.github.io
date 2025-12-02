@@ -42,14 +42,14 @@ export default function Timestamp({ ts }: TimestampProps) {
   }, [ts]);
 
   // Короткое время для основного отображения
-  const shortTime = date.toLocaleString("en-US", {
+  const shortTime = date.toLocaleString("en-UK", {
     hour: "2-digit",
     minute: "2-digit",
     hour12: false,
   });
 
   // Полная дата и время для тултипа
-  const fullDateTime = date.toLocaleString("en-US", {
+  const fullDateTime = date.toLocaleString("en-UK", {
     weekday: "short",
     year: "numeric",
     month: "2-digit",
