@@ -10,6 +10,8 @@ import steam from "./steampowered-tile.svg";
 import extera from "./5EmxevP.png";
 import soundcloud from "./soundcloud.png";
 import telegram from "./telegram.png";
+import kofi from "./kofi.png";
+import cloudtips from "./cloudtips.png";
 import Badge from "./components/Badge";
 import StatusBubble from "./components/StatusBubble";
 import Timestamp from "./components/Timestamp";
@@ -38,7 +40,7 @@ export function App() {
           </div>
           <p className="desc">hey there. name's Max, I'm learning web development and Rust in shape of microservices and GUI apps. I contribute small features to /tg/station from time to time, write Telegram bots and help set them up. open for bounties -w-</p>
           <div style={{display: 'flex', height: 'fit-content', margin: '0px 5px 10px 0'}}>
-            <p>My midnight is your</p> <Timestamp ts="1764608400" />
+            <p>my midnight is your</p> <Timestamp ts="1764608400" /><p>. usually I'm active 9-23</p>
           </div>
 
           <h1>Connections</h1>
@@ -54,6 +56,12 @@ export function App() {
             </Badge>
             <Badge href="https://t.me/whattheactualfuckbro" src={telegram}>
               Telegram ↗
+            </Badge>
+            <Badge href="https://ko-fi.com/mcbalaam" src={kofi}>
+              Ko-Fi ↗
+            </Badge>
+            <Badge href="https://pay.cloudtips.ru/p/7ac675d4" src={cloudtips}>
+              Cloudtips ↗
             </Badge>
           </div>
           {/*<div className="buttons">
