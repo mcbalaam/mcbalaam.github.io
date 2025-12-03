@@ -10,6 +10,10 @@
     font-family: gg sans Medium;
 }
 
+.fancy-button-text {
+    line-height: 20px;
+}
+
 .fancy-button.blue {
     background-color: #5865f2;
     border: 1px solid #6571f3;
@@ -27,4 +31,12 @@
 
 .fancy-button.fill {
     width: 50%;
+}
+
+.button-img {
+    height: 20px;
+    width: 20px;
+    margin-left: -8px;
+    margin-right: 8px;
+    margin-bottom: -5px;
 }

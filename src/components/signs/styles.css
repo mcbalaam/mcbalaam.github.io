@@ -1,0 +1,26 @@
+.user-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 20px;
+}
+
+.username {
+    font-family: gg sans SemiBold;
+    font-size: 16px;
+    line-height: 20px;
+}
+
+.user-info {
+    display: flex;
+    width: 100%;
+}
+
+.user-profile-stack {
+    margin-left: 10px;
+    width: 63%;
+}
+
+.about {
+    font-size: 12px;
+    color: #8c78a1;
+}

@@ -13,13 +13,14 @@
     position: absolute;
     width: 100%;
     height: 100%;
-    display: flex;
+    display: inline-flexbox;
     flex-wrap: wrap;
     gap: 20px;
     margin-block-end: 0;
     margin-block-start: 0;
     margin-left: -8px;
     margin-top: -8px;
+    padding-top: 200px;
 }
 
 .card {
@@ -34,12 +35,17 @@
     position: relative;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 200px;
+    margin-bottom: 15px;
 }
 
 .item-container {
     width: fit-content;
     padding: 20px 20px 20px 20px;
+}
+
+.item-container.user-data {
+    padding: 10px 10px 10px 10px;
+    width: 100%;
 }
 
 .banner {

@@ -17,6 +17,7 @@ import StatusBubble from "./components/StatusBubble";
 import Timestamp from "./components/Timestamp";
 import Tooltip from "./components/Tooltip";
 import RepoTab from "./components/RepoTab";
+import AuthButtons from "./components/signs/AuthButtons";
 
 export function App() {
   return (
@@ -24,9 +25,7 @@ export function App() {
       <div className="card">
         <div className="banner">
           <img className="pfp" src={pfp}></img>
-          <StatusBubble>
-            busy auracoding
-          </StatusBubble>
+          <StatusBubble>busy auracoding</StatusBubble>
         </div>
         <div className="item-container">
           <div className="name">
@@ -38,9 +37,23 @@ export function App() {
           <div className="pnouns">
             mcbalaam ~ эмсибалаам, балаам, макбаклак (he/him)
           </div>
-          <p className="desc">hey there. name's Max, I'm learning web development and Rust in shape of microservices and GUI apps. I contribute small features to /tg/station from time to time, write Telegram bots and help set them up. open for bounties -w-</p>
-          <div style={{display: 'flex', height: 'fit-content', margin: '0px 5px 10px 0'}}>
-            <p>my midnight is your</p> <Timestamp ts="1764608400" /><p>. usually I'm active 9-23</p>
+          <p className="desc">
+            hey there. name's Max, I'm learning web development and Rust in
+            shape of microservices and GUI apps. I contribute small features to
+            /tg/station from time to time, write Telegram bots and help set them
+            up. open for bounties -w-
+          </p>
+          <div
+            style={{
+              display: "flex",
+              height: "fit-content",
+              margin: "0px 5px 10px 0",
+            }}
+          >
+            <span className="desc">
+              my midnight is your <Timestamp ts="1764608400" />. usually I'm
+              active 9-23
+            </span>
           </div>
 
           <h1>Connections</h1>
@@ -64,11 +77,17 @@ export function App() {
               CloudTips ↗
             </Badge>
           </div>
+
           {/*<div className="buttons">
             <Button fill>Authorize with GitHub</Button>
             <Button contrast>Sign</Button>
             <Button>About signs</Button>
           </div>*/}
+        </div>
+      </div>
+      <div style={{ width: "100%" }} className="card">
+        <div className="item-container user-data">
+          <AuthButtons />
         </div>
       </div>
     </div>
