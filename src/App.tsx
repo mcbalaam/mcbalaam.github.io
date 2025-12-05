@@ -81,6 +81,7 @@ export function App() {
               </Badge>
             </div>
             <button onClick={toggleLocale}>Authorize with GitHub</button>
+            <Button href={steam} />
           </div>
         </div>
       </div>
