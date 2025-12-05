@@ -14,7 +14,8 @@
 
 .tooltip-text {
     font-size: 14px;
-    font-family: gg sans Medium;
+    font-family: NunitoSans;
+    font-weight: 600;
     margin-block-end: 0;
     margin-block-start: 0;
     line-height: 18px;
@@ -23,9 +24,9 @@
 }
 
 .tooltip-wrapper {
-  position: relative;
-  display: inline-block;
-  height: fit-content;
+    position: relative;
+    display: inline-block;
+    height: fit-content;
 }
 
 .tooltip-text {
@@ -48,7 +49,7 @@
 }
 
 .tooltip-wrapper:hover .tooltip-text {
-  visibility: visible;
-  opacity: 1;
-  top: -35px; /* небольшое смещение вверх при показе */
+    visibility: visible;
+    opacity: 1;
+    top: -35px; /* небольшое смещение вверх при показе */
 }
