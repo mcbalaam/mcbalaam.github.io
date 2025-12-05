@@ -6,6 +6,8 @@ import Button from "./components/Button";
 import pfp from "./mcbalaam.webp";
 
 import { t, TranslationContextProvider } from "translations/translate";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMoon, faSun, faLanguage } from "@fortawesome/free-solid-svg-icons";
 
 import github from "./github-tile.svg";
 import steam from "./steampowered-tile.svg";
@@ -34,6 +36,12 @@ export function App() {
       <div className="master-container">
         <div className="card">
           <div className="banner">
+            <Button
+              className="language-button"
+              faIcon={faLanguage}
+              onClick={toggleLocale}
+            />
+            <Button className="theme-button" faIcon={faMoon} />
             <img className="pfp" src={pfp}></img>
             <StatusBubble>busy auracoding</StatusBubble>
           </div>
@@ -52,14 +60,16 @@ export function App() {
               style={{
                 display: "flex",
                 height: "fit-content",
+                flexWrap: "wrap",
                 margin: "0px 5px 10px 0",
               }}
             >
-              <p>{t("myMidniht")}</p> <Timestamp ts="1764608400" />
-              <p>{t("active")}</p>
+              <p>
+                {t("myMidniht")} <Timestamp ts="1764608400" />. {t("active")}
+              </p>
             </div>
 
-            <h1>Connections</h1>
+            <h1>{t("connections")}</h1>
             <div className="connections">
               <Badge href="https://www.github.com/mcbalaam" src={github}>
                 GitHub ↗
@@ -80,9 +90,6 @@ export function App() {
                 CloudTips ↗
               </Badge>
             </div>
-            <button onClick={toggleLocale}>Authorize with GitHub</button>
-            <Button href={steam} />
-            <Button href={steam}>Steam</Button>
           </div>
         </div>
       </div>

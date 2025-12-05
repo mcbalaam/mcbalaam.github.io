@@ -61,6 +61,32 @@
     margin-bottom: 30px;
 }
 
+.language-button {
+    position: absolute;
+    z-index: 2;
+    right: 10px;
+    top: 10px;
+    margin-left: auto;
+    background-color: #201f3166;
+}
+
+.theme-button {
+    position: absolute;
+    z-index: 2;
+    right: 10px;
+    top: 55px;
+    margin-left: auto;
+    background-color: #201f3166;
+}
+
+.language-button:hover {
+    background-color: #2f2f3f66;
+}
+
+.theme-button:hover {
+    background-color: #2f2f3f66;
+}
+
 .banner::before {
     content: "";
     position: absolute;
