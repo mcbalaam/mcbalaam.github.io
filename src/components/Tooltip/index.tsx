@@ -8,9 +8,9 @@ interface TooltipProps {
 
 export default function Tooltip({ children, text }: TooltipProps) {
   return (
-    <div className="tooltip-wrapper">
+    <span className="tooltip-wrapper">
       {children}
-      <div className="tooltip-text">{text}</div>
-    </div>
+      <span className="tooltip-text">{text}</span>
+    </span>
   );
 }

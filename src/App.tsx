@@ -1,10 +1,4 @@
-import { APITester } from "./APITester";
-import "./index.css";
-
-import Button from "./components/Button";
-
-import pfp from "./mcbalaam.webp";
-
+import { useState } from "react";
 import { t, TranslationContextProvider } from "translations/translate";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -15,20 +9,22 @@ import {
   faArrowUpRightFromSquare,
 } from "@fortawesome/free-solid-svg-icons";
 
-import github from "./github-tile.svg";
-import steam from "./steampowered-tile.svg";
-import extera from "./5EmxevP.png";
-import soundcloud from "./soundcloud.png";
-import telegram from "./telegram.png";
-import kofi from "./kofi.png";
-import cloudtips from "./cloudtips.png";
+import "./index.css";
+
+import github from "../media/github-tile.svg";
+import steam from "../media/steampowered-tile.svg";
+import extera from "../media/5EmxevP.png";
+import soundcloud from "../media/soundcloud.png";
+import telegram from "../media/telegram.png";
+import kofi from "../media/kofi.png";
+import cloudtips from "../media/cloudtips.png";
+import pfp from "../media/mcbalaam.webp";
+
+import Button from "./components/Button";
 import Badge from "./components/Badge";
 import StatusBubble from "./components/StatusBubble";
 import Timestamp from "./components/Timestamp";
-import Tooltip from "./components/Tooltip";
 import RepoTab from "./components/RepoTab";
-
-import { useState } from "react";
 
 export function App() {
   const [locale, setLocale] = useState("en");
