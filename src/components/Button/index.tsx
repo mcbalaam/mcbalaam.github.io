@@ -27,7 +27,7 @@ export default function Button({
       style={style}
     >
       {href && <img className="button-img" src={href} />}
-      <span className="fancy-button-text">{children}</span>
+      {children && <span className="fancy-button-text">{children}</span>}
     </button>
   );
 }

@@ -1,12 +1,17 @@
-@import url("https://fonts.cdnfonts.com/css/gg-sans-2");
-
 .fancy-button {
-    padding: 7px 15px 6px 15px;
+    padding: 7px 7px 7px 7px;
     border-radius: 7px;
     background-color: #252535;
     border: 1px solid #292938;
     transition: 250ms;
     cursor: pointer;
+    font-family: NunitoSans;
+}
+
+.fancy-button-text {
+    line-height: 20px;
+    margin-left: 8px;
+    margin-right: 8px;
 }
 
 .fancy-button.blue {
@@ -26,4 +31,11 @@
 
 .fancy-button.fill {
     width: 50%;
+}
+
+.button-img {
+    height: 20px;
+    width: 20px;
+    margin-bottom: -5px;
+    position: relative;
 }
