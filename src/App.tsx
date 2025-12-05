@@ -7,7 +7,13 @@ import pfp from "./mcbalaam.webp";
 
 import { t, TranslationContextProvider } from "translations/translate";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMoon, faSun, faLanguage } from "@fortawesome/free-solid-svg-icons";
+import {
+  faMoon,
+  faSun,
+  faLanguage,
+  faArrowRightLong,
+  faArrowUpRightFromSquare,
+} from "@fortawesome/free-solid-svg-icons";
 
 import github from "./github-tile.svg";
 import steam from "./steampowered-tile.svg";
@@ -53,7 +59,8 @@ export function App() {
               </Badge>
             </div>
             <div className="pnouns">
-              mcbalaam ~ эмсибалаам, балаам, макбаклак (he/him)
+              mcbalaam <FontAwesomeIcon icon={faArrowRightLong} /> эмсибалаам,
+              балаам, макбаклак (he/him)
             </div>
             <p className="desc">{t("aboutMe")}</p>
             <div
@@ -72,22 +79,28 @@ export function App() {
             <h1>{t("connections")}</h1>
             <div className="connections">
               <Badge href="https://www.github.com/mcbalaam" src={github}>
-                GitHub ↗
+                GitHub{" "}
+                <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} />
               </Badge>
               <Badge href="https://steamcommunity.com/id/mcbalaam/" src={steam}>
-                Steam ↗
+                Steam{" "}
+                <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} />
               </Badge>
               <Badge href="https://soundcloud.com/mcbalaam" src={soundcloud}>
-                SoundСloud ↗
+                SoundСloud{" "}
+                <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} />
               </Badge>
               <Badge href="https://t.me/whattheactualfuckbro" src={telegram}>
-                Telegram ↗
+                Telegram{" "}
+                <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} />
               </Badge>
               <Badge href="https://ko-fi.com/mcbalaam" src={kofi}>
-                Ko-Fi ↗
+                Ko-Fi{" "}
+                <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} />
               </Badge>
               <Badge href="https://pay.cloudtips.ru/p/7ac675d4" src={cloudtips}>
-                CloudTips ↗
+                CloudTips{" "}
+                <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} />
               </Badge>
             </div>
           </div>
