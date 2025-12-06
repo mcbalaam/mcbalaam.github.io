@@ -7,6 +7,8 @@ import {
   faLanguage,
   faArrowRightLong,
   faArrowUpRightFromSquare,
+  faInfoCircle,
+  faPlus,
 } from "@fortawesome/free-solid-svg-icons";
 
 import "./index.css";
@@ -24,13 +26,62 @@ import Button from "./components/Button";
 import Badge from "./components/Badge";
 import StatusBubble from "./components/StatusBubble";
 import Timestamp from "./components/Timestamp";
+import AuthButtons from "./components/AccountBar/AccountBar";
+import SignList from "./components/SignList";
+import SignForm from "./components/SignForm/SignForm";
 import RepoTab from "./components/RepoTab";
+import ModalPopup, { type ModalControl } from "./components/ModalPopup";
 
 export function App() {
   const [locale, setLocale] = useState("en");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalType, setModalType] = useState<
+    "default" | "strict" | "noCloseButton"
+  >("default");
 
   const toggleLocale = () => {
     setLocale((locale) => (locale === "en" ? "ru" : "en"));
+  };
+
+  const openModal = (type: typeof modalType) => {
+    setModalType(type);
+    setIsModalOpen(true);
+  };
+
+  const modalControl: ModalControl = {
+    isOpen: isModalOpen,
+    onClose: () => setIsModalOpen(false),
+    closeOnOverlayClick: modalType !== "strict",
+    closeOnEscape: modalType !== "strict",
+    showCloseButton: modalType !== "noCloseButton",
+    title: "Пример модального окна",
+    footerButtons:
+      modalType === "strict" ? (
+        <>
+          <Button onClick={() => setIsModalOpen(false)}>Закрыть</Button>
+          <Button primary onClick={() => setIsModalOpen(false)}>
+            Сохранить
+          </Button>
+        </>
+      ) : undefined,
+  };
+
+  const modalLeaveSign: ModalControl = {
+    isOpen: isModalOpen,
+    onClose: () => setIsModalOpen(false),
+    closeOnOverlayClick: modalType !== "strict",
+    closeOnEscape: modalType !== "strict",
+    showCloseButton: modalType !== "noCloseButton",
+    title: t("sign_header"),
+    footerButtons:
+      modalType === "strict" ? (
+        <>
+          <Button onClick={() => setIsModalOpen(false)}>Закрыть</Button>
+          <Button primary onClick={() => setIsModalOpen(false)}>
+            Сохранить
+          </Button>
+        </>
+      ) : undefined,
   };
 
   return (
@@ -101,7 +152,21 @@ export function App() {
             </div>
           </div>
         </div>
+        <div className="card">
+          <div className="item-container accountbar">
+            <AuthButtons />
+          </div>
+        </div>
+        <div className="card">
+          <div className="item-container accountbar">
+            <SignList onLeaveSignClick={() => openModal("default")} />
+          </div>
+        </div>
       </div>
+
+      <ModalPopup control={modalLeaveSign}>
+        <SignForm />
+      </ModalPopup>
     </TranslationContextProvider>
   );
 }
