@@ -22,6 +22,9 @@ interface SignListProps {
   showAdminControls?: boolean;
   className?: string;
   onLeaveSignClick?: () => void;
+  onSignDeleted?: () => void;
+  onSignDeleteError?: (errorMessage: string) => void;
+  refreshKey?: number;
 }
 
 export default function SignList({
@@ -29,7 +32,10 @@ export default function SignList({
   showAdminControls = false,
   className = "",
   onLeaveSignClick,
-}: SignListProps = {}) {
+  onSignDeleted,
+  onSignDeleteError,
+  refreshKey = 0,
+}: SignListProps) {
   const [signs, setSigns] = useState<Sign[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -48,13 +54,13 @@ export default function SignList({
     loadSigns();
     loadCurrentUser();
     checkCanCreateSign();
-  }, [showUserSigns]);
+  }, [showUserSigns, refreshKey]);
 
   useEffect(() => {
     if (currentUser) {
       checkCanCreateSign();
     }
-  }, [currentUser]);
+  }, [currentUser, refreshKey]);
 
   const loadSigns = async () => {
     setLoading(true);
@@ -107,8 +113,15 @@ export default function SignList({
     try {
       await deleteSign(signToDelete);
       setSigns(signs.filter((sign) => sign.id !== signToDelete));
+      if (onSignDeleted) {
+        onSignDeleted();
+      }
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Failed to delete sign");
+      const errorMessage =
+        err instanceof Error ? err.message : t("sign_toastDeleteError");
+      if (onSignDeleteError) {
+        onSignDeleteError(errorMessage);
+      }
     } finally {
       setDeletingId(null);
       setSignToDelete(null);

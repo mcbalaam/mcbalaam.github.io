@@ -408,7 +408,6 @@ export class SignManager {
 
 export class AuthManager {
   static async signInWithGitHub() {
-    console.log("boo");
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "github",
       options: {

@@ -9,6 +9,8 @@ import {
   faArrowUpRightFromSquare,
   faInfoCircle,
   faPlus,
+  faCircleCheck,
+  faCircleXmark,
 } from "@fortawesome/free-solid-svg-icons";
 
 import "./index.css";
@@ -31,6 +33,7 @@ import SignList from "./components/SignList";
 import SignForm from "./components/SignForm/SignForm";
 import RepoTab from "./components/RepoTab";
 import ModalPopup, { type ModalControl } from "./components/ModalPopup";
+import ToastNotification from "./components/ToastNotification";
 
 export function App() {
   const [locale, setLocale] = useState("en");
@@ -38,6 +41,16 @@ export function App() {
   const [modalType, setModalType] = useState<
     "default" | "strict" | "noCloseButton"
   >("default");
+  const [toast, setToast] = useState<{
+    visible: boolean;
+    message: string;
+    type: "success" | "error";
+  }>({
+    visible: false,
+    message: "",
+    type: "success",
+  });
+  const [signsRefreshKey, setSignsRefreshKey] = useState(0);
 
   const toggleLocale = () => {
     setLocale((locale) => (locale === "en" ? "ru" : "en"));
@@ -64,6 +77,52 @@ export function App() {
           </Button>
         </>
       ) : undefined,
+  };
+
+  const showToast = (message: string, type: "success" | "error") => {
+    setToast({
+      visible: true,
+      message,
+      type,
+    });
+  };
+
+  const handleSignFormSuccess = () => {
+    setIsModalOpen(false);
+    showToast(t("sign_toastSent"), "success");
+    setSignsRefreshKey((prev) => prev + 1);
+  };
+
+  const handleSignFormError = (errorMessage: string) => {
+    setIsModalOpen(false);
+    showToast(`${t("sign_error")}: ${errorMessage}`, "error");
+  };
+
+  const handleSignDeleted = () => {
+    showToast(t("sign_toastDeleted"), "success");
+    setSignsRefreshKey((prev) => prev + 1);
+  };
+
+  const handleSignDeleteError = (errorMessage: string) => {
+    showToast(`${t("sign_toastDeleteError")}: ${errorMessage}`, "error");
+  };
+
+  const handleLogoutSuccess = () => {
+    showToast(t("logout_toastSuccess"), "success");
+    setSignsRefreshKey((prev) => prev + 1);
+  };
+
+  const handleLogoutError = (errorMessage: string) => {
+    showToast(`${t("logout_toastError")}: ${errorMessage}`, "error");
+  };
+
+  const handleLoginSuccess = () => {
+    showToast(t("authViaGitHub"), "success");
+    setSignsRefreshKey((prev) => prev + 1);
+  };
+
+  const handleLoginError = (errorMessage: string) => {
+    showToast(`${t("sign_error")}: ${errorMessage}`, "error");
   };
 
   return (
@@ -136,19 +195,47 @@ export function App() {
         </div>
         <div className="card">
           <div className="item-container accountbar">
-            <AuthButtons />
+            <AuthButtons
+              onLoginSuccess={handleLoginSuccess}
+              onLoginError={handleLoginError}
+              onLogoutSuccess={handleLogoutSuccess}
+              onLogoutError={handleLogoutError}
+              onAuthChange={(isAuthenticated) => {
+                // Auth change handled by explicit success/error callbacks
+              }}
+            />
           </div>
         </div>
         <div className="card">
           <div className="item-container accountbar">
-            <SignList onLeaveSignClick={() => openModal("default")} />
+            <SignList
+              onLeaveSignClick={() => openModal("default")}
+              onSignDeleted={handleSignDeleted}
+              onSignDeleteError={handleSignDeleteError}
+              refreshKey={signsRefreshKey}
+            />
           </div>
         </div>
       </div>
 
       <ModalPopup control={modalLeaveSign}>
-        <SignForm />
+        <SignForm
+          onSignCreated={handleSignFormSuccess}
+          onSignError={handleSignFormError}
+        />
       </ModalPopup>
+
+      {toast.visible && (
+        <ToastNotification
+          icon={toast.type === "success" ? faCircleCheck : faCircleXmark}
+          type={toast.type === "success" ? "success" : "error"}
+          duration={3000}
+          onClose={() => setToast({ ...toast, visible: false })}
+          position="bottom-center"
+        >
+          {toast.message}
+        </ToastNotification>
+      )}
     </TranslationContextProvider>
   );
 }

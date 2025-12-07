@@ -5,6 +5,7 @@ import "./styles.css";
 
 interface SignFormProps {
   onSignCreated?: () => void;
+  onSignError?: (errorMessage: string) => void;
   className?: string;
 }
 
@@ -12,7 +13,11 @@ import { useTranslator } from "translations/translate";
 
 import Button from "../Button";
 
-const SignForm: React.FC<SignFormProps> = ({ onSignCreated, className }) => {
+const SignForm: React.FC<SignFormProps> = ({
+  onSignCreated,
+  onSignError,
+  className,
+}) => {
   const t = useTranslator();
   const [message, setMessage] = useState("");
   const [isAnonymous, setIsAnonymous] = useState(false);
@@ -41,7 +46,29 @@ const SignForm: React.FC<SignFormProps> = ({ onSignCreated, className }) => {
         onSignCreated();
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to create sign");
+      console.error("Sign creation error:", err);
+
+      let errorMessage = "Failed to create sign";
+
+      if (err instanceof Error) {
+        errorMessage = err.message;
+      } else if (err && typeof err === "object") {
+        // Handle Supabase error object
+        if ("message" in err) {
+          errorMessage = String(err.message);
+        } else if ("details" in err) {
+          errorMessage = String(err.details);
+        } else if ("code" in err) {
+          errorMessage = `Error code: ${err.code}`;
+        }
+      } else if (typeof err === "string") {
+        errorMessage = err;
+      }
+
+      setError(errorMessage);
+      if (onSignError) {
+        onSignError(errorMessage);
+      }
     } finally {
       setIsSubmitting(false);
     }

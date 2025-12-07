@@ -35,6 +35,10 @@ export default {
     "Are you sure you want to delete this sign? This can't be undone and will wipe the data.",
   sign_deleteConfirm: "Delete",
   sign_deleteCancel: "Keep it",
+  sign_toastDeleted: "Sign deleted successfully!",
+  sign_toastDeleteError: "Failed to delete sign",
+  logout_toastSuccess: "Logged out successfully!",
+  logout_toastError: "Failed to log out",
   hashes_title: "What are hashes?",
   hashes_about:
     "Hashing is a technique of generating unique text strings based on some data. The method used ensures identical input data results in identical output.",

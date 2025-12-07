@@ -18,11 +18,19 @@ import Button from "../Button";
 
 interface AuthButtonsProps {
   onAuthChange?: (isAuthenticated: boolean) => void;
+  onLoginSuccess?: () => void;
+  onLoginError?: (errorMessage: string) => void;
+  onLogoutSuccess?: () => void;
+  onLogoutError?: (errorMessage: string) => void;
   className?: string;
 }
 
 const AuthButtons: React.FC<AuthButtonsProps> = ({
   onAuthChange,
+  onLoginSuccess,
+  onLoginError,
+  onLogoutSuccess,
+  onLogoutError,
   className,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -39,16 +47,23 @@ const AuthButtons: React.FC<AuthButtonsProps> = ({
       if (authenticated) {
         const session = await getCurrentSession();
         setUser(session);
+        if (onAuthChange) {
+          onAuthChange(true);
+        }
       } else {
         setUser(null);
+        if (onAuthChange) {
+          onAuthChange(false);
+        }
       }
     } catch (err) {
       console.error("Error checking auth status:", err);
+      setUser(null);
+      if (onAuthChange) {
+        onAuthChange(false);
+      }
     } finally {
       setAuthChecked(true);
-      if (onAuthChange) {
-        onAuthChange(!!user);
-      }
     }
   };
 
@@ -56,8 +71,15 @@ const AuthButtons: React.FC<AuthButtonsProps> = ({
     setIsLoading(true);
     try {
       await signInWithGitHub();
+      if (onLoginSuccess) {
+        onLoginSuccess();
+      }
     } catch (err) {
-      alert("Failed to sign in with GitHub. Please try again.");
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to sign in with GitHub";
+      if (onLoginError) {
+        onLoginError(errorMessage);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -71,9 +93,16 @@ const AuthButtons: React.FC<AuthButtonsProps> = ({
       if (onAuthChange) {
         onAuthChange(false);
       }
+      if (onLogoutSuccess) {
+        onLogoutSuccess();
+      }
     } catch (err) {
       console.error("Logout failed:", err);
-      alert("Failed to sign out. Please try again.");
+      const errorMessage =
+        err instanceof Error ? err.message : t("logout_toastError");
+      if (onLogoutError) {
+        onLogoutError(errorMessage);
+      }
     } finally {
       setIsLoading(false);
     }
