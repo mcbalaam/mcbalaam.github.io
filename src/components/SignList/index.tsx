@@ -11,7 +11,10 @@ import "./styles.css";
 
 import { t } from "translations/translate";
 import Button from "../Button";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import ModalPopup, { type ModalControl } from "../ModalPopup";
+import { faHashtag, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faTrashCan } from "@fortawesome/free-solid-svg-icons/faTrashCan";
+import Tooltip from "../Tooltip";
 
 interface SignListProps {
   showUserSigns?: boolean;
@@ -31,6 +34,11 @@ export default function SignList({
   const [error, setError] = useState<string | null>(null);
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [deletingId, setDeletingId] = useState<number | null>(null);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [signToDelete, setSignToDelete] = useState<number | null>(null);
+
+  const [isHashModalOpen, setIsHashModalOpen] = useState(false);
 
   useEffect(() => {
     loadSigns();
@@ -61,20 +69,30 @@ export default function SignList({
     }
   };
 
-  const handleDeleteSign = async (signId: number) => {
-    if (!confirm("Are you sure you want to delete this sign?")) {
-      return;
-    }
+  const handleDeleteClick = (signId: number) => {
+    setSignToDelete(signId);
+    setIsModalOpen(true);
+  };
 
-    setDeletingId(signId);
+  const handleDeleteConfirm = async () => {
+    if (!signToDelete) return;
+
+    setDeletingId(signToDelete);
     try {
-      await deleteSign(signId);
-      setSigns(signs.filter((sign) => sign.id !== signId));
+      await deleteSign(signToDelete);
+      setSigns(signs.filter((sign) => sign.id !== signToDelete));
     } catch (err) {
       alert(err instanceof Error ? err.message : "Failed to delete sign");
     } finally {
       setDeletingId(null);
+      setSignToDelete(null);
+      setIsModalOpen(false);
     }
+  };
+
+  const handleDeleteCancel = () => {
+    setSignToDelete(null);
+    setIsModalOpen(false);
   };
 
   const formatDate = (dateString: string) => {
@@ -170,41 +188,94 @@ export default function SignList({
                   </div>
 
                   {canDelete && (
-                    <button
+                    <Button
                       className="delete-button"
-                      onClick={() => handleDeleteSign(sign.id)}
+                      onClick={() => handleDeleteClick(sign.id)}
                       disabled={deletingId === sign.id}
-                      title={
-                        isOwnSign ? "Delete your sign" : "Admin: Delete sign"
-                      }
-                    >
-                      {deletingId === sign.id ? "Deleting..." : "×"}
-                    </button>
+                      faIcon={faTrashCan}
+                    />
                   )}
+
+                  <Tooltip text="This sign's hash matched!">
+                    <Button
+                      className="hash-button"
+                      onClick={() => setIsHashModalOpen(true)}
+                      faIcon={faHashtag}
+                    />
+                  </Tooltip>
                 </div>
 
                 {sign.message && (
                   <div className="sign-message">{sign.message}</div>
                 )}
 
-                <div className="sign-footer">
-                  {sign.is_anonymous && (
-                    <span className="anonymous-badge">Anonymous</span>
-                  )}
-                  {!sign.approved && (
-                    <span className="pending-badge">Pending Approval</span>
-                  )}
-                  {showAdminControls && currentUser?.is_admin && (
-                    <span className="admin-info">
-                      User ID: {sign.user_id?.substring(0, 8)}...
-                    </span>
-                  )}
-                </div>
+                {(sign.is_anonymous ||
+                  !sign.approved ||
+                  (showAdminControls && currentUser?.is_admin)) && (
+                  <div className="sign-footer">
+                    {sign.is_anonymous && (
+                      <span className="anonymous-badge">Anonymous</span>
+                    )}
+                    {!sign.approved && (
+                      <span className="pending-badge">Pending Approval</span>
+                    )}
+                    {showAdminControls && currentUser?.is_admin && (
+                      <span className="admin-info">
+                        User ID: {sign.user_id?.substring(0, 8)}...
+                      </span>
+                    )}
+                  </div>
+                )}
               </div>
             );
           })}
         </div>
       )}
+
+      <ModalPopup
+        control={{
+          isOpen: isModalOpen,
+          onClose: handleDeleteCancel,
+          closeOnOverlayClick: true,
+          closeOnEscape: true,
+          showCloseButton: true,
+          title: "Delete your sign?",
+          footerButtons: (
+            <>
+              <Button onClick={handleDeleteCancel}>Leave</Button>
+              <Button primary onClick={handleDeleteConfirm}>
+                Delete
+              </Button>
+            </>
+          ),
+        }}
+      >
+        <p>Are you sure you want to delete this sign?</p>
+      </ModalPopup>
+
+      <ModalPopup
+        control={{
+          isOpen: isHashModalOpen,
+          onClose: () => {
+            setIsHashModalOpen(false);
+          },
+          closeOnOverlayClick: true,
+          closeOnEscape: true,
+          showCloseButton: true,
+          title: "What are hashes?",
+        }}
+      >
+        <p>
+          Hashing is a technique of generating unique text strings based on some
+          data. The method used ensures identical input data results in
+          identical output.
+        </p>
+        <br />
+        <p>
+          This sign's hash matched the one that was generated when it was just
+          created — that means it wasn't modified!
+        </p>
+      </ModalPopup>
     </div>
   );
 }

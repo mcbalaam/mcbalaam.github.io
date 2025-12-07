@@ -48,24 +48,6 @@ export function App() {
     setIsModalOpen(true);
   };
 
-  const modalControl: ModalControl = {
-    isOpen: isModalOpen,
-    onClose: () => setIsModalOpen(false),
-    closeOnOverlayClick: modalType !== "strict",
-    closeOnEscape: modalType !== "strict",
-    showCloseButton: modalType !== "noCloseButton",
-    title: "Пример модального окна",
-    footerButtons:
-      modalType === "strict" ? (
-        <>
-          <Button onClick={() => setIsModalOpen(false)}>Закрыть</Button>
-          <Button primary onClick={() => setIsModalOpen(false)}>
-            Сохранить
-          </Button>
-        </>
-      ) : undefined,
-  };
-
   const modalLeaveSign: ModalControl = {
     isOpen: isModalOpen,
     onClose: () => setIsModalOpen(false),

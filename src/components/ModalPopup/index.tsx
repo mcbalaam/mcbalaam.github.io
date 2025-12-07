@@ -1,6 +1,9 @@
 import type { PropsWithChildren } from "react";
 import { useState, useEffect, useRef } from "react";
 import "./styles.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Button from "../Button";
+import { faXmark } from "@fortawesome/free-solid-svg-icons/faXmark";
 
 export type ModalControl = {
   isOpen: boolean;
@@ -34,7 +37,6 @@ export default function ModalPopup({
   const modalRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
 
-  // Handle escape key press
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (closeOnEscape && e.key === "Escape" && isOpen && !isClosing) {
@@ -44,7 +46,6 @@ export default function ModalPopup({
 
     if (isOpen) {
       document.addEventListener("keydown", handleEscape);
-      // Prevent scrolling on body when modal is open
       document.body.style.overflow = "hidden";
     }
 
@@ -61,7 +62,7 @@ export default function ModalPopup({
     setTimeout(() => {
       setIsClosing(false);
       onClose();
-    }, 200); // Match animation duration
+    }, 200);
   };
 
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -71,7 +72,6 @@ export default function ModalPopup({
   };
 
   const handleModalClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    // Prevent click from bubbling to overlay
     e.stopPropagation();
   };
 
@@ -92,13 +92,11 @@ export default function ModalPopup({
           <div className="modal-header">
             {title && <h2 className="modal-title">{title}</h2>}
             {showCloseButton && (
-              <button
+              <Button
                 className="modal-close-button"
                 onClick={handleClose}
-                aria-label="Close modal"
-              >
-                ×
-              </button>
+                faIcon={faXmark}
+              />
             )}
           </div>
         )}

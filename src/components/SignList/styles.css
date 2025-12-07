@@ -14,6 +14,10 @@
     padding: 10px 10px 10px 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     transition: box-shadow 0.2s;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
 .sign-card:hover {
@@ -24,7 +28,6 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 12px;
 }
 
 .sign-meta {
@@ -53,20 +56,26 @@
 }
 
 .delete-button {
-    background: none;
-    border: none;
-    color: #dc3545;
-    font-size: 20px;
-    font-weight: bold;
-    cursor: pointer;
-    padding: 4px 8px;
-    border-radius: 4px;
-    line-height: 1;
-    transition: background-color 0.2s;
+    width: 30px;
+    height: 30px;
+    min-height: 30px;
+    min-width: 30px;
+    padding: 3px;
+    margin-left: auto;
+    margin-right: 4px;
+}
+
+.hash-button {
+    width: 30px;
+    height: 30px;
+    min-height: 30px;
+    min-width: 30px;
+    padding: 3px;
 }
 
 .delete-button:hover:not(:disabled) {
-    background-color: #f8d7da;
+    background-color: #2f2f3f66;
+    color: rgba(255, 255, 255, 0.87);
 }
 
 .delete-button:disabled {
