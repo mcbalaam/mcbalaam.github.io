@@ -26,4 +26,20 @@ export default {
   sign_toastSent: "Sign sent!",
   sign_toastErrorNetwork: "Network request failed",
   sign_toastErrorOther: "Something went wrong. Please try again later...",
+  sign_hashMatched: "This sign's hash matched!",
+  sign_alreadyLeft: "You already left a sign!",
+  sign_blacklisted: "You were blacklisted.",
+  sign_error: "Something went wrong.",
+  sign_deleteTitle: "Delete this sign?",
+  sign_deleteText:
+    "Are you sure you want to delete this sign? This can't be undone and will wipe the data.",
+  sign_deleteConfirm: "Delete",
+  sign_deleteCancel: "Keep it",
+  hashes_title: "What are hashes?",
+  hashes_about:
+    "Hashing is a technique of generating unique text strings based on some data. The method used ensures identical input data results in identical output.",
+  hashes_matched:
+    "This sign's hash matched the one that was generated when it was just created — that means it wasn't modified!.. likely. I'm still able to do that, I'm just too lazy to generate the hash manually.",
+  hashes_notMatched:
+    "This sign's hash didn't match the one that was generated when it was just created; this sign was touched by someone's filthy hands. Wonder who that could've been...",
 } as const;

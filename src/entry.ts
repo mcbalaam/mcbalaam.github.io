@@ -5,6 +5,8 @@ import {
   ADMIN_GITHUB_USERNAME,
 } from "./config";
 
+import { t } from "translations/translate";
+
 export interface Sign {
   id: number;
   github_username?: string;
@@ -33,12 +35,6 @@ export interface UserSession {
 const supabaseUrl = SUPABASE_URL;
 const supabaseAnonKey = SUPABASE_ANON_KEY;
 const adminGithubUsername = ADMIN_GITHUB_USERNAME;
-
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.warn(
-    "Supabase environment variables are not set. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env file",
-  );
-}
 
 export const supabase = createClient(supabaseUrl || "", supabaseAnonKey || "", {
   auth: {
@@ -160,6 +156,25 @@ export class SignManager {
       throw new Error("User must be authenticated to create a sign");
     }
 
+    const { data: blacklistData, error: blacklistError } = await supabase
+      .from("blacklist")
+      .select("id")
+      .eq("user_id", user.id)
+      .single();
+
+    if (!blacklistError && blacklistData) {
+      throw new Error("User is blacklisted and cannot create signs");
+    }
+
+    const { data: existingSigns, error: existingError } = await supabase
+      .from("signs")
+      .select("id")
+      .eq("user_id", user.id);
+
+    if (!existingError && existingSigns && existingSigns.length > 0) {
+      throw new Error("User has already created a sign");
+    }
+
     const userMetadata = user.user_metadata;
     const githubUsername = userMetadata.user_name;
     const githubAvatar = userMetadata.avatar_url;
@@ -188,6 +203,46 @@ export class SignManager {
     }
 
     return data;
+  }
+
+  static async canUserCreateSign(): Promise<{
+    canCreate: boolean;
+    reason?: string;
+  }> {
+    try {
+      const {
+        data: { user },
+        error: authError,
+      } = await supabase.auth.getUser();
+
+      if (authError || !user) {
+        return { canCreate: false, reason: "User not authenticated" };
+      }
+
+      const { data: blacklistData, error: blacklistError } = await supabase
+        .from("blacklist")
+        .select("id")
+        .eq("user_id", user.id)
+        .single();
+
+      if (!blacklistError && blacklistData) {
+        return { canCreate: false, reason: t("sign_blacklisted") };
+      }
+
+      const { data: existingSigns, error: existingError } = await supabase
+        .from("signs")
+        .select("id")
+        .eq("user_id", user.id);
+
+      if (!existingError && existingSigns && existingSigns.length > 0) {
+        return { canCreate: false, reason: t("sign_alreadyLeft") };
+      }
+
+      return { canCreate: true };
+    } catch (error: any) {
+      console.error("Error checking if user can create sign:", error);
+      return { canCreate: false, reason: t("sign_error") };
+    }
   }
 
   static async getUserSigns(): Promise<Sign[]> {
@@ -445,6 +500,7 @@ export const updateSign = SignManager.updateSign;
 export const deleteSign = SignManager.deleteSign;
 export const adminToggleApproval = SignManager.adminToggleApproval;
 export const adminRemoveComment = SignManager.adminRemoveComment;
+export const canUserCreateSign = SignManager.canUserCreateSign;
 
 export const signInWithGitHub = AuthManager.signInWithGitHub;
 export const signOut = AuthManager.signOut;

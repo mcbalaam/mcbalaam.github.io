@@ -4,6 +4,7 @@ import {
   getUserSigns,
   deleteSign,
   getCurrentSession,
+  canUserCreateSign,
 } from "../../entry";
 
 import type { Sign } from "../../entry";
@@ -34,6 +35,9 @@ export default function SignList({
   const [error, setError] = useState<string | null>(null);
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [deletingId, setDeletingId] = useState<number | null>(null);
+  const [canCreateSign, setCanCreateSign] = useState<boolean>(true);
+  const [canCreateReason, setCanCreateReason] = useState<string>("");
+  const [checkingPermissions, setCheckingPermissions] = useState<boolean>(true);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [signToDelete, setSignToDelete] = useState<number | null>(null);
@@ -43,7 +47,14 @@ export default function SignList({
   useEffect(() => {
     loadSigns();
     loadCurrentUser();
+    checkCanCreateSign();
   }, [showUserSigns]);
+
+  useEffect(() => {
+    if (currentUser) {
+      checkCanCreateSign();
+    }
+  }, [currentUser]);
 
   const loadSigns = async () => {
     setLoading(true);
@@ -66,6 +77,21 @@ export default function SignList({
       setCurrentUser(user);
     } catch (err) {
       console.error("Failed to load user session:", err);
+    }
+  };
+
+  const checkCanCreateSign = async () => {
+    setCheckingPermissions(true);
+    try {
+      const { canCreate, reason } = await canUserCreateSign();
+      setCanCreateSign(canCreate);
+      setCanCreateReason(reason || "");
+    } catch (err) {
+      console.error("Failed to check sign creation permission:", err);
+      setCanCreateSign(false);
+      setCanCreateReason("Error checking permissions");
+    } finally {
+      setCheckingPermissions(false);
     }
   };
 
@@ -146,8 +172,13 @@ export default function SignList({
             faIcon={faPlus}
             onClick={onLeaveSignClick}
             style={{ width: "100%" }}
+            disabled={checkingPermissions || !canCreateSign}
           >
-            Leave a sign
+            {checkingPermissions
+              ? "Loading..."
+              : canCreateSign
+                ? t("sign_header")
+                : canCreateReason}
           </Button>
         </div>
       )}
@@ -196,7 +227,7 @@ export default function SignList({
                     />
                   )}
 
-                  <Tooltip text="This sign's hash matched!">
+                  <Tooltip text={t("sign_hashMatched")}>
                     <Button
                       className="hash-button"
                       onClick={() => setIsHashModalOpen(true)}
@@ -239,18 +270,20 @@ export default function SignList({
           closeOnOverlayClick: true,
           closeOnEscape: true,
           showCloseButton: true,
-          title: "Delete your sign?",
+          title: t("sign_deleteTitle"),
           footerButtons: (
             <>
-              <Button onClick={handleDeleteCancel}>Leave</Button>
-              <Button primary onClick={handleDeleteConfirm}>
-                Delete
+              <Button onClick={handleDeleteCancel}>
+                {t("sign_deleteCancel")}
+              </Button>
+              <Button contrast onClick={handleDeleteConfirm}>
+                {t("sign_deleteConfirm")}
               </Button>
             </>
           ),
         }}
       >
-        <p>Are you sure you want to delete this sign?</p>
+        <p>{t("sign_deleteText")}</p>
       </ModalPopup>
 
       <ModalPopup
@@ -262,19 +295,12 @@ export default function SignList({
           closeOnOverlayClick: true,
           closeOnEscape: true,
           showCloseButton: true,
-          title: "What are hashes?",
+          title: t("hashes_title"),
         }}
       >
-        <p>
-          Hashing is a technique of generating unique text strings based on some
-          data. The method used ensures identical input data results in
-          identical output.
-        </p>
+        <p>{t("hashes_about")}</p>
         <br />
-        <p>
-          This sign's hash matched the one that was generated when it was just
-          created — that means it wasn't modified!
-        </p>
+        <p>{t("hashes_matched")}</p>
       </ModalPopup>
     </div>
   );
