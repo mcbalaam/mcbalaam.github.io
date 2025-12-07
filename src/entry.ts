@@ -6,6 +6,7 @@ import {
 } from "./config";
 
 import { t } from "translations/translate";
+import { CryptoUtils } from "./cryptoUtils";
 
 export interface Sign {
   id: number;
@@ -16,11 +17,19 @@ export interface Sign {
   approved: boolean;
   created_at: string;
   user_id?: string;
+  public_key?: string;
+  signature?: string;
 }
 
 export interface SignFormData {
   message?: string;
   is_anonymous: boolean;
+}
+
+export interface SignWithVerification extends Sign {
+  signatureValid?: boolean;
+  publicKeyDisplay?: string;
+  verificationError?: string;
 }
 
 export interface UserSession {
@@ -64,7 +73,6 @@ async function fetchWithRetry(
     const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
     try {
-      console.log(`Fetch attempt ${attempt + 1}/${maxRetries + 1} to ${url}`);
       const response = await fetch(url, {
         ...options,
         signal: controller.signal,
@@ -86,7 +94,6 @@ async function fetchWithRetry(
 
       if (attempt < maxRetries) {
         const delay = Math.min(1000 * Math.pow(2, attempt), 10000);
-        console.log(`Retrying in ${delay}ms...`);
         await new Promise((resolve) => setTimeout(resolve, delay));
       }
     } catch (error: any) {
@@ -102,7 +109,6 @@ async function fetchWithRetry(
 
       if (attempt < maxRetries) {
         const delay = Math.min(1000 * Math.pow(2, attempt), 10000);
-        console.log(`Network error, retrying in ${delay}ms...`);
         await new Promise((resolve) => setTimeout(resolve, delay));
       }
     }
@@ -112,7 +118,7 @@ async function fetchWithRetry(
 }
 
 export class SignManager {
-  static async getApprovedSigns(): Promise<Sign[]> {
+  static async getApprovedSigns(): Promise<SignWithVerification[]> {
     try {
       const url = `${supabaseUrl}/rest/v1/signs?select=*&approved=eq.true&order=created_at.desc`;
 
@@ -137,7 +143,17 @@ export class SignManager {
 
       const data = await response.json();
       console.timeEnd("getApprovedSigns");
-      return data || [];
+
+      // Verify signatures for all signs
+      return (data || []).map((sign: Sign) => {
+        const verification = CryptoUtils.verifySign(sign);
+        return {
+          ...sign,
+          signatureValid: verification.isValid,
+          publicKeyDisplay: verification.publicKeyDisplay,
+          verificationError: verification.error,
+        };
+      });
     } catch (error: any) {
       console.error("Error fetching approved signs:", error);
       if (error.name === "AbortError") {
@@ -182,6 +198,17 @@ export class SignManager {
     const isAdmin =
       adminGithubUsername && githubUsername === adminGithubUsername;
 
+    // Generate timestamp first
+    const timestamp = new Date().toISOString();
+
+    // Generate signature with the timestamp
+    const signatureData = CryptoUtils.generateSignatureForSign(
+      formData.message || "",
+      user.id,
+      formData.is_anonymous,
+      timestamp,
+    );
+
     const signData = {
       github_username: githubUsername,
       github_avatar: githubAvatar,
@@ -189,6 +216,9 @@ export class SignManager {
       is_anonymous: formData.is_anonymous,
       approved: isAdmin,
       user_id: user.id,
+      public_key: signatureData.publicKey,
+      signature: signatureData.signature,
+      created_at: timestamp,
     };
 
     const { data, error } = await supabase
@@ -245,7 +275,7 @@ export class SignManager {
     }
   }
 
-  static async getUserSigns(): Promise<Sign[]> {
+  static async getUserSigns(): Promise<SignWithVerification[]> {
     try {
       const {
         data: { user },
@@ -272,7 +302,16 @@ export class SignManager {
         return [];
       }
 
-      return data || [];
+      // Verify signatures for all signs
+      return (data || []).map((sign: Sign) => {
+        const verification = CryptoUtils.verifySign(sign);
+        return {
+          ...sign,
+          signatureValid: verification.isValid,
+          publicKeyDisplay: verification.publicKeyDisplay,
+          verificationError: verification.error,
+        };
+      });
     } catch (error: any) {
       console.error("Network error fetching user signs:", error);
       if (error.name === "AbortError") {

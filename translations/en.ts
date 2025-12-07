@@ -26,7 +26,8 @@ export default {
   sign_toastSent: "Sign sent!",
   sign_toastErrorNetwork: "Network request failed",
   sign_toastErrorOther: "Something went wrong. Please try again later...",
-  sign_hashMatched: "This sign's hash matched!",
+  sign_hashMatched: "This sign's signature matched!",
+  sign_hashMismatch: "Signature verification failed!",
   sign_alreadyLeft: "You already left a sign!",
   sign_blacklisted: "You were blacklisted.",
   sign_error: "Something went wrong.",
@@ -39,11 +40,14 @@ export default {
   sign_toastDeleteError: "Failed to delete sign",
   logout_toastSuccess: "Logged out successfully!",
   logout_toastError: "Failed to log out",
-  hashes_title: "What are hashes?",
+  hashes_title: "Signature verified!",
+  hashes_mismatchTitle: "Signature verification failed",
   hashes_about:
-    "Hashing is a technique of generating unique text strings based on some data. The method used ensures identical input data results in identical output.",
+    "Each sign is cryptographically signed using Ed25519. The signature is generated from the message, timestamp, and user ID, then verified with a public key.",
+  hashes_mismatchAbout:
+    "This sign's cryptographic signature could not be verified. The data may have been modified or the signature is invalid.",
   hashes_matched:
-    "This sign's hash matched the one that was generated when it was just created — that means it wasn't modified!.. likely. I'm still able to do that, I'm just too lazy to generate the hash manually.",
-  hashes_notMatched:
-    "This sign's hash didn't match the one that was generated when it was just created; this sign was touched by someone's filthy hands. Wonder who that could've been...",
+    "Signature verified successfully! This sign's cryptographic signature matches the original data — it hasn't been tampered with.",
+  hashes_error: "Verification error",
+  hashes_signature: "missing signature data",
 } as const;

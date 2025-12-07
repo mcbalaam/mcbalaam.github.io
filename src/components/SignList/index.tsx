@@ -7,7 +7,7 @@ import {
   canUserCreateSign,
 } from "../../entry";
 
-import type { Sign } from "../../entry";
+import type { Sign, SignWithVerification } from "../../entry";
 import "./styles.css";
 
 import { t } from "translations/translate";
@@ -36,7 +36,7 @@ export default function SignList({
   onSignDeleteError,
   refreshKey = 0,
 }: SignListProps) {
-  const [signs, setSigns] = useState<Sign[]>([]);
+  const [signs, setSigns] = useState<SignWithVerification[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentUser, setCurrentUser] = useState<any>(null);
@@ -49,6 +49,9 @@ export default function SignList({
   const [signToDelete, setSignToDelete] = useState<number | null>(null);
 
   const [isHashModalOpen, setIsHashModalOpen] = useState(false);
+  const [selectedSign, setSelectedSign] = useState<SignWithVerification | null>(
+    null,
+  );
 
   useEffect(() => {
     loadSigns();
@@ -240,10 +243,19 @@ export default function SignList({
                     />
                   )}
 
-                  <Tooltip text={t("sign_hashMatched")}>
+                  <Tooltip
+                    text={
+                      sign.signatureValid
+                        ? t("sign_hashMatched")
+                        : t("sign_hashMismatch")
+                    }
+                  >
                     <Button
-                      className="hash-button"
-                      onClick={() => setIsHashModalOpen(true)}
+                      className={`hash-button ${sign.signatureValid ? "" : "hash-mismatch"}`}
+                      onClick={() => {
+                        setSelectedSign(sign);
+                        setIsHashModalOpen(true);
+                      }}
                       faIcon={faHashtag}
                     />
                   </Tooltip>
@@ -304,16 +316,43 @@ export default function SignList({
           isOpen: isHashModalOpen,
           onClose: () => {
             setIsHashModalOpen(false);
+            setSelectedSign(null);
           },
           closeOnOverlayClick: true,
           closeOnEscape: true,
           showCloseButton: true,
-          title: t("hashes_title"),
+          title: selectedSign?.signatureValid
+            ? t("hashes_title")
+            : t("hashes_mismatchTitle"),
         }}
       >
-        <p>{t("hashes_about")}</p>
-        <br />
-        <p>{t("hashes_matched")}</p>
+        {selectedSign && (
+          <>
+            <p>
+              {selectedSign.signatureValid
+                ? t("hashes_about")
+                : t("hashes_mismatchAbout")}
+              <br />
+              <br />
+            </p>
+            <p>{selectedSign.signatureValid && t("hashes_matched")}</p>
+
+            {selectedSign.publicKeyDisplay && (
+              <>
+                <br />
+                <p className="public-key">
+                  {selectedSign.publicKeyDisplay}****************
+                </p>
+              </>
+            )}
+            {selectedSign.verificationError && (
+              <p>
+                <strong>{t("hashes_error")}:</strong>{" "}
+                {selectedSign.verificationError}
+              </p>
+            )}
+          </>
+        )}
       </ModalPopup>
     </div>
   );

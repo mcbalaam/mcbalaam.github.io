@@ -21,7 +21,13 @@
     margin-block-start: 0;
     margin-left: -8px;
     margin-top: -8px;
-    margin-top: 150px;
+    margin-top: 100px;
+}
+
+@media (max-width: 768px) {
+    .master-container {
+        margin-top: 20px;
+    }
 }
 
 .card {
