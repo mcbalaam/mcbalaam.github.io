@@ -112,12 +112,7 @@ const SignForm: React.FC<SignFormProps> = ({
           </div>
         )}
 
-        <Button
-          type="submit"
-          disabled={isSubmitting}
-          style={{ width: "100%" }}
-          contrast
-        >
+        <Button type="submit" disabled={isSubmitting} fill contrast>
           {isSubmitting ? t("sign_sending") : t("sign_sendAction")}
         </Button>
       </form>

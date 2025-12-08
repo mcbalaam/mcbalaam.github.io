@@ -148,3 +148,7 @@
     border-radius: 3px;
     line-height: 10px;
 }
+
+.mobile-check {
+    left: -250%;
+}

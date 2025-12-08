@@ -187,7 +187,7 @@ export default function SignList({
             contrast
             faIcon={faPlus}
             onClick={onLeaveSignClick}
-            style={{ width: "100%" }}
+            fill
             disabled={checkingPermissions || !canCreateSign}
           >
             {checkingPermissions
@@ -244,6 +244,7 @@ export default function SignList({
                   )}
 
                   <Tooltip
+                    className="mobile-check"
                     text={
                       sign.signatureValid
                         ? t("sign_hashMatched")
