@@ -13,6 +13,7 @@ export default function Button({
   className,
   style,
   faIcon,
+  type = "button",
 }: PropsWithChildren<{
   contrast?: boolean;
   fill?: boolean;
@@ -22,6 +23,7 @@ export default function Button({
   className?: string;
   style?: CSSProperties;
   faIcon?: typeof faIcons;
+  type?: "button" | "submit" | "reset";
 }>) {
   return (
     <button
@@ -29,6 +31,7 @@ export default function Button({
       onClick={onClick}
       disabled={disabled}
       style={style}
+      type={type}
     >
       {faIcon && <FontAwesomeIcon className="button-img icon" icon={faIcon} />}
       {href && <img className="button-img" src={href} />}

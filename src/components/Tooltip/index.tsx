@@ -2,15 +2,16 @@ import type { PropsWithChildren } from "react";
 import "./styles.css";
 
 interface TooltipProps {
-  children: React.ReactNode; // trigger блок
-  text: string; // текст тултипа
+  children: React.ReactNode;
+  text: string;
+  className: string;
 }
 
-export default function Tooltip({ children, text }: TooltipProps) {
+export default function Tooltip({ children, text, className }: TooltipProps) {
   return (
     <span className="tooltip-wrapper">
       {children}
-      <span className="tooltip-text">{text}</span>
+      <span className={"tooltip-text " + className}>{text}</span>
     </span>
   );
 }

@@ -1,12 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { t, TranslationContextProvider } from "translations/translate";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { getStatus, type UserStatus } from "./entry";
+import { getVanityConfig } from "./config";
 import {
   faMoon,
   faSun,
   faLanguage,
   faArrowRightLong,
   faArrowUpRightFromSquare,
+  faInfoCircle,
+  faPlus,
+  faCircleCheck,
+  faCircleXmark,
 } from "@fortawesome/free-solid-svg-icons";
 
 import "./index.css";
@@ -24,13 +30,126 @@ import Button from "./components/Button";
 import Badge from "./components/Badge";
 import StatusBubble from "./components/StatusBubble";
 import Timestamp from "./components/Timestamp";
+import AuthButtons from "./components/AccountBar/AccountBar";
+import SignList from "./components/SignList";
+import SignForm from "./components/SignForm/SignForm";
 import RepoTab from "./components/RepoTab";
+import ModalPopup, { type ModalControl } from "./components/ModalPopup";
+import ToastNotification from "./components/ToastNotification";
 
 export function App() {
   const [locale, setLocale] = useState("en");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [toast, setToast] = useState<{
+    visible: boolean;
+    message: string;
+    type: "success" | "error";
+  }>({
+    visible: false,
+    message: "",
+    type: "success",
+  });
+  const [signsRefreshKey, setSignsRefreshKey] = useState(0);
+  const [userStatus, setUserStatus] = useState<UserStatus | null>(null);
+
+  useEffect(() => {
+    const loadStatus = async () => {
+      try {
+        const status = await getStatus();
+        setUserStatus(status);
+      } catch (error) {
+        console.error("Failed to load status:", error);
+        setUserStatus({
+          status: "busy auracoding",
+          vanity_id: null,
+          updated_at: new Date().toISOString(),
+        });
+      }
+    };
+    loadStatus();
+  }, []);
 
   const toggleLocale = () => {
     setLocale((locale) => (locale === "en" ? "ru" : "en"));
+  };
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const modalLeaveSign: ModalControl = {
+    isOpen: isModalOpen,
+    onClose: () => setIsModalOpen(false),
+    closeOnOverlayClick: true,
+    closeOnEscape: true,
+    showCloseButton: true,
+    title: t("sign_header"),
+  };
+
+  const showToast = (message: string, type: "success" | "error") => {
+    setToast({
+      visible: true,
+      message,
+      type,
+    });
+  };
+
+  const handleSignFormSuccess = () => {
+    setIsModalOpen(false);
+    showToast(t("sign_toastSent"), "success");
+    setSignsRefreshKey((prev) => prev + 1);
+  };
+
+  const handleSignFormError = (errorMessage: string) => {
+    setIsModalOpen(false);
+    showToast(`${t("sign_error")}: ${errorMessage}`, "error");
+  };
+
+  const handleSignDeleted = () => {
+    showToast(t("sign_toastDeleted"), "success");
+    setSignsRefreshKey((prev) => prev + 1);
+  };
+
+  const handleSignDeleteError = (errorMessage: string) => {
+    showToast(`${t("sign_toastDeleteError")}: ${errorMessage}`, "error");
+  };
+
+  const handleLogoutSuccess = () => {
+    showToast(t("logout_toastSuccess"), "success");
+    setSignsRefreshKey((prev) => prev + 1);
+  };
+
+  const handleLogoutError = (errorMessage: string) => {
+    showToast(`${t("logout_toastError")}: ${errorMessage}`, "error");
+  };
+
+  const handleLoginSuccess = () => {
+    showToast(t("authViaGitHub"), "success");
+    setSignsRefreshKey((prev) => prev + 1);
+  };
+
+  const handleLoginError = (errorMessage: string) => {
+    showToast(`${t("sign_error")}: ${errorMessage}`, "error");
+  };
+
+  const VanityOverlay = ({ vanityId }: { vanityId: string }) => {
+    const config = getVanityConfig(vanityId);
+    if (!config) return null;
+
+    const style = {
+      position: "absolute" as const,
+      top: `calc(50% + ${config.y}px)`,
+      left: `calc(50% + ${config.x}px)`,
+      transform: `translate(-50%, -50%) rotate(${config.angle}deg)`,
+      width: "auto",
+      height: "auto",
+      maxWidth: "120px",
+      maxHeight: "120px",
+      pointerEvents: "none" as const,
+      zIndex: 3,
+    };
+
+    return <img src={config.path} alt="vanity" style={style} />;
   };
 
   return (
@@ -44,8 +163,15 @@ export function App() {
               onClick={toggleLocale}
             />
             <Button className="theme-button" faIcon={faMoon} />
-            <img className="pfp" src={pfp}></img>
-            <StatusBubble>busy auracoding</StatusBubble>
+            <div className="avatar-container">
+              <img className="pfp" src={pfp}></img>
+              {userStatus?.vanity_id && (
+                <VanityOverlay vanityId={userStatus.vanity_id} />
+              )}
+            </div>
+            <StatusBubble>
+              {(userStatus?.status || "\n").replace(/<br\s*\/?>/gi, "\n")}
+            </StatusBubble>
           </div>
           <div className="item-container">
             <div className="name">
@@ -55,8 +181,8 @@ export function App() {
               </Badge>
             </div>
             <div className="pnouns">
-              mcbalaam <FontAwesomeIcon icon={faArrowRightLong} /> эмсибалаам,
-              балаам, макбаклак (he/him)
+              mcbalaam <FontAwesomeIcon size="sm" icon={faArrowRightLong} />{" "}
+              эмсибалаам, балаам, макбаклак (he/him)
             </div>
             <p className="desc">{t("aboutMe")}</p>
             <div
@@ -101,7 +227,47 @@ export function App() {
             </div>
           </div>
         </div>
+        <div className="card">
+          <div className="item-container accountbar">
+            <AuthButtons
+              onLoginSuccess={handleLoginSuccess}
+              onLoginError={handleLoginError}
+              onLogoutSuccess={handleLogoutSuccess}
+              onLogoutError={handleLogoutError}
+              onAuthChange={(isAuthenticated) => {}}
+            />
+          </div>
+        </div>
+        <div className="card">
+          <div className="item-container accountbar">
+            <SignList
+              onLeaveSignClick={() => openModal()}
+              onSignDeleted={handleSignDeleted}
+              onSignDeleteError={handleSignDeleteError}
+              refreshKey={signsRefreshKey}
+            />
+          </div>
+        </div>
       </div>
+
+      <ModalPopup control={modalLeaveSign}>
+        <SignForm
+          onSignCreated={handleSignFormSuccess}
+          onSignError={handleSignFormError}
+        />
+      </ModalPopup>
+
+      {toast.visible && (
+        <ToastNotification
+          icon={toast.type === "success" ? faCircleCheck : faCircleXmark}
+          type={toast.type === "success" ? "success" : "error"}
+          duration={3000}
+          onClose={() => setToast({ ...toast, visible: false })}
+          position="bottom-center"
+        >
+          {toast.message}
+        </ToastNotification>
+      )}
     </TranslationContextProvider>
   );
 }

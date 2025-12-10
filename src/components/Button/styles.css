@@ -23,7 +23,6 @@
 .fancy-button.blue {
     background-color: #5865f2;
     border: 1px solid #6571f3;
-    padding: 7px 15px 6px 15px;
 }
 
 .fancy-button:hover {
@@ -36,7 +35,26 @@
 }
 
 .fancy-button.fill {
-    width: 50%;
+    width: 100%;
+}
+
+.fancy-button:disabled {
+    color: #a6ade6;
+}
+
+.fancy-button.blue:disabled {
+    color: #a6ade6;
+    background-color: #424492;
+    border-color: #4346b3;
+}
+
+.fancy-button:disabled:hover {
+    background-color: #252535;
+}
+
+.fancy-button.blue:disabled:hover {
+    background-color: #424492;
+    border-color: #4346b3;
 }
 
 .button-img {
@@ -44,6 +62,7 @@
     width: 20px;
     position: relative;
     margin-bottom: -5px;
+    top: -1px;
 }
 
 .button-img.icon {
