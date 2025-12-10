@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { t, TranslationContextProvider } from "translations/translate";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { getStatus, type UserStatus } from "./entry";
+import { getVanityConfig } from "./config";
 import {
   faMoon,
   faSun,
@@ -38,9 +40,6 @@ import ToastNotification from "./components/ToastNotification";
 export function App() {
   const [locale, setLocale] = useState("en");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalType, setModalType] = useState<
-    "default" | "strict" | "noCloseButton"
-  >("default");
   const [toast, setToast] = useState<{
     visible: boolean;
     message: string;
@@ -51,32 +50,40 @@ export function App() {
     type: "success",
   });
   const [signsRefreshKey, setSignsRefreshKey] = useState(0);
+  const [userStatus, setUserStatus] = useState<UserStatus | null>(null);
+
+  useEffect(() => {
+    const loadStatus = async () => {
+      try {
+        const status = await getStatus();
+        setUserStatus(status);
+      } catch (error) {
+        console.error("Failed to load status:", error);
+        setUserStatus({
+          status: "busy auracoding",
+          vanity_id: null,
+          updated_at: new Date().toISOString(),
+        });
+      }
+    };
+    loadStatus();
+  }, []);
 
   const toggleLocale = () => {
     setLocale((locale) => (locale === "en" ? "ru" : "en"));
   };
 
-  const openModal = (type: typeof modalType) => {
-    setModalType(type);
+  const openModal = () => {
     setIsModalOpen(true);
   };
 
   const modalLeaveSign: ModalControl = {
     isOpen: isModalOpen,
     onClose: () => setIsModalOpen(false),
-    closeOnOverlayClick: modalType !== "strict",
-    closeOnEscape: modalType !== "strict",
-    showCloseButton: modalType !== "noCloseButton",
+    closeOnOverlayClick: true,
+    closeOnEscape: true,
+    showCloseButton: true,
     title: t("sign_header"),
-    footerButtons:
-      modalType === "strict" ? (
-        <>
-          <Button onClick={() => setIsModalOpen(false)}>Закрыть</Button>
-          <Button primary onClick={() => setIsModalOpen(false)}>
-            Сохранить
-          </Button>
-        </>
-      ) : undefined,
   };
 
   const showToast = (message: string, type: "success" | "error") => {
@@ -125,6 +132,26 @@ export function App() {
     showToast(`${t("sign_error")}: ${errorMessage}`, "error");
   };
 
+  const VanityOverlay = ({ vanityId }: { vanityId: string }) => {
+    const config = getVanityConfig(vanityId);
+    if (!config) return null;
+
+    const style = {
+      position: "absolute" as const,
+      top: `calc(50% + ${config.y}px)`,
+      left: `calc(50% + ${config.x}px)`,
+      transform: `translate(-50%, -50%) rotate(${config.angle}deg)`,
+      width: "auto",
+      height: "auto",
+      maxWidth: "120px",
+      maxHeight: "120px",
+      pointerEvents: "none" as const,
+      zIndex: 3,
+    };
+
+    return <img src={config.path} alt="vanity" style={style} />;
+  };
+
   return (
     <TranslationContextProvider locale={locale}>
       <div className="master-container">
@@ -136,8 +163,15 @@ export function App() {
               onClick={toggleLocale}
             />
             <Button className="theme-button" faIcon={faMoon} />
-            <img className="pfp" src={pfp}></img>
-            <StatusBubble>busy auracoding</StatusBubble>
+            <div className="avatar-container">
+              <img className="pfp" src={pfp}></img>
+              {userStatus?.vanity_id && (
+                <VanityOverlay vanityId={userStatus.vanity_id} />
+              )}
+            </div>
+            <StatusBubble>
+              {(userStatus?.status || "\n").replace(/<br\s*\/?>/gi, "\n")}
+            </StatusBubble>
           </div>
           <div className="item-container">
             <div className="name">
@@ -147,8 +181,8 @@ export function App() {
               </Badge>
             </div>
             <div className="pnouns">
-              mcbalaam <FontAwesomeIcon icon={faArrowRightLong} /> эмсибалаам,
-              балаам, макбаклак (he/him)
+              mcbalaam <FontAwesomeIcon size="sm" icon={faArrowRightLong} />{" "}
+              эмсибалаам, балаам, макбаклак (he/him)
             </div>
             <p className="desc">{t("aboutMe")}</p>
             <div
@@ -200,16 +234,14 @@ export function App() {
               onLoginError={handleLoginError}
               onLogoutSuccess={handleLogoutSuccess}
               onLogoutError={handleLogoutError}
-              onAuthChange={(isAuthenticated) => {
-                // Auth change handled by explicit success/error callbacks
-              }}
+              onAuthChange={(isAuthenticated) => {}}
             />
           </div>
         </div>
         <div className="card">
           <div className="item-container accountbar">
             <SignList
-              onLeaveSignClick={() => openModal("default")}
+              onLeaveSignClick={() => openModal()}
               onSignDeleted={handleSignDeleted}
               onSignDeleteError={handleSignDeleteError}
               refreshKey={signsRefreshKey}

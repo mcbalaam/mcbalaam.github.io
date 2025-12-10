@@ -41,6 +41,12 @@ export interface UserSession {
   is_admin: boolean;
 }
 
+export interface UserStatus {
+  status: string;
+  vanity_id: string | null;
+  updated_at: string;
+}
+
 const supabaseUrl = SUPABASE_URL;
 const supabaseAnonKey = SUPABASE_ANON_KEY;
 const adminGithubUsername = ADMIN_GITHUB_USERNAME;
@@ -531,6 +537,109 @@ export class AuthManager {
   }
 }
 
+export class StatusManager {
+  static async getStatus(): Promise<UserStatus | null> {
+    try {
+      const url = `${supabaseUrl}/rest/v1/user_status?select=status,vanity_id,updated_at&id=eq.1`;
+
+      const response = await fetchWithRetry(
+        url,
+        {
+          headers: {
+            apikey: supabaseAnonKey || "",
+            Authorization: `Bearer ${supabaseAnonKey}`,
+            "Content-Type": "application/json",
+            "Cache-Control": "no-cache",
+          },
+        },
+        5000,
+        1,
+      );
+
+      if (!response.ok) {
+        console.warn("Failed to fetch status, returning default");
+        return {
+          status: "busy auracoding",
+          vanity_id: null,
+          updated_at: new Date().toISOString(),
+        };
+      }
+
+      const data = await response.json();
+      if (data && data.length > 0) {
+        return data[0];
+      }
+
+      return {
+        status: "busy auracoding",
+        vanity_id: null,
+        updated_at: new Date().toISOString(),
+      };
+    } catch (error: any) {
+      console.error("Error fetching status:", error);
+      return {
+        status: "busy auracoding",
+        vanity_id: null,
+        updated_at: new Date().toISOString(),
+      };
+    }
+  }
+
+  static async updateStatus(status?: string, vanityId?: string | null): Promise<UserStatus> {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      throw new Error("User must be authenticated to update status");
+    }
+
+    const updates: any = {};
+    if (status !== undefined) updates.status = status;
+    if (vanityId !== undefined) updates.vanity_id = vanityId;
+
+    const { data, error } = await supabase
+      .from("user_status")
+      .update(updates)
+      .eq("id", 1)
+      .select("status, vanity_id, updated_at")
+      .single();
+
+    if (error) {
+      console.error("Error updating status:", error);
+      throw error;
+    }
+
+    return data;
+  }
+
+  static async getStatusForAdmin(): Promise<{ canUpdate: boolean; currentStatus: UserStatus | null }> {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      return { canUpdate: false, currentStatus: null };
+    }
+
+    const userMetadata = user.user_metadata;
+    const githubUsername = userMetadata?.user_name;
+    const isAdmin = adminGithubUsername && githubUsername === adminGithubUsername;
+
+    if (!isAdmin) {
+      return { canUpdate: false, currentStatus: null };
+    }
+
+    try {
+      const status = await StatusManager.getStatus();
+      return { canUpdate: true, currentStatus: status };
+    } catch (error) {
+      console.error("Error fetching status for admin:", error);
+      return { canUpdate: true, currentStatus: null };
+    }
+  }
+}
+
 export const getApprovedSigns = SignManager.getApprovedSigns;
 export const createSign = SignManager.createSign;
 export const getUserSigns = SignManager.getUserSigns;
@@ -544,3 +653,7 @@ export const signInWithGitHub = AuthManager.signInWithGitHub;
 export const signOut = AuthManager.signOut;
 export const getCurrentSession = AuthManager.getCurrentSession;
 export const isAuthenticated = AuthManager.isAuthenticated;
+
+export const getStatus = StatusManager.getStatus;
+export const updateStatus = StatusManager.updateStatus;
+export const getStatusForAdmin = StatusManager.getStatusForAdmin;
