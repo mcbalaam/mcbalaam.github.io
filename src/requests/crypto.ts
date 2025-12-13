@@ -14,18 +14,13 @@ export interface SignatureData {
   userId: string;
 }
 
-export class CryptoUtils {
-  /**
-   * Generate Ed25519 key pair
-   */
+export class Crypto {
   static generateKeyPair(): KeyPair {
-    // Generate 32 random bytes for private key with timestamp and additional randomness
     const timestamp = Date.now().toString();
     const timestampBytes = new TextEncoder().encode(timestamp);
     const random1 = randomBytes(32);
     const random2 = randomBytes(32);
 
-    // Combine multiple sources of randomness with timestamp
     const combined = new Uint8Array(32);
     for (let i = 0; i < 32; i++) {
       const timestampByte = timestampBytes[i % timestampBytes.length]!;
@@ -41,9 +36,6 @@ export class CryptoUtils {
     };
   }
 
-  /**
-   * Create message to sign from signature data
-   */
   static createMessage(data: SignatureData): Uint8Array {
     const encoder = new TextEncoder();
     const message = data.message || "";
@@ -51,17 +43,11 @@ export class CryptoUtils {
     return encoder.encode(combined);
   }
 
-  /**
-   * Sign data with private key using Ed25519
-   */
   static sign(data: SignatureData, privateKey: Uint8Array): Uint8Array {
     const message = this.createMessage(data);
     return ed25519.sign(message, privateKey);
   }
 
-  /**
-   * Verify signature with public key using Ed25519
-   */
   static verify(
     data: SignatureData,
     signature: Uint8Array,
@@ -76,32 +62,20 @@ export class CryptoUtils {
     }
   }
 
-  /**
-   * Convert bytes to hex string
-   */
   static bytesToHex(bytes: Uint8Array): string {
     return bytesToHex(bytes);
   }
 
-  /**
-   * Convert hex string to bytes
-   */
   static hexToBytes(hex: string): Uint8Array {
     return hexToBytes(hex);
   }
 
-  /**
-   * Get short display version of public key
-   */
   static getPublicKeyDisplay(publicKey: Uint8Array | string): string {
     const hex =
       typeof publicKey === "string" ? publicKey : this.bytesToHex(publicKey);
     return hex.substring(0, 16); // First 16 chars for display
   }
 
-  /**
-   * Generate full signature data for a sign
-   */
   static generateSignatureForSign(
     message: string,
     userId: string,
@@ -128,9 +102,6 @@ export class CryptoUtils {
     };
   }
 
-  /**
-   * Verify sign signature
-   */
   static verifySign(sign: {
     message?: string;
     created_at: string;

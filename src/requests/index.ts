@@ -6,7 +6,7 @@ import {
 } from "./config";
 
 import { t } from "translations/translate";
-import { CryptoUtils } from "./cryptoUtils";
+import { Crypto } from "./crypto";
 
 export interface Sign {
   id: number;
@@ -152,7 +152,7 @@ export class SignManager {
 
       // Verify signatures for all signs
       return (data || []).map((sign: Sign) => {
-        const verification = CryptoUtils.verifySign(sign);
+        const verification = Crypto.verifySign(sign);
         return {
           ...sign,
           signatureValid: verification.isValid,
@@ -208,7 +208,7 @@ export class SignManager {
     const timestamp = new Date().toISOString();
 
     // Generate signature with the timestamp
-    const signatureData = CryptoUtils.generateSignatureForSign(
+    const signatureData = Crypto.generateSignatureForSign(
       formData.message || "",
       user.id,
       formData.is_anonymous,
@@ -310,7 +310,7 @@ export class SignManager {
 
       // Verify signatures for all signs
       return (data || []).map((sign: Sign) => {
-        const verification = CryptoUtils.verifySign(sign);
+        const verification = Crypto.verifySign(sign);
         return {
           ...sign,
           signatureValid: verification.isValid,
@@ -585,7 +585,10 @@ export class StatusManager {
     }
   }
 
-  static async updateStatus(status?: string, vanityId?: string | null): Promise<UserStatus> {
+  static async updateStatus(
+    status?: string,
+    vanityId?: string | null,
+  ): Promise<UserStatus> {
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -613,7 +616,10 @@ export class StatusManager {
     return data;
   }
 
-  static async getStatusForAdmin(): Promise<{ canUpdate: boolean; currentStatus: UserStatus | null }> {
+  static async getStatusForAdmin(): Promise<{
+    canUpdate: boolean;
+    currentStatus: UserStatus | null;
+  }> {
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -624,7 +630,8 @@ export class StatusManager {
 
     const userMetadata = user.user_metadata;
     const githubUsername = userMetadata?.user_name;
-    const isAdmin = adminGithubUsername && githubUsername === adminGithubUsername;
+    const isAdmin =
+      adminGithubUsername && githubUsername === adminGithubUsername;
 
     if (!isAdmin) {
       return { canUpdate: false, currentStatus: null };

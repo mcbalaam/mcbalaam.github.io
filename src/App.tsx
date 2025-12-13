@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { t, TranslationContextProvider } from "translations/translate";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { getStatus, type UserStatus } from "./entry";
+import { getStatus, type UserStatus } from "./requests";
 import { getVanityConfig } from "./config";
 import {
   faMoon,
