@@ -4,6 +4,7 @@ export default {
   myMidniht: "моя полночь в",
   active: "обычно я доступен 9-23",
   connections: "Где меня найти",
+  thisRepo: "Репо этой странички",
   auth: "Аутентификация...",
   loginWithGithub: "Войди c GitHub",
   toLeaveSigns: "чтобы оставлять сигны!",

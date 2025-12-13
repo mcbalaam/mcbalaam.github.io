@@ -4,6 +4,7 @@ export default {
   myMidniht: "my midnight is your",
   active: "usually I'm active 9-23",
   connections: "Connections",
+  thisRepo: "This site's repo",
   auth: "Authenticating...",
   loginWithGithub: "Sign in with GitHub",
   toLeaveSigns: "to leave signs!",

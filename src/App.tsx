@@ -9,8 +9,6 @@ import {
   faLanguage,
   faArrowRightLong,
   faArrowUpRightFromSquare,
-  faInfoCircle,
-  faPlus,
   faCircleCheck,
   faCircleXmark,
 } from "@fortawesome/free-solid-svg-icons";
@@ -149,7 +147,7 @@ export function App() {
       zIndex: 3,
     };
 
-    return <img src={config.path} alt="vanity" style={style} />;
+    return <img src={config.path} style={style} />;
   };
 
   return (
@@ -222,6 +220,13 @@ export function App() {
               </Badge>
               <Badge href="https://pay.cloudtips.ru/p/7ac675d4" src={cloudtips}>
                 CloudTips{" "}
+                <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} />
+              </Badge>
+              <Badge
+                href="https://www.github.com/mcbalaam/mcbalaam.github.io"
+                src={github}
+              >
+                {t("thisRepo")}{" "}
                 <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} />
               </Badge>
             </div>
