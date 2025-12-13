@@ -3,7 +3,7 @@ import {
   SUPABASE_URL,
   SUPABASE_ANON_KEY,
   ADMIN_GITHUB_USERNAME,
-} from "./config";
+} from "../config";
 
 import { t } from "translations/translate";
 import { Crypto } from "./crypto";
