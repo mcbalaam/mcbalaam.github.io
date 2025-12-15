@@ -1,21 +1,9 @@
-# bun-react-template
+## mcbalaam.github.io
 
-To install dependencies:
+Небольшой статический сайт-визитка на react@bun в стиле карточки профиля Discord с забавными фичами:
+- кастомные компоненты в стиле Discord;
+- интеграция с Supabase для boneless хостинга без сервера;
+- система сигн с аутентификацией через GitHub;
+- криптографическая подпись сигн для подтверждения их подлинности (что их не изменили вручную в базе).
 
-```bash
-bun install
-```
-
-To start a development server:
-
-```bash
-bun dev
-```
-
-To run for production:
-
-```bash
-bun start
-```
-
-This project was created using `bun init` in bun v1.3.3. [Bun](https://bun.com) is a fast all-in-one JavaScript runtime.
+Использованные материалы: FontAwesome для иконок, i18n для перевода
