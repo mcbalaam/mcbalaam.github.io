@@ -1,8 +1,8 @@
 .fancy-button {
     padding: 7px 7px 7px 7px;
     border-radius: 7px;
-    background-color: #252535;
-    border: 1px solid #292938;
+    background-color: var(--color-bg-button);
+    border: 1px solid var(--color-border-button);
     transition: 250ms;
     cursor: pointer;
     font-family: NunitoSans;
@@ -18,20 +18,21 @@
     height: 20px;
     margin-left: 8px;
     margin-right: 8px;
+    color: rgba(255, 255, 255, 0.87);
 }
 
 .fancy-button.blue {
-    background-color: #5865f2;
-    border: 1px solid #6571f3;
+    background-color: var(--color-bg-button-blue);
+    border: 1px solid var(--color-border-button-blue);
 }
 
 .fancy-button:hover {
-    background-color: #2f2f3f;
+    background-color: var(--color-bg-button-hover);
 }
 
 .fancy-button.blue:hover {
-    background-color: #4452bb;
-    border-color: #6162e1;
+    background-color: var(--color-bg-button-blue-hover);
+    border-color: var(--color-border-button-blue-hover);
 }
 
 .fancy-button.fill {
@@ -39,22 +40,17 @@
 }
 
 .fancy-button:disabled {
-    color: #a6ade6;
+    color: var(--color-text-disabled);
+    background-color: var(--color-bg-button-disabled);
+    border-color: var(--color-bg-button-disabled);
+    cursor: not-allowed;
 }
 
 .fancy-button.blue:disabled {
-    color: #a6ade6;
-    background-color: #424492;
-    border-color: #4346b3;
-}
-
-.fancy-button:disabled:hover {
-    background-color: #252535;
-}
-
-.fancy-button.blue:disabled:hover {
-    background-color: #424492;
-    border-color: #4346b3;
+    color: var(--color-text-disabled);
+    background-color: var(--color-bg-button-disabled);
+    border-color: var(--color-bg-button-disabled);
+    cursor: not-allowed;
 }
 
 .button-img {
@@ -70,4 +66,8 @@
     width: 14px;
     padding: 4px 2px 4px 2px;
     position: relative;
+}
+
+.button-img.icon {
+    color: rgba(255, 255, 255, 0.87);
 }

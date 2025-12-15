@@ -2,11 +2,11 @@
     display: inline-flex;
     padding: 4px 0px 4px 4px;
     border-radius: 7px;
-    background-color: #252535;
-    border: 1px solid #292938;
+    background-color: var(--color-bg-button);
+    border: 1px solid var(--color-border-button);
     transition: 250ms;
     cursor: pointer;
-    color: white;
+    color: var(--color-text-primary);
     text-decoration: none;
 }
 
@@ -25,19 +25,9 @@
     border-radius: 3px;
 }
 
-.fancy-button.blue {
-    background-color: #5865f2;
-    border: 1px solid #6571f3;
-    padding: 7px 15px 6px 15px;
-}
-
 .badge:hover {
-    background-color: #2f2f3f;
-}
-
-.fancy-button.blue:hover {
-    background-color: #4452bb;
-    border-color: #6162e1;
+    background-color: var(--color-bg-button-hover);
+    border-color: var(--color-bg-button-hover);
 }
 
 .badge.small {
@@ -45,8 +35,6 @@
     height: 15px;
     margin-top: 11px;
     margin-left: 6px;
-    background-color: #363340;
-}
 
 .badge-img.small {
     height: 15px;

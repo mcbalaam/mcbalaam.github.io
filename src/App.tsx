@@ -37,8 +37,16 @@ import RepoTab from "./components/RepoTab";
 import ModalPopup, { type ModalControl } from "./components/ModalPopup";
 import ToastNotification from "./components/ToastNotification";
 
+function getCookie(name: string): string | null {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop()?.split(";").shift() || null;
+  return null;
+}
+
 export function App() {
   const [locale, setLocale] = useState("en");
+  const [theme, setTheme] = useState<"dark" | "light">("dark");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [toast, setToast] = useState<{
     visible: boolean;
@@ -69,8 +77,54 @@ export function App() {
     loadStatus();
   }, []);
 
+  useEffect(() => {
+    // Read cookies first
+    const savedLocale = getCookie("locale");
+    const savedTheme = getCookie("theme") as "dark" | "light" | null;
+
+    // Detect preferred language from browser if no cookie
+    let initialLocale = "en";
+    if (savedLocale) {
+      initialLocale = savedLocale;
+    } else {
+      const browserLang =
+        navigator.language || navigator.languages?.[0] || "en";
+      const prefersRu = browserLang.startsWith("ru");
+      initialLocale = prefersRu ? "ru" : "en";
+    }
+    setLocale(initialLocale);
+
+    // Detect preferred theme from system if no cookie
+    let initialTheme: "dark" | "light" = "dark";
+    if (savedTheme) {
+      initialTheme = savedTheme;
+    } else {
+      const prefersDark = window.matchMedia(
+        "(prefers-color-scheme: dark)",
+      ).matches;
+      initialTheme = prefersDark ? "dark" : "light";
+    }
+    setTheme(initialTheme);
+    document.documentElement.setAttribute("data-theme", initialTheme);
+    document.documentElement.style.setProperty("color-scheme", initialTheme);
+  }, []);
+
   const toggleLocale = () => {
-    setLocale((locale) => (locale === "en" ? "ru" : "en"));
+    setLocale((locale) => {
+      const newLocale = locale === "en" ? "ru" : "en";
+      document.cookie = `locale=${newLocale}; path=/; max-age=31536000`; // 1 year
+      return newLocale;
+    });
+  };
+
+  const toggleTheme = () => {
+    setTheme((theme) => {
+      const newTheme = theme === "dark" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", newTheme);
+      document.documentElement.style.setProperty("color-scheme", newTheme);
+      document.cookie = `theme=${newTheme}; path=/; max-age=31536000`; // 1 year
+      return newTheme;
+    });
   };
 
   const openModal = () => {
@@ -155,9 +209,9 @@ export function App() {
   return (
     <TranslationContextProvider locale={locale}>
       <Balatro
-        color1="#24313D"
-        color2="#3C385A"
-        color3="#201F31"
+        color1="#3C385A"
+        color2="#24313D"
+        color3={theme == "light" ? "#656181" : "#201F31"}
         mouseInteraction={false}
       ></Balatro>
       <div className="master-container">
@@ -168,7 +222,11 @@ export function App() {
               faIcon={faLanguage}
               onClick={toggleLocale}
             />
-            <Button className="theme-button" faIcon={faMoon} />
+            <Button
+              className="theme-button"
+              faIcon={theme === "dark" ? faMoon : faSun}
+              onClick={toggleTheme}
+            />
             <div className="avatar-container">
               <img className="pfp" src={pfp}></img>
               {userStatus?.vanity_id && (

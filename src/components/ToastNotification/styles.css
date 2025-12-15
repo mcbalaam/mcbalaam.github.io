@@ -1,13 +1,13 @@
 .toast-notification {
     position: fixed;
     z-index: 1100;
-    background-color: #201f31;
+    background-color: var(--color-bg-secondary);
     border-radius: 15px;
     min-width: 270px;
     max-width: 400px;
     width: fit-content;
-    border: 1px solid #2b2b3a;
-    box-shadow: 0px 0px 23px 5px #1b1b2b;
+    border: 1px solid var(--color-border-primary);
+    box-shadow: 0px 0px 23px 5px var(--color-shadow);
     padding: 15px 20px;
     display: flex;
     align-items: center;
@@ -39,7 +39,7 @@
 .toast-icon-svg {
     height: 16px;
     width: 16px;
-    color: rgba(255, 255, 255, 0.87);
+    color: var(--color-text-primary);
 }
 
 .toast-icon-img {
@@ -52,7 +52,7 @@
 .toast-message {
     font-size: 15px;
     line-height: 1.4;
-    color: rgba(255, 255, 255, 0.87);
+    color: var(--color-text-primary);
     font-family: NunitoSans;
     margin-block-end: 0;
 }
@@ -64,7 +64,7 @@
 }
 
 .toast-close-button:hover {
-    background-color: #ffffff20 !important;
+    background-color: var(--color-white-20) !important;
 }
 
 .toast-close-button:focus-visible {
@@ -74,27 +74,29 @@
 .toast-close-button svg {
     height: 14px;
     width: 14px;
+    color: #1e1e30 !important;
+    fill: #1e1e30 !important;
 }
 
 /* Типы тостов */
 .toast-info {
-    background-color: #201f31;
-    border-color: #2b2b3a;
+    background-color: var(--color-info);
+    border-color: var(--color-info-border);
 }
 
 .toast-success {
-    background-color: #1f3120;
-    border-color: #2b3a2c;
+    background-color: var(--color-success);
+    border-color: var(--color-success-border);
 }
 
 .toast-warning {
-    background-color: #312a1f;
-    border-color: #3a322b;
+    background-color: var(--color-warning);
+    border-color: var(--color-warning-border);
 }
 
 .toast-error {
-    background-color: #31201f;
-    border-color: #3a2b2b;
+    background-color: var(--color-error);
+    border-color: var(--color-error-border);
 }
 
 /* Позиции */

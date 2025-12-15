@@ -9,10 +9,10 @@
 }
 
 .sign-card {
-    background-color: #252535;
+    background-color: var(--color-bg-secondary);
     border-radius: 8px;
     padding: 10px 10px 10px 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 4px var(--color-shadow-light);
     transition: box-shadow 0.2s;
     height: fit-content;
     display: flex;
@@ -21,7 +21,7 @@
 }
 
 .sign-card:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px var(--color-shadow-medium);
 }
 
 .sign-header {
@@ -50,50 +50,50 @@
 
 .sign-date {
     font-size: 12px;
-    color: #6c757d;
+    color: var(--color-text-primary);
     line-height: 26px;
     font-weight: 700;
 }
 
 .delete-button {
-    width: 30px;
-    height: 30px;
-    min-height: 30px;
-    min-width: 30px;
-    padding: 3px;
-    margin-left: auto;
-    margin-right: 4px;
+    width: 30px !important;
+    height: 30px !important;
+    min-height: 30px !important;
+    min-width: 30px !important;
+    padding: 3px !important;
+    margin-left: auto !important;
+    margin-right: 4px !important;
 }
 
 .hash-button {
-    width: 30px;
-    height: 30px;
-    min-height: 30px;
-    min-width: 30px;
-    padding: 3px;
-    background-color: #253035;
+    width: 30px !important;
+    height: 30px !important;
+    min-height: 30px !important;
+    min-width: 30px !important;
+    padding: 3px !important;
+    background-color: var(--color-accent-green);
 }
 
 .hash-button:hover {
-    background-color: #253b35;
+    background-color: var(--color-accent-green-hover);
 }
 
 .hash-button.hash-mismatch {
-    background-color: #553d4f;
+    background-color: var(--color-accent-red);
     color: white;
 }
 
 .hash-button.hash-mismatch:hover {
-    background-color: #a17893;
+    background-color: var(--color-accent-red-hover);
 }
 
 .delete-button:hover:not(:disabled) {
-    background-color: #2f2f3f66;
-    color: rgba(255, 255, 255, 0.87);
+    background-color: var(--color-bg-transparent-hover);
+    color: var(--color-text-primary);
 }
 
 .delete-button:disabled {
-    color: #6c757d;
+    color: var(--color-text-secondary);
     cursor: not-allowed;
 }
 
@@ -101,15 +101,15 @@
     margin-top: -8px;
     padding: 0 12px 0 12px;
     border-radius: 4px;
-    border-left: 3px solid #5865f2;
-    background-color: #99867022;
+    border-left: 3px solid var(--color-accent-blue);
+    background-color: var(--color-bg-transparent-light);
     font-size: 14px;
     line-height: 1.5;
     white-space: pre-wrap;
 }
 
 .anonymous-badge {
-    background-color: #5865f2;
+    background-color: var(--color-accent-blue);
     height: 20px;
     border-radius: 4px;
     font-size: 12px;
@@ -121,7 +121,7 @@
 }
 
 .pending-badge {
-    background-color: #5865f2;
+    background-color: var(--color-accent-blue);
     height: 20px;
     border-radius: 4px;
     font-size: 12px;
@@ -134,7 +134,7 @@
 
 .admin-info {
     font-size: 11px;
-    color: #6c757d;
+    color: var(--color-text-secondary);
     font-family: monospace;
     margin-left: auto;
 }
@@ -143,7 +143,7 @@
     font-size: 16px;
     font-family: monospace;
     font-weight: 300;
-    background-color: #3f3f5a;
+    background-color: var(--color-accent-gray);
     padding: 2px 5px 2px 5px;
     border-radius: 3px;
     line-height: 10px;
