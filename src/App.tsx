@@ -15,6 +15,8 @@ import {
 
 import "./index.css";
 
+import Balatro from "./components/Balatro";
+
 import github from "../media/github-tile.svg";
 import steam from "../media/steampowered-tile.svg";
 import extera from "../media/5EmxevP.png";
@@ -152,6 +154,12 @@ export function App() {
 
   return (
     <TranslationContextProvider locale={locale}>
+      <Balatro
+        color1="#24313D"
+        color2="#3C385A"
+        color3="#201F31"
+        mouseInteraction={false}
+      ></Balatro>
       <div className="master-container">
         <div className="card">
           <div className="banner">
@@ -175,7 +183,7 @@ export function App() {
             <div className="name">
               <div className="nameplate">mcbalaam</div>
               <Badge small src={extera}>
-                extera
+                EXTR
               </Badge>
             </div>
             <div className="pnouns">

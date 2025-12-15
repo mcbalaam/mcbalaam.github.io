@@ -178,3 +178,12 @@ h1 {
 .item-container.accountbar {
     padding: 15px 15px 15px 15px;
 }
+
+.balatro-container {
+    position: fixed;
+    z-index: -1;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+}
