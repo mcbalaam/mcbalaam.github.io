@@ -145,8 +145,10 @@ export default function Balatro({
     gl.clearColor(0, 0, 0, 1);
 
     let program: Program;
+    let resizeObserver: ResizeObserver | null = null;
 
     function resize() {
+      if (!container) return;
       renderer.setSize(container.offsetWidth, container.offsetHeight);
       if (program) {
         program.uniforms.iResolution.value = [
@@ -156,7 +158,43 @@ export default function Balatro({
         ];
       }
     }
+
+    function forceRedraw() {
+      resize();
+      // Принудительно обновляем uniform для перерисовки
+      if (program) {
+        program.uniforms.iTime.value = performance.now() * 0.001;
+      }
+    }
+
+    function checkVisibilityAndRedraw() {
+      if (!container) return;
+      const rect = container.getBoundingClientRect();
+      const isVisible =
+        rect.top < window.innerHeight &&
+        rect.bottom > 0 &&
+        rect.left < window.innerWidth &&
+        rect.right > 0;
+
+      if (isVisible) {
+        forceRedraw();
+      }
+    }
+
+    // Обработчик изменения размера окна
     window.addEventListener("resize", resize);
+
+    // Обработчик скролла для перерисовки при изменении видимой области
+    window.addEventListener("scroll", forceRedraw);
+
+    // ResizeObserver для отслеживания изменений размеров контейнера
+    if (typeof ResizeObserver !== "undefined") {
+      resizeObserver = new ResizeObserver(() => {
+        forceRedraw();
+      });
+      resizeObserver.observe(container);
+    }
+
     resize();
 
     const geometry = new Triangle(gl);
@@ -211,6 +249,10 @@ export default function Balatro({
     return () => {
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener("resize", resize);
+      window.removeEventListener("scroll", forceRedraw);
+      if (resizeObserver) {
+        resizeObserver.disconnect();
+      }
       container.removeEventListener("mousemove", handleMouseMove);
       container.removeChild(gl.canvas);
       gl.getExtension("WEBGL_lose_context")?.loseContext();

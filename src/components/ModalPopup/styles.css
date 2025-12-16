@@ -59,13 +59,13 @@
 
 .modal-close-button svg,
 .modal-close-button svg path {
-    color: #1e1e30 !important;
-    fill: #1e1e30 !important;
-    stroke: #1e1e30 !important;
+    color: var(--color-text-primary) !important;
+    fill: var(--color-text-primary) !important;
+    stroke: var(--color-text-primary) !important;
 }
 
 .modal-close-button:hover {
-    background-color: #1e1e3010 !important;
+    background-color: var(--color-bg-transparent-light) !important;
 }
 
 .modal-content {

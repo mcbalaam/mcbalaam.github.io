@@ -30,8 +30,8 @@
     --color-text-primary: rgba(255, 255, 255, 0.87);
     --color-text-secondary: #6c757d;
     --color-text-disabled: #a6ade6;
-    --color-text-success: #155724;
-    --color-text-error: #721c24;
+    --color-text-success: #325742;
+    --color-text-error: #542d31;
 
     --color-shadow: #1b1b2b;
     --color-shadow-light: rgba(0, 0, 0, 0.05);
@@ -59,8 +59,8 @@
     --color-accent-purple: #8c78a1;
     --color-accent-red: #553d4f;
     --color-accent-red-hover: #a17893;
-    --color-accent-green: #253035;
-    --color-accent-green-hover: #253b35;
+    --color-accent-green: #365048;
+    --color-accent-green-hover: #254035;
     --color-accent-gray: #3f3f5a;
     --color-accent-gray-light: #454555;
 
@@ -68,7 +68,7 @@
     --color-bg-transparent: rgba(32, 31, 49, 0.4);
     --color-border-transparent: rgba(47, 47, 63, 0.4);
     --color-bg-transparent-hover: rgba(47, 47, 63, 0.6);
-    --color-bg-transparent-light: rgba(153, 134, 112, 0.13);
+    --color-bg-transparent-light: rgba(153, 134, 180, 0.05);
     --color-modal-overlay: rgba(0, 0, 0, 0.5);
     --color-white-transparent: rgba(255, 255, 255, 0.87);
     --color-white-20: rgba(255, 255, 255, 0.12);
@@ -98,8 +98,8 @@
     --color-text-primary: #213547;
     --color-text-secondary: #6c757d;
     --color-text-disabled: #a6ade6;
-    --color-text-success: #155724;
-    --color-text-error: #721c24;
+    --color-text-success: #39813f;
+    --color-text-error: #a14652;
 
     --color-shadow: rgba(0, 0, 0, 0.1);
     --color-shadow-light: rgba(0, 0, 0, 0.05);
@@ -121,8 +121,8 @@
     --color-accent-purple: #8c78a1;
     --color-accent-red: #553d4f;
     --color-accent-red-hover: #a17893;
-    --color-accent-green: #253035;
-    --color-accent-green-hover: #253b35;
+    --color-accent-green: #6a8a7d;
+    --color-accent-green-hover: #79a286;
     --color-accent-gray: #e9ecef;
     --color-accent-gray-light: #dee2e6;
 
@@ -130,7 +130,7 @@
     --color-bg-transparent: rgba(32, 31, 49, 0.4);
     --color-border-transparent: rgba(47, 47, 63, 0.4);
     --color-bg-transparent-hover: rgba(47, 47, 63, 0.6);
-    --color-bg-transparent-light: rgba(153, 134, 112, 0.13);
+    --color-bg-transparent-light: rgba(153, 134, 180, 0.2);
     --color-modal-overlay: rgba(0, 0, 0, 0.5);
     --color-white-transparent: rgba(255, 255, 255, 0.87);
     --color-white-20: rgba(255, 255, 255, 0.12);

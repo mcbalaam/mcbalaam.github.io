@@ -19,7 +19,7 @@ import Balatro from "./components/Balatro";
 
 import github from "../media/github-tile.svg";
 import steam from "../media/steampowered-tile.svg";
-import extera from "../media/5EmxevP.png";
+import robust from "../media/robust.png";
 import soundcloud from "../media/soundcloud.png";
 import telegram from "../media/telegram.png";
 import kofi from "../media/kofi.png";
@@ -240,8 +240,8 @@ export function App() {
           <div className="item-container">
             <div className="name">
               <div className="nameplate">mcbalaam</div>
-              <Badge small src={extera}>
-                EXTR
+              <Badge small src={robust}>
+                RBST
               </Badge>
             </div>
             <div className="pnouns">
@@ -286,13 +286,6 @@ export function App() {
               </Badge>
               <Badge href="https://pay.cloudtips.ru/p/7ac675d4" src={cloudtips}>
                 CloudTips{" "}
-                <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} />
-              </Badge>
-              <Badge
-                href="https://www.github.com/mcbalaam/mcbalaam.github.io"
-                src={github}
-              >
-                {t("thisRepo")}{" "}
                 <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} />
               </Badge>
             </div>
