@@ -11,7 +11,7 @@ export type ModalControl = {
   closeOnOverlayClick?: boolean;
   closeOnEscape?: boolean;
   showCloseButton?: boolean;
-  title?: string;
+  title?: React.ReactNode;
   footerButtons?: React.ReactNode;
 };
 

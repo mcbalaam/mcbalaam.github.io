@@ -50,7 +50,7 @@ export function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [toast, setToast] = useState<{
     visible: boolean;
-    message: string;
+    message: React.ReactNode;
     type: "success" | "error";
   }>({
     visible: false,
@@ -140,7 +140,7 @@ export function App() {
     title: t("sign_header"),
   };
 
-  const showToast = (message: string, type: "success" | "error") => {
+  const showToast = (message: React.ReactNode, type: "success" | "error") => {
     setToast({
       visible: true,
       message,

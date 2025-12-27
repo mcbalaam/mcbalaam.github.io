@@ -127,8 +127,6 @@ export class SignManager {
   static async getApprovedSigns(): Promise<SignWithVerification[]> {
     try {
       const url = `${supabaseUrl}/rest/v1/signs?select=*&approved=eq.true&order=created_at.desc`;
-
-      console.time("getApprovedSigns");
       const response = await fetchWithRetry(
         url,
         {
@@ -148,7 +146,6 @@ export class SignManager {
       }
 
       const data = await response.json();
-      console.timeEnd("getApprovedSigns");
 
       // Verify signatures for all signs
       return (data || []).map((sign: Sign) => {
@@ -161,7 +158,6 @@ export class SignManager {
         };
       });
     } catch (error: any) {
-      console.error("Error fetching approved signs:", error);
       if (error.name === "AbortError") {
         console.warn("Request timeout after retries");
       }
@@ -212,7 +208,6 @@ export class SignManager {
       formData.message || "",
       user.id,
       formData.is_anonymous,
-      timestamp,
     );
 
     const signData = {
@@ -486,13 +481,7 @@ export class AuthManager {
     try {
       const {
         data: { user },
-        error,
       } = await supabase.auth.getUser();
-
-      if (error) {
-        console.error("Error getting user session:", error);
-        return null;
-      }
 
       if (!user) {
         return null;
@@ -521,13 +510,7 @@ export class AuthManager {
     try {
       const {
         data: { user },
-        error,
       } = await supabase.auth.getUser();
-
-      if (error) {
-        console.error("Error checking authentication:", error);
-        return false;
-      }
 
       return !!user;
     } catch (error: any) {

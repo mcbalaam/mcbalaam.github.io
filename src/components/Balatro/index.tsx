@@ -255,7 +255,6 @@ export default function Balatro({
       }
       container.removeEventListener("mousemove", handleMouseMove);
       container.removeChild(gl.canvas);
-      gl.getExtension("WEBGL_lose_context")?.loseContext();
     };
   }, [
     spinRotation,

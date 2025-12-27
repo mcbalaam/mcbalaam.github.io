@@ -24,8 +24,6 @@ export default function Timestamp({ ts }: TimestampProps) {
     if (!isNaN(parsed.getTime())) {
       return parsed;
     }
-
-    console.warn(`Invalid timestamp: ${ts}`);
     return new Date();
   };
 
