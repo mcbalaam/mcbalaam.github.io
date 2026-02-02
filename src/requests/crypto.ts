@@ -73,7 +73,7 @@ export class Crypto {
   static getPublicKeyDisplay(publicKey: Uint8Array | string): string {
     const hex =
       typeof publicKey === "string" ? publicKey : this.bytesToHex(publicKey);
-    return hex.substring(0, 16); // First 16 chars for display
+    return hex.substring(0, 18);
   }
 
   static generateSignatureForSign(
@@ -118,7 +118,7 @@ export class Crypto {
       if (!sign.public_key || !sign.signature) {
         return {
           isValid: false,
-          error: t("hashes_signature"),
+          error: t("hashes_signature").toString(),
         };
       }
 

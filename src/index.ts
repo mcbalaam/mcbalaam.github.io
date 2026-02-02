@@ -2,8 +2,8 @@ import { serve } from "bun";
 import index from "./index.html";
 
 const server = serve({
-  port: 3001,
-  hostname: "192.168.50.230",
+  port: 3000,
+  hostname: "192.168.1.134",
   routes: {
     "/*": index,
   },

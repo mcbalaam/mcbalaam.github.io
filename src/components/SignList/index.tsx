@@ -94,7 +94,7 @@ export default function SignList({
     try {
       const { canCreate, reason } = await canUserCreateSign();
       setCanCreateSign(canCreate);
-      setCanCreateReason(reason || "");
+      setCanCreateReason(reason?.toString() || "");
     } catch (err) {
       console.error("Failed to check sign creation permission:", err);
       setCanCreateSign(false);

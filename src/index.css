@@ -3,6 +3,11 @@
     src: url("../media/NunitoSans.ttf");
 }
 
+@font-face {
+    font-family: FiraCode;
+    src: url("../media/FiraCode-VF.ttf");
+}
+
 :root {
     font-family: NunitoSans;
     line-height: 1.5;

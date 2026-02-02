@@ -7,6 +7,7 @@ import {
 
 import { t } from "translations/translate";
 import { Crypto } from "./crypto";
+import type { ReactNode } from "react";
 
 export interface Sign {
   id: number;
@@ -238,7 +239,7 @@ export class SignManager {
 
   static async canUserCreateSign(): Promise<{
     canCreate: boolean;
-    reason?: string;
+    reason?: ReactNode;
   }> {
     try {
       const {

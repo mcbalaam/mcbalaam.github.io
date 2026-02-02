@@ -143,8 +143,8 @@
 
 .public-key {
     font-size: 16px;
-    font-family: monospace;
-    font-weight: 700;
+    font-family: FiraCode;
+    font-weight: 500;
     background-color: var(--color-accent-gray);
     padding: 2px 5px 2px 5px;
     border-radius: 3px;

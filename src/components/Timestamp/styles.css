@@ -1,7 +1,7 @@
 .timestamp {
     font-size: 14px;
-    font-family: monospace;
-    font-weight: 300;
+    font-family: FiraCode;
+    font-weight: 500;
     background-color: var(--color-overlay);
     padding: 2px 5px 2px 5px;
     border-radius: 3px;
