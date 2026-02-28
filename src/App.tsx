@@ -36,12 +36,25 @@ import SignForm from "./components/SignForm/SignForm";
 import RepoTab from "./components/RepoTab";
 import ModalPopup, { type ModalControl } from "./components/ModalPopup";
 import ToastNotification from "./components/ToastNotification";
+import Reaction from "./components/Reaction";
+import Tooltip from "./components/Tooltip";
+
+import { ReactionManager } from "./requests";
 
 function getCookie(name: string): string | null {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
   if (parts.length === 2) return parts.pop()?.split(";").shift() || null;
   return null;
+}
+
+function getOrCreateVisitorToken(): string {
+  let token = getCookie("visitor_token");
+  if (!token) {
+    token = crypto.randomUUID();
+    document.cookie = `visitor_token=${token}; path=/; max-age=31536000; SameSite=Lax`;
+  }
+  return token;
 }
 
 export function App() {
@@ -59,6 +72,69 @@ export function App() {
   });
   const [signsRefreshKey, setSignsRefreshKey] = useState(0);
   const [userStatus, setUserStatus] = useState<UserStatus | null>(null);
+
+  // Внутри компонента App
+  useEffect(() => {
+    getOrCreateVisitorToken();
+  }, []);
+
+const [reactionCounts, setReactionCounts] = useState<Record<string, number>>({});
+const [userReactions, setUserReactions] = useState<string[]>([]);
+
+// 2. Дополните загрузку данных в useEffect
+useEffect(() => {
+  const fetchReactions = async () => {
+    try {
+      const token = getOrCreateVisitorToken();
+      const [counts, userActive] = await Promise.all([
+        ReactionManager.getReactionCounts(),
+        ReactionManager.getUserReactions(token)
+      ]);
+      setReactionCounts(counts);
+      setUserReactions(userActive);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  fetchReactions();
+}, []);
+
+// 3. Измените обработчик клика
+const handleReactionClick = async (type: string) => {
+  const token = getCookie("visitor_token");
+  if (!token) return;
+
+  const isReacted = userReactions.includes(type);
+
+  // 1. ОПТИМИСТИЧНОЕ ОБНОВЛЕНИЕ (Локально)
+  if (isReacted) {
+    // Снимаем локально
+    setUserReactions(prev => prev.filter(t => t !== type));
+    setReactionCounts(prev => ({
+      ...prev,
+      [type]: Math.max(0, (prev[type] || 0) - 1)
+    }));
+  } else {
+    // Добавляем локально
+    setUserReactions(prev => [...prev, type]);
+    setReactionCounts(prev => ({
+      ...prev,
+      [type]: (prev[type] || 0) + 1
+    }));
+  }
+
+  // 2. ФОНОВЫЙ ЗАПРОС (API)
+  try {
+    if (isReacted) {
+      await ReactionManager.removeReaction(type, token);
+    } else {
+      await ReactionManager.addReaction(type, token);
+    }
+  } catch (error) {
+    null;
+  }
+};
+
 
   useEffect(() => {
     const loadStatus = async () => {
@@ -288,7 +364,49 @@ export function App() {
                 CloudTips{" "}
                 <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} />
               </Badge>
+              
+
+              
             </div>
+          <br></br>
+          <div className="reactions">
+            <Tooltip text=":pig2:">
+              <Reaction 
+                count={reactionCounts["pig"] || 0} 
+                reacted={userReactions.includes("pig")} // Подсветит кнопку, если нажата
+                onClick={() => handleReactionClick("pig")}
+              >
+                🐖
+              </Reaction>
+            </Tooltip>
+            <Tooltip text=":dash:">
+              <Reaction 
+                count={reactionCounts["dash"] || 0} 
+                onClick={() => handleReactionClick("dash")}
+                reacted={userReactions.includes("dash")} 
+              >
+                💨
+              </Reaction>
+            </Tooltip>
+            <Tooltip text=":heart:">
+              <Reaction 
+                count={reactionCounts["heart"] || 0} 
+                onClick={() => handleReactionClick("heart")}
+                reacted={userReactions.includes("heart")} 
+              >
+                ❤️
+              </Reaction>
+            </Tooltip>
+            <Tooltip text=":broken_heart:">
+              <Reaction 
+                count={reactionCounts["broken_heart"] || 0} 
+                onClick={() => handleReactionClick("broken_heart")}
+                reacted={userReactions.includes("broken_heart")} 
+              >
+                💔
+              </Reaction>
+            </Tooltip>
+          </div>
           </div>
         </div>
         <div className="card">

@@ -29,8 +29,8 @@
 .tooltip-text {
     visibility: hidden;
     position: absolute;
-    top: -30px; /* над блоком */
-    left: 50%;
+    top: -30px;
+    left: 35%;
     transform: translateX(-50%);
     background-color: var(--color-bg-secondary);
     color: var(--color-text-primary);

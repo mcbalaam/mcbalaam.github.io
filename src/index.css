@@ -8,6 +8,11 @@
     src: url("../media/FiraCode-VF.ttf");
 }
 
+@font-face {
+  font-family: 'Twemoji';
+  src: url('../media/twemoji.ttf');
+}
+
 :root {
     font-family: NunitoSans;
     line-height: 1.5;
@@ -283,7 +288,7 @@ p {
 h1 {
     font-size: 18px;
     width: fit-content;
-    margin-block-start: 0px;
+    margin-block-start: 10px;
     margin-block-end: 5px;
 }
 
@@ -323,4 +328,9 @@ h1 {
     top: 0;
     left: 0;
     transition: 1000ms;
+}
+
+.reactions {
+    display: inline-flex;
+    gap: 5px;
 }

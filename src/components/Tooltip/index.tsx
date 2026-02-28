@@ -4,7 +4,7 @@ import "./styles.css";
 interface TooltipProps {
   children: React.ReactNode;
   text: string;
-  className: string;
+  className?: string;
 }
 
 export default function Tooltip({ children, text, className }: TooltipProps) {

@@ -1,0 +1,61 @@
+.reaction-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 8px;
+    background-color: var(--color-bg-button);
+    border: 1px solid var(--color-border-button);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.1s ease;
+  font-size: 17px;
+  line-height: 23px;
+  color: #dbdee1;
+  font-family: Twemoji;
+  height: fit-content;
+}
+
+.reaction-badge:hover {
+      background-color: var(--color-bg-button-hover);
+    border-color: var(--color-bg-button-hover);
+}
+
+.reaction-badge.reacted {
+  background-color: #4a5578;
+  border-color: #5865f2;
+}
+
+.reaction-badge.reacted:hover {
+  background-color: #404c6b;
+}
+
+/* .reaction-emoji {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+} */
+
+.reaction-text {
+  font-weight: 400;
+}
+
+.reaction-count {
+    font-family: NunitoSans;
+  font-weight: 700;
+  font-size: 13px;
+  top: 2px;
+  position: relative;
+}
+
+/* Contrast вариант */
+.reaction-badge.contrast {
+  background-color: #1e1f22;
+}
+
+.reaction-badge.contrast:hover {
+  background-color: #2b2d31;
+}
+
+.reaction-badge.contrast.reacted {
+  background-color: #404249;
+}

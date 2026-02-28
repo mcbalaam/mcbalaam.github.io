@@ -631,6 +631,48 @@ export class StatusManager {
   }
 }
 
+export class ReactionManager {
+  static async addReaction(type: string, token: string) {
+    const { error } = await supabase
+      .from("reactions")
+      .insert([{ reaction_type: type, visitor_token: token }]);
+    if (error) throw error;
+  }
+
+  static async removeReaction(type: string, token: string) {
+    const { error } = await supabase
+      .from("reactions")
+      .delete()
+      .eq("reaction_type", type)
+      .eq("visitor_token", token);
+    if (error) throw error;
+  }
+
+static async getUserReactions(token: string): Promise<string[]> {
+  const { data, error } = await supabase
+    .from("reactions")
+    .select("reaction_type")
+    .eq("visitor_token", token);
+
+  if (error) {
+    console.error("Error fetching user reactions:", error);
+    return [];
+  }
+  return data.map(r => r.reaction_type);
+}
+
+  static async getReactionCounts() {
+    const { data, error } = await supabase.from("reactions").select("reaction_type");
+    if (error) throw error;
+    return data.reduce((acc: Record<string, number>, curr) => {
+      acc[curr.reaction_type] = (acc[curr.reaction_type] || 0) + 1;
+      return acc;
+    }, {});
+  }
+}
+
+
+
 export const getApprovedSigns = SignManager.getApprovedSigns;
 export const createSign = SignManager.createSign;
 export const getUserSigns = SignManager.getUserSigns;
