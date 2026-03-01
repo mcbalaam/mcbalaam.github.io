@@ -1,16 +1,16 @@
 @font-face {
     font-family: NunitoSans;
-    src: url("../media/NunitoSans.ttf");
+    src: url("../public/NunitoSans.ttf");
 }
 
 @font-face {
     font-family: FiraCode;
-    src: url("../media/FiraCode-VF.ttf");
+    src: url("../public/FiraCode-Light.woff2") format("woff2");
 }
 
 @font-face {
   font-family: 'Twemoji';
-  src: url('../media/twemoji.ttf');
+  src: url('../public/TwemojiMozilla-colr.woff2') format("woff2");
 }
 
 :root {
@@ -191,7 +191,7 @@
 .banner {
     width: 100%;
     height: 100px;
-    background-image: url("../media/delta-rune-maker.png");
+    background-image: url("../public/delta-rune-maker.png");
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;

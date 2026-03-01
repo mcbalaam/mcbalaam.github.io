@@ -9,7 +9,7 @@ interface SignFormProps {
   className?: string;
 }
 
-import { useTranslator } from "translations/translate";
+import { useTranslator } from "../../../translations/translate";
 
 import Button from "../Button";
 

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { t, TranslationContextProvider } from "translations/translate";
+import { t, TranslationContextProvider } from "../translations/translate";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getStatus, type UserStatus } from "./requests";
 import { getVanityConfig } from "./config";
@@ -17,14 +17,14 @@ import "./index.css";
 
 import Balatro from "./components/Balatro";
 
-import github from "../media/github-tile.svg";
-import steam from "../media/steampowered-tile.svg";
-import robust from "../media/robust.png";
-import soundcloud from "../media/soundcloud.png";
-import telegram from "../media/telegram.png";
-import kofi from "../media/kofi.png";
-import cloudtips from "../media/cloudtips.png";
-import pfp from "../media/mcbalaam.webp";
+import github from "../public/github-tile.svg";
+import steam from "../public/steampowered-tile.svg";
+import robust from "../public/robust.png";
+import soundcloud from "../public/soundcloud.png";
+import telegram from "../public/telegram.png";
+import kofi from "../public/kofi.png";
+import cloudtips from "../public/cloudtips.png";
+import pfp from "../public/mcbalaam.webp";
 
 import Button from "./components/Button";
 import Badge from "./components/Badge";
@@ -33,7 +33,6 @@ import Timestamp from "./components/Timestamp";
 import AuthButtons from "./components/AccountBar/AccountBar";
 import SignList from "./components/SignList";
 import SignForm from "./components/SignForm/SignForm";
-import RepoTab from "./components/RepoTab";
 import ModalPopup, { type ModalControl } from "./components/ModalPopup";
 import ToastNotification from "./components/ToastNotification";
 import Reaction from "./components/Reaction";

@@ -7,7 +7,7 @@ export interface KeyPair {
   privateKey: Uint8Array;
 }
 
-import { t } from "translations/translate";
+import { t } from "../../translations/translate";
 
 export interface SignatureData {
   message: string;

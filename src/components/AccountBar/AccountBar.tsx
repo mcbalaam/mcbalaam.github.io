@@ -7,12 +7,12 @@ import {
 } from "../../requests";
 import "./styles.css";
 
-import { t } from "translations/translate";
+import { t } from "../../../translations/translate";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 
-import github from "../../../media/github-tile.svg";
+import github from "../../../public/github-tile.svg";
 
 import Button from "../Button";
 

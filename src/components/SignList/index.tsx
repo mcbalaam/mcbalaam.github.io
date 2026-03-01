@@ -10,7 +10,7 @@ import {
 import type { Sign, SignWithVerification } from "../../requests";
 import "./styles.css";
 
-import { t } from "translations/translate";
+import { t } from "../../../translations/translate";
 import Button from "../Button";
 import ModalPopup, { type ModalControl } from "../ModalPopup";
 import { faHashtag, faPlus } from "@fortawesome/free-solid-svg-icons";

@@ -5,7 +5,7 @@ import {
   ADMIN_GITHUB_USERNAME,
 } from "../config";
 
-import { t } from "translations/translate";
+import { t } from "../../translations/translate";
 import { Crypto } from "./crypto";
 import type { ReactNode } from "react";
 
