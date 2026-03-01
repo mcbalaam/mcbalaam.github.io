@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { t, TranslationContextProvider } from "translations/translate";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getStatus, type UserStatus } from "./requests";
@@ -41,20 +41,12 @@ import Tooltip from "./components/Tooltip";
 
 import { ReactionManager } from "./requests";
 
-function getCookie(name: string): string | null {
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop()?.split(";").shift() || null;
-  return null;
-}
+import FingerprintJS from '@fingerprintjs/fingerprintjs';
 
-function getOrCreateVisitorToken(): string {
-  let token = getCookie("visitor_token");
-  if (!token) {
-    token = crypto.randomUUID();
-    document.cookie = `visitor_token=${token}; path=/; max-age=31536000; SameSite=Lax`;
-  }
-  return token;
+async function getVisitorToken(): Promise<string> {
+  const fp = await FingerprintJS.load();
+  const result = await fp.get();
+  return result.visitorId;
 }
 
 export function App() {
@@ -73,67 +65,65 @@ export function App() {
   const [signsRefreshKey, setSignsRefreshKey] = useState(0);
   const [userStatus, setUserStatus] = useState<UserStatus | null>(null);
 
-  // Внутри компонента App
+  const [visitorToken, setVisitorToken] = useState<string | null>(null);
+
   useEffect(() => {
-    getOrCreateVisitorToken();
+    const initToken = async () => {
+      const token = await getVisitorToken();
+      setVisitorToken(token);
+    };
+    initToken();
   }, []);
 
-const [reactionCounts, setReactionCounts] = useState<Record<string, number>>({});
-const [userReactions, setUserReactions] = useState<string[]>([]);
+  const [reactionCounts, setReactionCounts] = useState<Record<string, number>>({});
+  const [userReactions, setUserReactions] = useState<string[]>([]);
 
-// 2. Дополните загрузку данных в useEffect
-useEffect(() => {
-  const fetchReactions = async () => {
+  useEffect(() => {
+    if (!visitorToken) return;
+
+    const fetchReactions = async () => {
+      try {
+        const [counts, userActive] = await Promise.all([
+          ReactionManager.getReactionCounts(),
+          ReactionManager.getUserReactions(visitorToken)
+        ]);
+        setReactionCounts(counts);
+        setUserReactions(userActive);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchReactions();
+  }, [visitorToken]);
+
+  const handleReactionClick = async (type: string) => {
+    if (!visitorToken) return;
+
+    const isReacted = userReactions.includes(type);
+    if (isReacted) {
+      setUserReactions(prev => prev.filter(t => t !== type));
+      setReactionCounts(prev => ({
+        ...prev,
+        [type]: Math.max(0, (prev[type] || 0) - 1)
+      }));
+    } else {
+      setUserReactions(prev => [...prev, type]);
+      setReactionCounts(prev => ({
+        ...prev,
+        [type]: (prev[type] || 0) + 1
+      }));
+    }
+
     try {
-      const token = getOrCreateVisitorToken();
-      const [counts, userActive] = await Promise.all([
-        ReactionManager.getReactionCounts(),
-        ReactionManager.getUserReactions(token)
-      ]);
-      setReactionCounts(counts);
-      setUserReactions(userActive);
-    } catch (err) {
-      console.error(err);
+      if (isReacted) {
+        await ReactionManager.removeReaction(type, visitorToken);
+      } else {
+        await ReactionManager.addReaction(type, visitorToken);
+      }
+    } catch (error) {
+      console.error("Reaction toggle failed", error);
     }
   };
-  fetchReactions();
-}, []);
-
-// 3. Измените обработчик клика
-const handleReactionClick = async (type: string) => {
-  const token = getCookie("visitor_token");
-  if (!token) return;
-
-  const isReacted = userReactions.includes(type);
-
-  // 1. ОПТИМИСТИЧНОЕ ОБНОВЛЕНИЕ (Локально)
-  if (isReacted) {
-    // Снимаем локально
-    setUserReactions(prev => prev.filter(t => t !== type));
-    setReactionCounts(prev => ({
-      ...prev,
-      [type]: Math.max(0, (prev[type] || 0) - 1)
-    }));
-  } else {
-    // Добавляем локально
-    setUserReactions(prev => [...prev, type]);
-    setReactionCounts(prev => ({
-      ...prev,
-      [type]: (prev[type] || 0) + 1
-    }));
-  }
-
-  // 2. ФОНОВЫЙ ЗАПРОС (API)
-  try {
-    if (isReacted) {
-      await ReactionManager.removeReaction(type, token);
-    } else {
-      await ReactionManager.addReaction(type, token);
-    }
-  } catch (error) {
-    null;
-  }
-};
 
 
   useEffect(() => {
@@ -154,30 +144,31 @@ const handleReactionClick = async (type: string) => {
   }, []);
 
   useEffect(() => {
-    // Read cookies first
+    const getCookie = (name: string): string | null => {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop()?.split(";").shift() || null;
+      return null;
+    }
+    
     const savedLocale = getCookie("locale");
     const savedTheme = getCookie("theme") as "dark" | "light" | null;
 
-    // Detect preferred language from browser if no cookie
     let initialLocale = "en";
     if (savedLocale) {
       initialLocale = savedLocale;
     } else {
-      const browserLang =
-        navigator.language || navigator.languages?.[0] || "en";
+      const browserLang = navigator.language || navigator.languages?.[0] || "en";
       const prefersRu = browserLang.startsWith("ru");
       initialLocale = prefersRu ? "ru" : "en";
     }
     setLocale(initialLocale);
 
-    // Detect preferred theme from system if no cookie
     let initialTheme: "dark" | "light" = "dark";
     if (savedTheme) {
       initialTheme = savedTheme;
     } else {
-      const prefersDark = window.matchMedia(
-        "(prefers-color-scheme: dark)",
-      ).matches;
+      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
       initialTheme = prefersDark ? "dark" : "light";
     }
     setTheme(initialTheme);
@@ -188,7 +179,7 @@ const handleReactionClick = async (type: string) => {
   const toggleLocale = () => {
     setLocale((locale) => {
       const newLocale = locale === "en" ? "ru" : "en";
-      document.cookie = `locale=${newLocale}; path=/; max-age=31536000`; // 1 year
+      document.cookie = `locale=${newLocale}; path=/; max-age=31536000`;
       return newLocale;
     });
   };
@@ -198,14 +189,12 @@ const handleReactionClick = async (type: string) => {
       const newTheme = theme === "dark" ? "light" : "dark";
       document.documentElement.setAttribute("data-theme", newTheme);
       document.documentElement.style.setProperty("color-scheme", newTheme);
-      document.cookie = `theme=${newTheme}; path=/; max-age=31536000`; // 1 year
+      document.cookie = `theme=${newTheme}; path=/; max-age=31536000`;
       return newTheme;
     });
   };
 
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
+  const openModal = () => setIsModalOpen(true);
 
   const modalLeaveSign: ModalControl = {
     isOpen: isModalOpen,
@@ -217,11 +206,7 @@ const handleReactionClick = async (type: string) => {
   };
 
   const showToast = (message: React.ReactNode, type: "success" | "error") => {
-    setToast({
-      visible: true,
-      message,
-      type,
-    });
+    setToast({ visible: true, message, type });
   };
 
   const handleSignFormSuccess = () => {
@@ -265,146 +250,83 @@ const handleReactionClick = async (type: string) => {
   const VanityOverlay = ({ vanityId }: { vanityId: string }) => {
     const config = getVanityConfig(vanityId);
     if (!config) return null;
-
     const style = {
       position: "absolute" as const,
       top: `calc(50% + ${config.y}px)`,
       left: `calc(50% + ${config.x}px)`,
       transform: `translate(-50%, -50%) rotate(${config.angle}deg)`,
-      width: "auto",
-      height: "auto",
-      maxWidth: "120px",
-      maxHeight: "120px",
-      pointerEvents: "none" as const,
-      zIndex: 3,
+      width: "auto", height: "auto", maxWidth: "120px", maxHeight: "120px",
+      pointerEvents: "none" as const, zIndex: 3,
     };
-
     return <img src={config.path} style={style} />;
   };
 
   return (
     <TranslationContextProvider locale={locale}>
-      <Balatro
-        color1="#3C385A"
-        color2="#24313D"
-        color3={theme == "light" ? "#656181" : "#201F31"}
-        mouseInteraction={false}
-      ></Balatro>
+      <Balatro color1="#3C385A" color2="#24313D" color3={theme == "light" ? "#656181" : "#201F31"} mouseInteraction={false}></Balatro>
       <div className="master-container">
         <div className="card">
           <div className="banner">
-            <Button
-              className="language-button"
-              faIcon={faLanguage}
-              onClick={toggleLocale}
-            />
-            <Button
-              className="theme-button"
-              faIcon={theme === "dark" ? faMoon : faSun}
-              onClick={toggleTheme}
-            />
+            <Button className="language-button" faIcon={faLanguage} onClick={toggleLocale} />
+            <Button className="theme-button" faIcon={theme === "dark" ? faMoon : faSun} onClick={toggleTheme} />
             <div className="avatar-container">
               <img className="pfp" src={pfp}></img>
-              {userStatus?.vanity_id && (
-                <VanityOverlay vanityId={userStatus.vanity_id} />
-              )}
+              {userStatus?.vanity_id && <VanityOverlay vanityId={userStatus.vanity_id} />}
             </div>
-            <StatusBubble>
-              {(userStatus?.status || "\n").replace(/<br\s*\/?>/gi, "\n")}
-            </StatusBubble>
+            <StatusBubble>{(userStatus?.status || "\n").replace(/<br\s*\/?>/gi, "\n")}</StatusBubble>
           </div>
           <div className="item-container">
             <div className="name">
               <div className="nameplate">mcbalaam</div>
-              <Badge small src={robust}>
-                RBST
-              </Badge>
+              <Badge small src={robust}>RBST</Badge>
             </div>
             <div className="pnouns">
               mcbalaam <FontAwesomeIcon size="sm" icon={faArrowRightLong} />{" "}
               эмсибалаам, балаам, макбаклак (he/him)
             </div>
             <p className="desc">{t("aboutMe")}</p>
-            <div
-              style={{
-                display: "flex",
-                height: "fit-content",
-                flexWrap: "wrap",
-                margin: "0px 5px 10px 0",
-              }}
-            >
-              <p>
-                {t("myMidniht")} <Timestamp ts="1764608400" />. {t("active")}
-              </p>
+            <div style={{ display: "flex", height: "fit-content", flexWrap: "wrap", margin: "0px 5px 10px 0" }}>
+              <p>{t("myMidniht")} <Timestamp ts="1764608400" />. {t("active")}</p>
             </div>
 
             <h1>{t("connections")}</h1>
             <div className="connections">
-              <Badge href="https://www.github.com/mcbalaam" src={github}>
-                GitHub{" "}
-                <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} />
-              </Badge>
-              <Badge href="https://steamcommunity.com/id/mcbalaam/" src={steam}>
-                Steam{" "}
-                <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} />
-              </Badge>
-              <Badge href="https://soundcloud.com/mcbalaam" src={soundcloud}>
-                SoundСloud{" "}
-                <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} />
-              </Badge>
-              <Badge href="https://t.me/whattheactualfuckbro" src={telegram}>
-                Telegram{" "}
-                <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} />
-              </Badge>
-              <Badge href="https://ko-fi.com/mcbalaam" src={kofi}>
-                Ko-Fi{" "}
-                <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} />
-              </Badge>
-              <Badge href="https://pay.cloudtips.ru/p/7ac675d4" src={cloudtips}>
-                CloudTips{" "}
-                <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} />
-              </Badge>
-              
-
-              
+              <Badge href="https://www.github.com/mcbalaam" src={github}>GitHub <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
+              <Badge href="https://steamcommunity.com/id/mcbalaam/" src={steam}>Steam <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
+              <Badge href="https://soundcloud.com/mcbalaam" src={soundcloud}>SoundСloud <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
+              <Badge href="https://t.me/whattheactualfuckbro" src={telegram}>Telegram <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
+              <Badge href="https://ko-fi.com/mcbalaam" src={kofi}>Ko-Fi <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
+              <Badge href="https://pay.cloudtips.ru/p/7ac675d4" src={cloudtips}>CloudTips <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
             </div>
           <br></br>
           <div className="reactions">
             <Tooltip text=":pig2:">
               <Reaction 
                 count={reactionCounts["pig"] || 0} 
-                reacted={userReactions.includes("pig")} // Подсветит кнопку, если нажата
+                reacted={userReactions.includes("pig")}
                 onClick={() => handleReactionClick("pig")}
-              >
-                🐖
-              </Reaction>
+              >🐖</Reaction>
             </Tooltip>
             <Tooltip text=":dash:">
               <Reaction 
                 count={reactionCounts["dash"] || 0} 
                 onClick={() => handleReactionClick("dash")}
                 reacted={userReactions.includes("dash")} 
-              >
-                💨
-              </Reaction>
+              >💨</Reaction>
             </Tooltip>
             <Tooltip text=":heart:">
               <Reaction 
                 count={reactionCounts["heart"] || 0} 
                 onClick={() => handleReactionClick("heart")}
                 reacted={userReactions.includes("heart")} 
-              >
-                ❤️
-              </Reaction>
+              >❤️</Reaction>
             </Tooltip>
             <Tooltip text=":broken_heart:">
               <Reaction 
                 count={reactionCounts["broken_heart"] || 0} 
                 onClick={() => handleReactionClick("broken_heart")}
                 reacted={userReactions.includes("broken_heart")} 
-              >
-                💔
-              </Reaction>
+              >💔</Reaction>
             </Tooltip>
           </div>
           </div>
@@ -416,7 +338,7 @@ const handleReactionClick = async (type: string) => {
               onLoginError={handleLoginError}
               onLogoutSuccess={handleLogoutSuccess}
               onLogoutError={handleLogoutError}
-              onAuthChange={(isAuthenticated) => {}}
+              onAuthChange={() => {}}
             />
           </div>
         </div>
@@ -431,14 +353,9 @@ const handleReactionClick = async (type: string) => {
           </div>
         </div>
       </div>
-
       <ModalPopup control={modalLeaveSign}>
-        <SignForm
-          onSignCreated={handleSignFormSuccess}
-          onSignError={handleSignFormError}
-        />
+        <SignForm onSignCreated={handleSignFormSuccess} onSignError={handleSignFormError} />
       </ModalPopup>
-
       {toast.visible && (
         <ToastNotification
           icon={toast.type === "success" ? faCircleCheck : faCircleXmark}
@@ -446,9 +363,7 @@ const handleReactionClick = async (type: string) => {
           duration={3000}
           onClose={() => setToast({ ...toast, visible: false })}
           position="bottom-center"
-        >
-          {toast.message}
-        </ToastNotification>
+        >{toast.message}</ToastNotification>
       )}
     </TranslationContextProvider>
   );

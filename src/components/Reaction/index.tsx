@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from "react";
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion"; // 1. Импортируем анимацию
+import { motion, AnimatePresence } from "framer-motion";
 import "./styles.css";
 
 interface ReactionProps {
@@ -13,26 +13,23 @@ interface ReactionProps {
   onClick: () => void;
 }
 
-// 2. Компонент для анимированной цифры
 function AnimatedDigit({ digit }: { digit: string }) {
   return (
 <div style={{ 
       position: "relative",  
       height: "1em", 
-      width: "1em",
+      width: "0.7em",
       overflow: "hidden", 
       display: "inline-block",
       textAlign: "center" 
     }}>
       <AnimatePresence mode="popLayout">
         <motion.span
-          // Ключ - это главное! Он должен меняться при смене цифры
           key={digit} 
-          initial={{ y: "100%" }} // Появляется снизу
-          animate={{ y: "0%" }}   // Встает на место
-          exit={{ y: "-100%" }}   // Уходит вверх
+          initial={{ y: "100%" }}
+          animate={{ y: "0%" }}
+          exit={{ y: "-100%" }}
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
-          // ВАЖНО: absolute, чтобы обе цифры были в одном месте
           style={{ 
             position: "absolute", 
             top: -3, 
@@ -72,7 +69,6 @@ export default function Reaction({
 
   const badgeClass = `reaction-badge ${isReacted ? "reacted" : ""} ${contrast ? "contrast" : ""} ${small ? "small" : ""}`;
 
-  // 3. Разбиваем число на цифры для анимации
   const countString = count.toString();
 
   return (

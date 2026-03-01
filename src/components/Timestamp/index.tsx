@@ -3,22 +3,19 @@ import "./styles.css";
 import Tooltip from "../Tooltip";
 
 interface TimestampProps {
-  ts: string; // Unix timestamp в секундах или ISO
+  ts: string;
 }
 
 export default function Timestamp({ ts }: TimestampProps) {
   const [date, setDate] = useState<Date>(new Date());
 
-  // Парсинг Unix timestamp (секунды) или ISO строки
   const parseTimestamp = (ts: string): Date => {
     const num = Number(ts);
 
-    // Если это Unix timestamp в секундах (обычно 10 цифр)
     if (!isNaN(num) && ts.length === 10) {
-      return new Date(num * 1000); // конвертируем в миллисекунды
+      return new Date(num * 1000);
     }
 
-    // Если это timestamp в миллисекундах (13 цифр) или ISO строка
     const parsed = new Date(ts);
 
     if (!isNaN(parsed.getTime())) {
@@ -39,14 +36,12 @@ export default function Timestamp({ ts }: TimestampProps) {
     return () => clearInterval(interval);
   }, [ts]);
 
-  // Короткое время для основного отображения
   const shortTime = date.toLocaleString("en-UK", {
     hour: "2-digit",
     minute: "2-digit",
     hour12: false,
   });
 
-  // Полная дата и время для тултипа
   const fullDateTime = date.toLocaleString("en-UK", {
     weekday: "short",
     year: "numeric",

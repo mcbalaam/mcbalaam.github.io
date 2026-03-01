@@ -43,14 +43,12 @@ const AuthButtons: React.FC<AuthButtonsProps> = ({
   }, []);
 
   useEffect(() => {
-    // Проверяем аутентификацию при изменении URL (после возврата с OAuth)
     const handleHashChange = () => {
       checkAuthStatus();
     };
 
     window.addEventListener("hashchange", handleHashChange);
 
-    // Также проверяем при загрузке страницы (на случай если пользователь вернулся с OAuth)
     const checkOnLoad = () => {
       if (
         window.location.hash.includes("access_token") ||
@@ -60,9 +58,7 @@ const AuthButtons: React.FC<AuthButtonsProps> = ({
       }
     };
 
-    // Небольшая задержка для гарантии, что Supabase успел обработать OAuth callback
     setTimeout(checkOnLoad, 100);
-
     return () => {
       window.removeEventListener("hashchange", handleHashChange);
     };
@@ -72,7 +68,6 @@ const AuthButtons: React.FC<AuthButtonsProps> = ({
     try {
       const authenticated = await isAuthenticated();
 
-      // Вызываем onLoginSuccess только при изменении состояния с false на true
       if (authenticated && previousAuth === false) {
         if (onLoginSuccess) {
           onLoginSuccess();
@@ -92,7 +87,6 @@ const AuthButtons: React.FC<AuthButtonsProps> = ({
         }
       }
 
-      // Сохраняем текущее состояние для следующей проверки
       setPreviousAuth(authenticated);
     } catch (err) {
       console.error("Error checking auth status:", err);

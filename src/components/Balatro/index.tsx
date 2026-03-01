@@ -161,7 +161,6 @@ export default function Balatro({
 
     function forceRedraw() {
       resize();
-      // Принудительно обновляем uniform для перерисовки
       if (program) {
         program.uniforms.iTime.value = performance.now() * 0.001;
       }
@@ -181,13 +180,10 @@ export default function Balatro({
       }
     }
 
-    // Обработчик изменения размера окна
     window.addEventListener("resize", resize);
 
-    // Обработчик скролла для перерисовки при изменении видимой области
     window.addEventListener("scroll", forceRedraw);
 
-    // ResizeObserver для отслеживания изменений размеров контейнера
     if (typeof ResizeObserver !== "undefined") {
       resizeObserver = new ResizeObserver(() => {
         forceRedraw();
