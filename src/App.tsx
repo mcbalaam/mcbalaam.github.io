@@ -64,7 +64,7 @@ export function App() {
   });
   const [signsRefreshKey, setSignsRefreshKey] = useState(0);
   const [userStatus, setUserStatus] = useState<UserStatus | null>(null);
-
+  const [processingReactions, setProcessingReactions] = useState<Set<string>>(new Set());
   const [visitorToken, setVisitorToken] = useState<string | null>(null);
 
   useEffect(() => {
@@ -96,35 +96,43 @@ export function App() {
     fetchReactions();
   }, [visitorToken]);
 
-  const handleReactionClick = async (type: string) => {
-    if (!visitorToken) return;
+const handleReactionClick = async (type: string) => {
+  if (!visitorToken) return;
 
-    const isReacted = userReactions.includes(type);
+  const isReacted = userReactions.includes(type);
+
+  if (isReacted) {
+    setUserReactions(prev => prev.filter(t => t !== type));
+    setReactionCounts(prev => ({
+      ...prev,
+      [type]: Math.max(0, (prev[type] || 0) - 1)
+    }));
+  } else {
+    setUserReactions(prev => [...prev, type]);
+    setReactionCounts(prev => ({
+      ...prev,
+      [type]: (prev[type] || 0) + 1
+    }));
+  }
+
+  try {
     if (isReacted) {
-      setUserReactions(prev => prev.filter(t => t !== type));
-      setReactionCounts(prev => ({
-        ...prev,
-        [type]: Math.max(0, (prev[type] || 0) - 1)
-      }));
+      await ReactionManager.removeReaction(type, visitorToken);
     } else {
-      setUserReactions(prev => [...prev, type]);
-      setReactionCounts(prev => ({
-        ...prev,
-        [type]: (prev[type] || 0) + 1
-      }));
+      await ReactionManager.addReaction(type, visitorToken);
     }
+    
+    const [counts, userActive] = await Promise.all([
+      ReactionManager.getReactionCounts(),
+      ReactionManager.getUserReactions(visitorToken)
+    ]);
+    setReactionCounts(counts);
+    setUserReactions(userActive);
 
-    try {
-      if (isReacted) {
-        await ReactionManager.removeReaction(type, visitorToken);
-      } else {
-        await ReactionManager.addReaction(type, visitorToken);
-      }
-    } catch (error) {
-      console.error("Reaction toggle failed", error);
-    }
-  };
-
+  } catch (error) {
+    null;
+  }
+};
 
   useEffect(() => {
     const loadStatus = async () => {
