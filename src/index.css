@@ -85,6 +85,9 @@
 
     color: var(--color-text-primary);
     background-color: var(--color-bg-primary);
+
+    --reaction-badge-reacted: #292c51;
+    --reaction-badge-reacted-border: #5865f2;
 }
 
 :root[data-theme="light"] {
@@ -147,6 +150,9 @@
 
     color: var(--color-text-primary);
     background-color: var(--color-bg-primary);
+
+    --reaction-badge-reacted: #686ed1;
+    --reaction-badge-reacted-border: #585ccf;
 }
 
 .master-container {
