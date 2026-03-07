@@ -15,6 +15,7 @@ import Button from "../Button";
 import ModalPopup, { type ModalControl } from "../ModalPopup";
 import { faHashtag, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { faTrashCan } from "@fortawesome/free-solid-svg-icons/faTrashCan";
+import ContentLoader from "react-content-loader";
 import Tooltip from "../Tooltip";
 
 interface SignListProps {
@@ -76,7 +77,7 @@ export default function SignList({
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load signs");
     } finally {
-      setLoading(false);
+      setLoading(false); 
     }
   };
 
@@ -94,9 +95,8 @@ export default function SignList({
     try {
       const { canCreate, reason } = await canUserCreateSign();
       setCanCreateSign(canCreate);
-      setCanCreateReason(reason?.toString() || "");
+      setCanCreateReason(String(reason) || "");
     } catch (err) {
-      console.error("Failed to check sign creation permission:", err);
       setCanCreateSign(false);
       setCanCreateReason("Error checking permissions");
     } finally {
@@ -121,7 +121,7 @@ export default function SignList({
       }
     } catch (err) {
       const errorMessage =
-        err instanceof Error ? err.message : t("sign_toastDeleteError");
+        err instanceof Error ? err.message.toString() : t("sign_toastDeleteError").toString();
       if (onSignDeleteError) {
         onSignDeleteError(errorMessage);
       }
@@ -156,7 +156,19 @@ export default function SignList({
   };
 
   if (loading) {
-    return <p>{t("fetchingSigns")}</p>;
+    return (
+      <ContentLoader
+  speed={1}
+  width="100%"
+  height={70}
+  backgroundColor="#bbb1e34d"
+  foregroundColor="#a5a6bf99"
+  style={{ display: 'block',   }}
+>
+  <rect x="0" y="0" ry="5" rx="5" width="100%" height="70px" />
+  
+</ContentLoader>
+    )
   }
 
   if (error) {
@@ -194,7 +206,7 @@ export default function SignList({
               ? "Loading..."
               : canCreateSign
                 ? t("sign_header")
-                : canCreateReason}
+                : t(canCreateReason)}
           </Button>
         </div>
       )}

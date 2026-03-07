@@ -239,7 +239,7 @@ export class SignManager {
 
   static async canUserCreateSign(): Promise<{
     canCreate: boolean;
-    reason?: ReactNode;
+    reason?: string;
   }> {
     try {
       const {
@@ -258,7 +258,7 @@ export class SignManager {
         .single();
 
       if (!blacklistError && blacklistData) {
-        return { canCreate: false, reason: t("sign_blacklisted") };
+        return { canCreate: false, reason: "sign_blacklisted" };
       }
 
       const { data: existingSigns, error: existingError } = await supabase
@@ -267,13 +267,13 @@ export class SignManager {
         .eq("user_id", user.id);
 
       if (!existingError && existingSigns && existingSigns.length > 0) {
-        return { canCreate: false, reason: t("sign_alreadyLeft") };
+        return { canCreate: false, reason: "sign_alreadyLeft" };
       }
 
       return { canCreate: true };
     } catch (error: any) {
       console.error("Error checking if user can create sign:", error);
-      return { canCreate: false, reason: t("sign_error") };
+      return { canCreate: false, reason: "sign_error" };
     }
   }
 

@@ -1,13 +1,14 @@
 import type { PropsWithChildren } from "react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import ContentLoader from "react-content-loader";
 import "./styles.css";
 
 interface ReactionProps {
   contrast?: boolean;
   small?: boolean;
   src?: string;
-  count?: number;
+  count?: number; // может быть undefined, пока данные не загружены
   reacted?: boolean;
   onReaction?: (reacted: boolean) => void;
   onClick: () => void;
@@ -15,27 +16,29 @@ interface ReactionProps {
 
 function AnimatedDigit({ digit }: { digit: string }) {
   return (
-<div style={{ 
-      position: "relative",  
-      height: "1em", 
-      width: "0.7em",
-      overflow: "hidden", 
-      display: "inline-block",
-      textAlign: "center" 
-    }}>
+    <div
+      style={{
+        position: "relative",
+        height: "1em",
+        width: "0.7em",
+        overflow: "hidden",
+        display: "inline-block",
+        textAlign: "center",
+      }}
+    >
       <AnimatePresence mode="popLayout">
         <motion.span
-          key={digit} 
+          key={digit}
           initial={{ y: "100%" }}
           animate={{ y: "0%" }}
           exit={{ y: "-100%" }}
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
-          style={{ 
-            position: "absolute", 
-            top: -3, 
-            left: 0, 
+          style={{
+            position: "absolute",
+            top: -3,
+            left: 0,
             width: "100%",
-            height: "100%"
+            height: "100%",
           }}
         >
           {digit}
@@ -57,7 +60,7 @@ export default function Reaction({
 }: PropsWithChildren<ReactionProps>) {
   const [internalReacted, setInternalReacted] = useState(false);
   const isReacted = externalReacted !== undefined ? externalReacted : internalReacted;
-  
+
   const handleClick = () => {
     onClick();
     if (onReaction) {
@@ -67,18 +70,35 @@ export default function Reaction({
     }
   };
 
-  const badgeClass = `reaction-badge ${isReacted ? "reacted" : ""} ${contrast ? "contrast" : ""} ${small ? "small" : ""}`;
+  const badgeClass = `reaction-badge ${isReacted ? "reacted" : ""} ${
+    contrast ? "contrast" : ""
+  } ${small ? "small" : ""}`;
 
-  const countString = count.toString();
+  const showSkeleton = count === 0;
 
   return (
     <button className={badgeClass} onClick={handleClick} type="button">
       {src && <img className="reaction-emoji" src={src} alt="" />}
       <span className="reaction-text">{children}</span>
       <span className="reaction-count">
-        {countString.split("").map((digit, index) => (
-          <AnimatedDigit key={index} digit={digit} />
-        ))}
+        {showSkeleton ? (
+<ContentLoader
+  speed={1}
+  width={20}
+  height={20}
+  viewBox="0 0 28 30"
+  backgroundColor="#bbb1e34d"
+  foregroundColor="#a5a6bf99"
+  style={{ display: 'block'}} 
+>
+  <rect x="0" y="0" ry="5" rx="5" width="23" height="27"  />
+</ContentLoader>
+        ) : (
+          count
+            .toString()
+            .split("")
+            .map((digit, index) => <AnimatedDigit key={index} digit={digit} />)
+        )}
       </span>
     </button>
   );
