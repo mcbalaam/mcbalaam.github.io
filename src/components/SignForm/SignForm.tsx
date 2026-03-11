@@ -53,7 +53,6 @@ const SignForm: React.FC<SignFormProps> = ({
       if (err instanceof Error) {
         errorMessage = err.message;
       } else if (err && typeof err === "object") {
-        // Handle Supabase error object
         if ("message" in err) {
           errorMessage = String(err.message);
         } else if ("details" in err) {

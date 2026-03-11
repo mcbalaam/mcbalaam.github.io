@@ -8,7 +8,7 @@ interface ReactionProps {
   contrast?: boolean;
   small?: boolean;
   src?: string;
-  count?: number; // может быть undefined, пока данные не загружены
+  count?: number;
   reacted?: boolean;
   onReaction?: (reacted: boolean) => void;
   onClick: () => void;

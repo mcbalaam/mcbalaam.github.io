@@ -7,7 +7,7 @@ export default {
   thisRepo: "This site's repo",
   auth: "Authenticating...",
   loginWithGithub: "Sign in with GitHub",
-  toLeaveSigns: "to leave signs!",
+  toLeaveSigns: "and leave a sign!",
   fetchingSigns: "Fetching signs...",
   authViaGitHub: "Authenticated via GitHub",
   sign_header: "Leave a Sign",
@@ -51,4 +51,11 @@ export default {
     "Signature verified successfully! This sign's cryptographic signature matches the original data — it hasn't been tampered with.",
   hashes_error: "Verification error",
   hashes_signature: "missing signature data",
+  working_on: "Projects I'm working on",
+  fortune: "A Twitch chat overlay utility that runs in your browser, hosted on GitHub Pages. Supports 7TV/BTTV emotes, Twitch badges and much more",
+  extera: "An API server + version control system for exteraGram plugins. Elysia, Prisma+Postgress. Currently undergoing maintenance to switch to microservices",
+  zed: "A DreamMaker langserver which provides code highliting and snippets for the Zed editor. Compiled tree-sitter, basic features",
+  github: "GitHub activity · last 4 months",
+  less: "Less", 
+  more: "More"
 } as const;

@@ -1,0 +1,41 @@
+.tilt-card {
+    display: block;
+    width: 80px;
+    height: 80px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--color-border-primary);
+    box-shadow: 0 4px 12px var(--color-shadow);
+    transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.15s ease;
+    will-change: transform;
+    cursor: pointer;
+    transform-style: preserve-3d;
+}
+
+.tilt-card:hover {
+    box-shadow: 0 8px 28px var(--color-shadow), 0 0 16px rgba(88, 101, 242, 0.3);
+}
+
+.tilt-card--dragging {
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(88, 101, 242, 0.4);
+    cursor: grabbing;
+}
+
+.tilt-card-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+    pointer-events: none;
+    user-select: none;
+}
+
+/* fixed overlay for drag layer — must be above everything */
+.tilt-drag-layer {
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 0;
+    height: 0;
+}

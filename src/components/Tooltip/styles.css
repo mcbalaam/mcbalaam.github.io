@@ -30,7 +30,7 @@
     visibility: hidden;
     position: absolute;
     top: -30px;
-    left: 35%;
+    left: 42%;
     transform: translateX(-50%);
     background-color: var(--color-bg-secondary);
     color: var(--color-text-primary);

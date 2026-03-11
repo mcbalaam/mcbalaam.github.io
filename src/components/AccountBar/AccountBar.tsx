@@ -8,12 +8,8 @@ import {
 import "./styles.css";
 
 import { t } from "../../../translations/translate";
-
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
-
 import github from "../../../public/github-tile.svg";
-
 import Button from "../Button";
 
 interface AuthButtonsProps {

@@ -3,6 +3,9 @@ import { t, TranslationContextProvider } from "../translations/translate";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getStatus, type UserStatus } from "./requests";
 import { getVanityConfig } from "./config";
+import TiltCard from "./components/Token";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 import {
   faMoon,
   faSun,
@@ -25,6 +28,10 @@ import telegram from "../public/telegram.png";
 import kofi from "../public/kofi.png";
 import cloudtips from "../public/cloudtips.png";
 import pfp from "../public/mcbalaam.webp";
+import femtanyl from "../public/femtanyl.jpg";
+import birthday from "../public/birthday.jpg";
+import ksb from "../public/ksb.jpg";
+import bilb from "../public/bilb.jpg";
 
 import Button from "./components/Button";
 import Badge from "./components/Badge";
@@ -37,6 +44,8 @@ import ModalPopup, { type ModalControl } from "./components/ModalPopup";
 import ToastNotification from "./components/ToastNotification";
 import Reaction from "./components/Reaction";
 import Tooltip from "./components/Tooltip";
+import RepoTab from "./components/RepoTab";
+import GitHubActivity from "./components/GitHubActivity";
 
 import { ReactionManager } from "./requests";
 
@@ -95,43 +104,43 @@ export function App() {
     fetchReactions();
   }, [visitorToken]);
 
-const handleReactionClick = async (type: string) => {
-  if (!visitorToken) return;
+  const handleReactionClick = async (type: string) => {
+    if (!visitorToken) return;
 
-  const isReacted = userReactions.includes(type);
+    const isReacted = userReactions.includes(type);
 
-  if (isReacted) {
-    setUserReactions(prev => prev.filter(t => t !== type));
-    setReactionCounts(prev => ({
-      ...prev,
-      [type]: Math.max(0, (prev[type] || 0) - 1)
-    }));
-  } else {
-    setUserReactions(prev => [...prev, type]);
-    setReactionCounts(prev => ({
-      ...prev,
-      [type]: (prev[type] || 0) + 1
-    }));
-  }
-
-  try {
     if (isReacted) {
-      await ReactionManager.removeReaction(type, visitorToken);
+      setUserReactions(prev => prev.filter(t => t !== type));
+      setReactionCounts(prev => ({
+        ...prev,
+        [type]: Math.max(0, (prev[type] || 0) - 1)
+      }));
     } else {
-      await ReactionManager.addReaction(type, visitorToken);
+      setUserReactions(prev => [...prev, type]);
+      setReactionCounts(prev => ({
+        ...prev,
+        [type]: (prev[type] || 0) + 1
+      }));
     }
-    
-    const [counts, userActive] = await Promise.all([
-      ReactionManager.getReactionCounts(),
-      ReactionManager.getUserReactions(visitorToken)
-    ]);
-    setReactionCounts(counts);
-    setUserReactions(userActive);
 
-  } catch (error) {
-    null;
-  }
-};
+    try {
+      if (isReacted) {
+        await ReactionManager.removeReaction(type, visitorToken);
+      } else {
+        await ReactionManager.addReaction(type, visitorToken);
+      }
+
+      const [counts, userActive] = await Promise.all([
+        ReactionManager.getReactionCounts(),
+        ReactionManager.getUserReactions(visitorToken)
+      ]);
+      setReactionCounts(counts);
+      setUserReactions(userActive);
+
+    } catch (error) {
+      null;
+    }
+  };
 
   useEffect(() => {
     const loadStatus = async () => {
@@ -157,7 +166,7 @@ const handleReactionClick = async (type: string) => {
       if (parts.length === 2) return parts.pop()?.split(";").shift() || null;
       return null;
     }
-    
+
     const savedLocale = getCookie("locale");
     const savedTheme = getCookie("theme") as "dark" | "light" | null;
 
@@ -272,92 +281,116 @@ const handleReactionClick = async (type: string) => {
     <TranslationContextProvider locale={locale}>
       <Balatro color1="#3C385A" color2="#24313D" color3={theme == "light" ? "#656181" : "#201F31"} mouseInteraction={false}></Balatro>
       <div className="master-container">
-        <div className="card">
-          <div className="banner">
-            <Button className="language-button" faIcon={faLanguage} onClick={toggleLocale} />
-            <Button className="theme-button" faIcon={theme === "dark" ? faMoon : faSun} onClick={toggleTheme} />
-            <div className="avatar-container">
-              <img className="pfp" src={pfp}></img>
-              {userStatus?.vanity_id && <VanityOverlay vanityId={userStatus.vanity_id} />}
+        <div className="main-column">
+          <div className="card">
+            <div className="banner">
+              <Button className="language-button" faIcon={faLanguage} onClick={toggleLocale} />
+              <Button className="theme-button" faIcon={theme === "dark" ? faMoon : faSun} onClick={toggleTheme} />
+              <div className="avatar-container">
+                <img className="pfp" src={pfp}></img>
+                {userStatus?.vanity_id && <VanityOverlay vanityId={userStatus.vanity_id} />}
+              </div>
+              <StatusBubble>{(userStatus?.status || "\n").replace(/<br\s*\/?>/gi, "\n")}</StatusBubble>
             </div>
-            <StatusBubble>{(userStatus?.status || "\n").replace(/<br\s*\/?>/gi, "\n")}</StatusBubble>
-          </div>
-          <div className="item-container">
-            <div className="name">
-              <div className="nameplate">mcbalaam</div>
-              <Badge small src={robust}>RBST</Badge>
-            </div>
-            <div className="pnouns">
-              mcbalaam <FontAwesomeIcon size="sm" icon={faArrowRightLong} />{" "}
-              эмсибалаам, балаам, макбаклак (he/him)
-            </div>
-            <p className="desc">{t("aboutMe")}</p>
-            <div style={{ display: "flex", height: "fit-content", flexWrap: "wrap", margin: "0px 5px 10px 0" }}>
-              <p>{t("myMidniht")} <Timestamp ts="1764608400" />. {t("active")}</p>
-            </div>
+            <div className="item-container">
+              <div className="name">
+                <div className="nameplate">mcbalaam</div>
+                <Badge small src={robust}>RBST</Badge>
+              </div>
+              <div className="pnouns">
+                mcbalaam <FontAwesomeIcon size="sm" icon={faArrowRightLong} />{" "}
+                эмсибалаам, балаам, макбаклак (he/him)
+              </div>
+              <p className="desc">{t("aboutMe")}</p>
+              <div style={{ display: "flex", height: "fit-content", flexWrap: "wrap", margin: "0px 5px 10px 0" }}>
+                <p>{t("myMidniht")} <Timestamp ts="1764608400" />. {t("active")}</p>
+              </div>
 
-            <h1>{t("connections")}</h1>
-            <div className="connections">
-              <Badge href="https://www.github.com/mcbalaam" src={github}>GitHub <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
-              <Badge href="https://steamcommunity.com/id/mcbalaam/" src={steam}>Steam <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
-              <Badge href="https://soundcloud.com/mcbalaam" src={soundcloud}>SoundСloud <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
-              <Badge href="https://t.me/whattheactualfuckbro" src={telegram}>Telegram <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
-              <Badge href="https://ko-fi.com/mcbalaam" src={kofi}>Ko-Fi <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
-              <Badge href="https://pay.cloudtips.ru/p/7ac675d4" src={cloudtips}>CloudTips <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
+              <h1>{t("connections")}</h1>
+              <div className="connections">
+                <Badge href="https://www.github.com/mcbalaam" src={github}>GitHub <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
+                <Badge href="https://steamcommunity.com/id/mcbalaam/" src={steam}>Steam <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
+                <Badge href="https://soundcloud.com/mcbalaam" src={soundcloud}>SoundСloud <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
+                <Badge href="https://t.me/whattheactualfuckbro" src={telegram}>Telegram <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
+                <Badge href="https://ko-fi.com/mcbalaam" src={kofi}>Ko-Fi <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
+                <Badge href="https://pay.cloudtips.ru/p/7ac675d4" src={cloudtips}>CloudTips <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
+              </div>
+              <br></br>
+              <div className="reactions">
+                <Tooltip text=":pig2:">
+                  <Reaction
+                    count={reactionCounts["pig"] || 0}
+                    reacted={userReactions.includes("pig")}
+                    onClick={() => handleReactionClick("pig")}
+                  >🐖</Reaction>
+                </Tooltip>
+                <Tooltip text=":dash:">
+                  <Reaction
+                    count={reactionCounts["dash"] || 0}
+                    onClick={() => handleReactionClick("dash")}
+                    reacted={userReactions.includes("dash")}
+                  >💨</Reaction>
+                </Tooltip>
+                <Tooltip text=":heart:">
+                  <Reaction
+                    count={reactionCounts["heart"] || 0}
+                    onClick={() => handleReactionClick("heart")}
+                    reacted={userReactions.includes("heart")}
+                  >❤️</Reaction>
+                </Tooltip>
+                <Tooltip text=":broken_heart:">
+                  <Reaction
+                    count={reactionCounts["broken_heart"] || 0}
+                    onClick={() => handleReactionClick("broken_heart")}
+                    reacted={userReactions.includes("broken_heart")}
+                  >💔</Reaction>
+                </Tooltip>
+              </div>
             </div>
-          <br></br>
-          <div className="reactions">
-            <Tooltip text=":pig2:">
-              <Reaction 
-                count={reactionCounts["pig"] || 0} 
-                reacted={userReactions.includes("pig")}
-                onClick={() => handleReactionClick("pig")}
-              >🐖</Reaction>
-            </Tooltip>
-            <Tooltip text=":dash:">
-              <Reaction 
-                count={reactionCounts["dash"] || 0} 
-                onClick={() => handleReactionClick("dash")}
-                reacted={userReactions.includes("dash")} 
-              >💨</Reaction>
-            </Tooltip>
-            <Tooltip text=":heart:">
-              <Reaction 
-                count={reactionCounts["heart"] || 0} 
-                onClick={() => handleReactionClick("heart")}
-                reacted={userReactions.includes("heart")} 
-              >❤️</Reaction>
-            </Tooltip>
-            <Tooltip text=":broken_heart:">
-              <Reaction 
-                count={reactionCounts["broken_heart"] || 0} 
-                onClick={() => handleReactionClick("broken_heart")}
-                reacted={userReactions.includes("broken_heart")} 
-              >💔</Reaction>
-            </Tooltip>
           </div>
+          <div className="card">
+            <div className="item-container accountbar">
+              <AuthButtons
+                onLoginSuccess={handleLoginSuccess}
+                onLoginError={handleLoginError}
+                onLogoutSuccess={handleLogoutSuccess}
+                onLogoutError={handleLogoutError}
+                onAuthChange={() => { }}
+              />
+            </div>
+          </div>
+          <div className="card">
+            <div className="item-container accountbar">
+              <SignList
+                onLeaveSignClick={() => openModal()}
+                onSignDeleted={handleSignDeleted}
+                onSignDeleteError={handleSignDeleteError}
+                refreshKey={signsRefreshKey}
+              />
+            </div>
           </div>
         </div>
-        <div className="card">
-          <div className="item-container accountbar">
-            <AuthButtons
-              onLoginSuccess={handleLoginSuccess}
-              onLoginError={handleLoginError}
-              onLogoutSuccess={handleLogoutSuccess}
-              onLogoutError={handleLogoutError}
-              onAuthChange={() => {}}
-            />
+        <div className="side-column">
+          <div className="card side-card">
+            <div className="item-container accountbar">
+              <h1 style={{ marginBottom: "10px" }}>{t("working_on")}</h1>
+              <RepoTab />
+            </div>
           </div>
-        </div>
-        <div className="card">
-          <div className="item-container accountbar">
-            <SignList
-              onLeaveSignClick={() => openModal()}
-              onSignDeleted={handleSignDeleted}
-              onSignDeleteError={handleSignDeleteError}
-              refreshKey={signsRefreshKey}
-            />
+          <div className="card side-card">
+            <div className="item-container" style={{display: 'inline-flex', gap: "10px"}}>
+              <TiltCard src={femtanyl} label="femtanyl" href="https://open.spotify.com/artist/..." dnd />
+              <TiltCard src={birthday} label="The Birthday Massacre" href="https://open.spotify.com/artist/..." dnd />
+              <TiltCard src={ksb} label="ksb music" href="https://open.spotify.com/artist/..." dnd />
+              <TiltCard src={bilb} label="билборды" href="https://open.spotify.com/artist/..." dnd />
+            </div>
           </div>
+          <div className="card side-card">
+            <div className="item-container">
+              <GitHubActivity locale={locale} username="mcbalaam" />
+            </div>
+          </div>
+
         </div>
       </div>
       <ModalPopup control={modalLeaveSign}>
@@ -372,6 +405,7 @@ const handleReactionClick = async (type: string) => {
           position="bottom-center"
         >{toast.message}</ToastNotification>
       )}
+      
     </TranslationContextProvider>
   );
 }
