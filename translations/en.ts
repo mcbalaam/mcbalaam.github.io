@@ -34,7 +34,7 @@ export default {
   sign_error: "Something went wrong.",
   sign_deleteTitle: "Delete this sign?",
   sign_deleteText:
-    "Are you sure you want to delete this sign? This can't be undone and will wipe the data.",
+    "Are you sure you want to delete this sign? This can't be undone.",
   sign_deleteConfirm: "Delete",
   sign_deleteCancel: "Keep it",
   sign_toastDeleted: "Sign deleted successfully!",
@@ -44,11 +44,11 @@ export default {
   hashes_title: "Signature verified!",
   hashes_mismatchTitle: "Signature verification failed",
   hashes_about:
-    "Each sign is cryptographically signed using Ed25519. The signature is generated from the message, timestamp, and user ID, then verified with a public key.",
+    "Each sign is cryptographically signed (oh, the irony). The signature is generated when you submit the sign and is never used again, ensuring your sign can't be forged.",
   hashes_mismatchAbout:
     "This sign's cryptographic signature could not be verified. The data may have been modified or the signature is invalid.",
   hashes_matched:
-    "Signature verified successfully! This sign's cryptographic signature matches the original data — it hasn't been tampered with.",
+    "This sign's cryptographic signature matches the original data — it hasn't been tampered with.",
   hashes_error: "Verification error",
   hashes_signature: "missing signature data",
   working_on: "Projects I'm working on",
@@ -56,6 +56,12 @@ export default {
   extera: "An API server + version control system for exteraGram plugins. Elysia, Prisma+Postgress. Currently undergoing maintenance to switch to microservices",
   zed: "A DreamMaker langserver which provides code highliting and snippets for the Zed editor. Compiled tree-sitter, basic features",
   github: "GitHub activity · last 4 months",
-  less: "Less", 
-  more: "More"
+  less: "Less",
+  more: "More",
+  myStack: "My stack",
+  about_stack_typescript: "Strict (and static) typing appeals to me greatly — so much that I now consider it a de facto requirement in any language or framework. I wrote mis-fortune and exteraStore in TypeScript, and I'm working on another project — a Discord channel scraper that turns your channels into an RSS feed.",
+  about_stack_react: "I spent over a year working with React interfaces and components for Space Station 13. mis-fortune is the main personal project built with it (aside from this page), but I also have experience contributing to a component library and working with one.",
+  about_stack_elysiajs: "Elysia is a great JS/TS framework for large multi-route APIs. Writing middleware is convenient, chaining and unwrapping requests is a breeze. Used it in exteraStore for user authentication and routing requests between services.",
+  about_stack_prismaorm: "Prisma is my first ORM and I'm already in love. Strict TS-style typing, field/table snippets, mapping, JSON storage (not recommended, but it's there). Used it in exteraStore for PostgreSQL: managing users, plugins, and releases.",
+  about_stack_docker: "Homelab enthusiast, self-hosting various services I need. Writing Dockerfiles, creating configs, studying Kubernetes and working with networking. Can containerize small projects for deployment and production, work with secrets and pipelines.",
 } as const;

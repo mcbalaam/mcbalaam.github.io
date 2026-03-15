@@ -48,5 +48,5 @@
 .tooltip-wrapper:hover .tooltip-text {
     visibility: visible;
     opacity: 1;
-    top: -35px; /* небольшое смещение вверх при показе */
+    top: -35px;
 }

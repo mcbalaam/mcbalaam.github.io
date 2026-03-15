@@ -78,7 +78,6 @@
     fill: #b6b6d6 !important;
 }
 
-/* Типы тостов */
 .toast-info {
     background-color: var(--color-info);
     border-color: var(--color-info-border);
@@ -99,7 +98,6 @@
     border-color: var(--color-error-border);
 }
 
-/* Позиции */
 .toast-top-right {
     top: 20px;
     right: 20px;
@@ -132,7 +130,6 @@
     transform: translateX(-50%);
 }
 
-/* Анимации */
 @keyframes toastSlideIn {
     from {
         opacity: 0;
@@ -155,7 +152,6 @@
     }
 }
 
-/* Для bottom позиций */
 .toast-bottom-right,
 .toast-bottom-left,
 .toast-bottom-center {
@@ -190,7 +186,6 @@
     }
 }
 
-/* Для center позиций с трансформацией */
 .toast-top-center,
 .toast-bottom-center {
     animation-name: toastSlideInCenter;

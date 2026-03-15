@@ -25,6 +25,7 @@ import steam from "../public/steampowered-tile.svg";
 import robust from "../public/robust.png";
 import soundcloud from "../public/soundcloud.png";
 import telegram from "../public/telegram.png";
+import matrix from "../public/matrix.png"
 import kofi from "../public/kofi.png";
 import cloudtips from "../public/cloudtips.png";
 import pfp from "../public/mcbalaam.webp";
@@ -32,6 +33,14 @@ import femtanyl from "../public/femtanyl.jpg";
 import birthday from "../public/birthday.jpg";
 import ksb from "../public/ksb.jpg";
 import bilb from "../public/bilb.jpg";
+import byond from "../public/byond.png"
+import react from "../public/react.png"
+import typescript from "../public/typescript.jpg"
+import elysia from "../public/elysia.png"
+import prisma from "../public/prisma.jpg"
+import redis from "../public/redis.png"
+import docker from "../public/docker.png"
+import StackInfo from "./components/StackInfo";
 
 import Button from "./components/Button";
 import Badge from "./components/Badge";
@@ -311,7 +320,7 @@ export function App() {
                 <Badge href="https://www.github.com/mcbalaam" src={github}>GitHub <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
                 <Badge href="https://steamcommunity.com/id/mcbalaam/" src={steam}>Steam <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
                 <Badge href="https://soundcloud.com/mcbalaam" src={soundcloud}>SoundСloud <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
-                <Badge href="https://t.me/whattheactualfuckbro" src={telegram}>Telegram <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
+                <Badge href="https://matrix.to/#/@mcbalaam:matrix.realrobust.space" src={matrix}>Matrix <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
                 <Badge href="https://ko-fi.com/mcbalaam" src={kofi}>Ko-Fi <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
                 <Badge href="https://pay.cloudtips.ru/p/7ac675d4" src={cloudtips}>CloudTips <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
               </div>
@@ -378,11 +387,15 @@ export function App() {
             </div>
           </div>
           <div className="card side-card">
-            <div className="item-container" style={{display: 'inline-flex', gap: "10px"}}>
-              <TiltCard src={femtanyl} label="femtanyl" href="https://open.spotify.com/artist/..." dnd />
-              <TiltCard src={birthday} label="The Birthday Massacre" href="https://open.spotify.com/artist/..." dnd />
-              <TiltCard src={ksb} label="ksb music" href="https://open.spotify.com/artist/..." dnd />
-              <TiltCard src={bilb} label="билборды" href="https://open.spotify.com/artist/..." dnd />
+            <div className="item-container accountbar" style={{ display: 'inline-flex', flexDirection: "column" }}>
+              <h1 style={{ marginBottom: "10px" }}>{t("myStack")}</h1>
+              <StackInfo items={[
+                { src: typescript, label: "TypeScript", description: t("about_stack_typescript") },
+                { src: elysia, label: "ElysiaJS", description: t("about_stack_elysiajs") },
+                { src: react, label: "ReactJS", description: t("about_stack_react") },
+                { src: prisma, label: "Prisma ORM", description: t("about_stack_prismaorm") },
+                { src: docker, label: "Docker", description: t("about_stack_docker") },
+              ]} />
             </div>
           </div>
           <div className="card side-card">
@@ -390,7 +403,14 @@ export function App() {
               <GitHubActivity locale={locale} username="mcbalaam" />
             </div>
           </div>
-
+          <div className="card side-card">
+            <div className="item-container" style={{ display: 'inline-flex', gap: "10px" }}>
+              <TiltCard src={femtanyl} label="femtanyl" />
+              <TiltCard src={birthday} label="The Birthday Massacre" />
+              <TiltCard src={ksb} label="ksb music" />
+              <TiltCard src={bilb} label="билборды" />
+            </div>
+          </div>
         </div>
       </div>
       <ModalPopup control={modalLeaveSign}>
@@ -405,7 +425,7 @@ export function App() {
           position="bottom-center"
         >{toast.message}</ToastNotification>
       )}
-      
+
     </TranslationContextProvider>
   );
 }

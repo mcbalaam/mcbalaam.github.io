@@ -8,23 +8,14 @@ import Button from "../Button";
 import "./styles.css";
 
 export type ToastNotificationProps = PropsWithChildren<{
-  /** Иконка слева (как в Button) */
   icon?: IconDefinition;
-  /** URL изображения для иконки */
   iconUrl?: string;
-  /** Тип тоста для разных стилей */
   type?: "info" | "success" | "warning" | "error";
-  /** Время в миллисекундах до автоматического закрытия (0 - не закрывать автоматически) */
   duration?: number;
-  /** Функция вызываемая при закрытии тоста */
   onClose?: () => void;
-  /** Показывать ли кнопку закрытия */
   showCloseButton?: boolean;
-  /** Дополнительные CSS классы */
   className?: string;
-  /** Дополнительные стили */
   style?: CSSProperties;
-  /** Позиция тоста на экране */
   position?:
     | "top-right"
     | "top-left"

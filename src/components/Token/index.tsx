@@ -5,7 +5,7 @@ import "./styles.css";
 interface TiltCardProps {
   src: string;
   label: string;
-  href: string;
+  href?: string;
 }
 
 const VERT = `
