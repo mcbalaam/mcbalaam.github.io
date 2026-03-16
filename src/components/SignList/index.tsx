@@ -5,9 +5,9 @@ import {
   deleteSign,
   getCurrentSession,
   canUserCreateSign,
-} from "../../requests";
+} from "../../scripts";
 
-import type { Sign, SignWithVerification } from "../../requests";
+import type { Sign, SignWithVerification } from "../../scripts";
 import "./styles.css";
 
 import { t } from "../../../translations/translate";

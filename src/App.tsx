@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { t, TranslationContextProvider } from "../translations/translate";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { getStatus, type UserStatus } from "./requests";
+import { getStatus, type UserStatus } from "./scripts";
 import { getVanityConfig } from "./config";
 import TiltCard from "./components/Token";
 import { DndProvider } from "react-dnd";
@@ -56,7 +56,7 @@ import Tooltip from "./components/Tooltip";
 import RepoTab from "./components/RepoTab";
 import GitHubActivity from "./components/GitHubActivity";
 
-import { ReactionManager } from "./requests";
+import { ReactionManager } from "./scripts";
 
 import FingerprintJS from '@fingerprintjs/fingerprintjs';
 
