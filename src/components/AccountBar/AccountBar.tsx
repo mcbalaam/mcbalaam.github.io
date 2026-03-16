@@ -4,7 +4,7 @@ import {
   signOut,
   getCurrentSession,
   isAuthenticated,
-} from "../../scripts";
+} from "../../requests";
 import "./styles.css";
 
 import { t } from "../../../translations/translate";
