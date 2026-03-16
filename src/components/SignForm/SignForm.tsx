@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { createSign } from "../../scripts";
-import type { SignFormData } from "../../scripts";
+import { createSign } from "../../requests";
+import type { SignFormData } from "../../requests";
 import "./styles.css";
 
 interface SignFormProps {
