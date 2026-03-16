@@ -27,7 +27,8 @@
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^19",
-    "schummar-translate": "^1.25.2"
+    "schummar-translate": "^1.25.2",
+    "smol-toml": "^1.6.0"
   },
   "devDependencies": {
     "@types/bun": "latest",
