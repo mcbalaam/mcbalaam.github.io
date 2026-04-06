@@ -10,7 +10,7 @@ import "./styles.css";
 import { t } from "../../../translations/translate";
 import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import github from "../../../public/github-tile.svg";
-import Button from "../Button";
+import { Button } from "@mcbalaam/razdor-ui"
 
 interface AuthButtonsProps {
   onAuthChange?: (isAuthenticated: boolean) => void;
@@ -166,9 +166,9 @@ const AuthButtons: React.FC<AuthButtonsProps> = ({
     <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
       <Button
         onClick={handleGitHubLogin}
-        contrast
         href={github}
         disabled={isLoading}
+        color="contrast"
       >
         {isLoading ? "Connecting..." : t("loginWithGithub")}
       </Button>

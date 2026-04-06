@@ -11,8 +11,8 @@ import type { Sign, SignWithVerification } from "../../requests";
 import "./styles.css";
 
 import { t } from "../../../translations/translate";
-import Button from "../Button";
-import ModalPopup, { type ModalControl } from "../ModalPopup";
+import { Button } from "@mcbalaam/razdor-ui"
+import { ModalPopup } from "@mcbalaam/razdor-ui";
 import { faHashtag, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { faTrashCan } from "@fortawesome/free-solid-svg-icons/faTrashCan";
 import ContentLoader from "react-content-loader";
@@ -196,7 +196,6 @@ export default function SignList({
       {currentUser && onLeaveSignClick && (
         <div style={{ marginBottom: "20px" }}>
           <Button
-            contrast
             faIcon={faPlus}
             onClick={onLeaveSignClick}
             fill
@@ -314,7 +313,7 @@ export default function SignList({
               <Button onClick={handleDeleteCancel}>
                 {t("sign_deleteCancel")}
               </Button>
-              <Button contrast onClick={handleDeleteConfirm}>
+              <Button color="bad" onClick={handleDeleteConfirm}>
                 {t("sign_deleteConfirm")}
               </Button>
             </>

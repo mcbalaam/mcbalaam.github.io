@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons/faXmark";
 import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 
-import Button from "../Button";
+import { Button } from "@mcbalaam/razdor-ui"
 import "./styles.css";
 
 export type ToastNotificationProps = PropsWithChildren<{

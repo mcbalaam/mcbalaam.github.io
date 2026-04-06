@@ -1,4 +1,4 @@
-import Badge from "../Badge";
+import { Badge, Tooltip } from "@mcbalaam/razdor-ui"
 import "./styles.css";
 import misfortune from "../../../public/mis-fortune.png"
 import extera from "../../../public/extera.png"
@@ -11,7 +11,6 @@ import rust from "../../../public/rust.png"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
 import { t } from "../../../translations/translate";
-import Tooltip from "../Tooltip";
 
 export default function RepoTab({ }: {
 

@@ -24,7 +24,6 @@ import github from "../public/github-tile.svg";
 import steam from "../public/steampowered-tile.svg";
 import robust from "../public/robust.png";
 import soundcloud from "../public/soundcloud.png";
-import telegram from "../public/telegram.png";
 import matrix from "../public/matrix.png"
 import kofi from "../public/kofi.png";
 import cloudtips from "../public/cloudtips.png";
@@ -33,32 +32,29 @@ import femtanyl from "../public/femtanyl.jpg";
 import birthday from "../public/birthday.jpg";
 import ksb from "../public/ksb.jpg";
 import bilb from "../public/bilb.jpg";
-import byond from "../public/byond.png"
 import react from "../public/react.png"
 import typescript from "../public/typescript.jpg"
 import elysia from "../public/elysia.png"
 import prisma from "../public/prisma.jpg"
-import redis from "../public/redis.png"
 import docker from "../public/docker.png"
 import StackInfo from "./components/StackInfo";
 
-import Button from "./components/Button";
-import Badge from "./components/Badge";
+import { Button, ModalPopup, type ModalControl, useCreateToast, Badge, Tooltip } from "@mcbalaam/razdor-ui"
 import StatusBubble from "./components/StatusBubble";
 import Timestamp from "./components/Timestamp";
 import AuthButtons from "./components/AccountBar/AccountBar";
 import SignList from "./components/SignList";
 import SignForm from "./components/SignForm/SignForm";
-import ModalPopup, { type ModalControl } from "./components/ModalPopup";
-import ToastNotification from "./components/ToastNotification";
 import Reaction from "./components/Reaction";
-import Tooltip from "./components/Tooltip";
 import RepoTab from "./components/RepoTab";
 import GitHubActivity from "./components/GitHubActivity";
 
 import { ReactionManager } from "./requests";
 
 import FingerprintJS from '@fingerprintjs/fingerprintjs';
+import BalatroStatus from "./components/BalatroStatus";
+
+import '@mcbalaam/razdor-ui/dist/index.css'
 
 async function getVisitorToken(): Promise<string> {
   const fp = await FingerprintJS.load();
@@ -70,15 +66,7 @@ export function App() {
   const [locale, setLocale] = useState("en");
   const [theme, setTheme] = useState<"dark" | "light">("dark");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [toast, setToast] = useState<{
-    visible: boolean;
-    message: React.ReactNode;
-    type: "success" | "error";
-  }>({
-    visible: false,
-    message: "",
-    type: "success",
-  });
+  const { createSuccessToast, createErrorToast } = useCreateToast();
   const [signsRefreshKey, setSignsRefreshKey] = useState(0);
   const [userStatus, setUserStatus] = useState<UserStatus | null>(null);
   const [processingReactions, setProcessingReactions] = useState<Set<string>>(new Set());
@@ -230,46 +218,42 @@ export function App() {
     title: t("sign_header"),
   };
 
-  const showToast = (message: React.ReactNode, type: "success" | "error") => {
-    setToast({ visible: true, message, type });
-  };
-
   const handleSignFormSuccess = () => {
     setIsModalOpen(false);
-    showToast(t("sign_toastSent"), "success");
+    createSuccessToast({ children: t("sign_toastSent"), duration: 3000, position: "bottom-center", icon: faCircleCheck });
     setSignsRefreshKey((prev) => prev + 1);
   };
 
   const handleSignFormError = (errorMessage: string) => {
     setIsModalOpen(false);
-    showToast(`${t("sign_error")}: ${errorMessage}`, "error");
+    createErrorToast({ children: `${t("sign_error")}: ${errorMessage}`, position: "bottom-center", icon: faCircleXmark });
   };
 
   const handleSignDeleted = () => {
-    showToast(t("sign_toastDeleted"), "success");
+    createSuccessToast({ children: t("sign_toastDeleted"), duration: 3000, position: "bottom-center", icon: faCircleCheck });
     setSignsRefreshKey((prev) => prev + 1);
   };
 
   const handleSignDeleteError = (errorMessage: string) => {
-    showToast(`${t("sign_toastDeleteError")}: ${errorMessage}`, "error");
+    createErrorToast({ children: `${t("sign_toastDeleteError")}: ${errorMessage}`, position: "bottom-center", icon: faCircleXmark });
   };
 
   const handleLogoutSuccess = () => {
-    showToast(t("logout_toastSuccess"), "success");
+    createSuccessToast({ children: t("logout_toastSuccess"), duration: 3000, position: "bottom-center", icon: faCircleCheck });
     setSignsRefreshKey((prev) => prev + 1);
   };
 
   const handleLogoutError = (errorMessage: string) => {
-    showToast(`${t("logout_toastError")}: ${errorMessage}`, "error");
+    createErrorToast({ children: `${t("logout_toastError")}: ${errorMessage}`, position: "bottom-center", icon: faCircleXmark });
   };
 
   const handleLoginSuccess = () => {
-    showToast(t("authViaGitHub"), "success");
+    createSuccessToast({ children: t("authViaGitHub"), duration: 3000, position: "bottom-center", icon: faCircleCheck });
     setSignsRefreshKey((prev) => prev + 1);
   };
 
   const handleLoginError = (errorMessage: string) => {
-    showToast(`${t("sign_error")}: ${errorMessage}`, "error");
+    createErrorToast({ children: `${t("sign_error")}: ${errorMessage}`, position: "bottom-center", icon: faCircleXmark });
   };
 
   const VanityOverlay = ({ vanityId }: { vanityId: string }) => {
@@ -390,11 +374,11 @@ export function App() {
             <div className="item-container accountbar" style={{ display: 'inline-flex', flexDirection: "column" }}>
               <h1 style={{ marginBottom: "10px" }}>{t("myStack")}</h1>
               <StackInfo items={[
-                { src: typescript, label: "TypeScript", description: t("about_stack_typescript") },
-                { src: elysia, label: "ElysiaJS", description: t("about_stack_elysiajs") },
-                { src: react, label: "ReactJS", description: t("about_stack_react") },
-                { src: prisma, label: "Prisma ORM", description: t("about_stack_prismaorm") },
-                { src: docker, label: "Docker", description: t("about_stack_docker") },
+                { src: typescript, label: "TypeScript", description: t("about_stack_typescript").toString() },
+                { src: elysia, label: "ElysiaJS", description: t("about_stack_elysiajs").toString() },
+                { src: react, label: "ReactJS", description: t("about_stack_react").toString() },
+                { src: prisma, label: "Prisma ORM", description: t("about_stack_prismaorm").toString() },
+                { src: docker, label: "Docker", description: t("about_stack_docker").toString() },
               ]} />
             </div>
           </div>
@@ -411,20 +395,13 @@ export function App() {
               <TiltCard src={bilb} label="билборды" />
             </div>
           </div>
+          {/* <BalatroStatus title="Fibonacci" badge={<Badge>Uncommon</Badge>}>+4 Mult for every scored face card</BalatroStatus> */}
         </div>
       </div>
       <ModalPopup control={modalLeaveSign}>
         <SignForm onSignCreated={handleSignFormSuccess} onSignError={handleSignFormError} />
       </ModalPopup>
-      {toast.visible && (
-        <ToastNotification
-          icon={toast.type === "success" ? faCircleCheck : faCircleXmark}
-          type={toast.type === "success" ? "success" : "error"}
-          duration={3000}
-          onClose={() => setToast({ ...toast, visible: false })}
-          position="bottom-center"
-        >{toast.message}</ToastNotification>
-      )}
+
 
     </TranslationContextProvider>
   );

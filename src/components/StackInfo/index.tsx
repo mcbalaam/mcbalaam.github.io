@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Badge from "../Badge";
+import { Badge } from "@mcbalaam/razdor-ui"
 import "./styles.css";
 
 interface StackItem {

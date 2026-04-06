@@ -25,3 +25,8 @@ declare module "*.webp" {
   const path: `${string}.webp`;
   export = path;
 }
+
+declare module "*.jpg" {
+  const path: `${string}.jpg`;
+  export = path;
+}

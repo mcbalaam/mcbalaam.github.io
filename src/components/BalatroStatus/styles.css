@@ -1,0 +1,77 @@
+@font-face {
+    font-family: Thin Sans;
+    src: url("../../../public/Thin\ Sans.ttf");
+}
+
+.balatro-status {
+    width: 150px;
+    height: fit-content;
+    display: inline-flex;
+    flex-direction: column;
+    border: 3px solid rgba(255, 255, 255, 0.85);
+    border-top-width: 2px;
+    border-bottom-width: 6px;
+    border-radius: 10px;
+    border-bottom-left-radius: 14px;
+    border-bottom-right-radius: 14px;
+    background-color: #1a1823;
+    box-shadow: 0 6px 0 #0a090e, 0 8px 20px rgba(0, 0, 0, 0.7);
+    cursor: pointer;
+    transform-style: preserve-3d;
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+    font-family: 'Nunito', sans-serif;
+}
+
+.balatro-title {
+    display: block;
+    background-color: #1a1823;
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+    padding: 8px 8px 12px;
+    text-align: center;
+    font-family: 'Thin Sans';
+    font-size: 14px;
+    color: #f0e8c8;
+    text-shadow: 0 2px 0 rgba(0, 0, 0, 0.5);
+    letter-spacing: 0.3px;
+    line-height: 1;
+}
+
+.balatro-inside {
+    display: block;
+    margin: 4px 4px;
+    background: #f5f0e8;
+    border-radius: 6px;
+    border: 1.5px solid rgba(0, 0, 0, 0.15);
+    padding: 10px 8px 12px;
+    font-size: 12px;
+    font-weight: 800;
+    text-align: center;
+    line-height: 1.35;
+    color: rgb(46, 43, 52);
+    border-bottom: 3px solid rgb(109, 109, 109);
+}
+
+.balatro-badge div {
+    display: block;
+    border-radius: 12px;
+    background-color: #248b67;
+    padding: 2px 4px 2px 4px;
+    text-align: center;
+    border-top: 2px solid rgba(255, 255, 255, 0.1);
+    font-size: 8px;
+    font-weight: 900;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+    border: none;
+    margin-bottom: 5px;
+    border-bottom: #14563f solid 4px;
+    color: white;
+}
+
+.balatro-badge div:hover {
+    background-color: #248b67;
+    border: none;
+    border-bottom: #14563f solid 4px;
+}
