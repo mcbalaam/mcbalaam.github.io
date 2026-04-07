@@ -11,7 +11,7 @@ interface SignFormProps {
 
 import { useTranslator } from "../../../translations/translate";
 
-import { Button } from "@mcbalaam/razdor-ui"
+import { Button, Textarea } from "@mcbalaam/razdor-ui"
 
 const SignForm: React.FC<SignFormProps> = ({
   onSignCreated,
@@ -111,7 +111,7 @@ const SignForm: React.FC<SignFormProps> = ({
           </div>
         )}
 
-        <Button type="submit" disabled={isSubmitting} fill contrast>
+        <Button type="submit" disabled={isSubmitting} fill color="contrast">
           {isSubmitting ? t("sign_sending") : t("sign_sendAction")}
         </Button>
       </form>

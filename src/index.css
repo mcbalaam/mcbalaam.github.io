@@ -92,7 +92,7 @@
 
 :root[data-theme="light"] {
     --color-bg-primary: #f0f0f0;
-    --color-bg-secondary: #aaaade;
+    --color-bg-secondary: #bbbbdf;
     --color-bg-tertiary: #73739e;
     --color-bg-card: #cacbe1;
     --color-bg-button: #a1a2d7;
@@ -250,7 +250,7 @@
 }
 
 .language-button svg {
-    color: rgba(255, 255, 255, 0.87);
+    color: rgba(255, 255, 255, 0.87) !important;
 }
 
 .theme-button {
@@ -264,7 +264,7 @@
 }
 
 .theme-button svg {
-    color: rgba(255, 255, 255, 0.87);
+    color: rgba(255, 255, 255, 0.87) !important;
 }
 
 .language-button:hover {

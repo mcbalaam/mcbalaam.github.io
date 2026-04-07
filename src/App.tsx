@@ -374,11 +374,11 @@ export function App() {
             <div className="item-container accountbar" style={{ display: 'inline-flex', flexDirection: "column" }}>
               <h1 style={{ marginBottom: "10px" }}>{t("myStack")}</h1>
               <StackInfo items={[
-                { src: typescript, label: "TypeScript", description: t("about_stack_typescript").toString() },
-                { src: elysia, label: "ElysiaJS", description: t("about_stack_elysiajs").toString() },
-                { src: react, label: "ReactJS", description: t("about_stack_react").toString() },
-                { src: prisma, label: "Prisma ORM", description: t("about_stack_prismaorm").toString() },
-                { src: docker, label: "Docker", description: t("about_stack_docker").toString() },
+                { src: typescript, label: "TypeScript", description: t("about_stack_typescript") },
+                { src: elysia, label: "ElysiaJS", description: t("about_stack_elysiajs") },
+                { src: react, label: "ReactJS", description: t("about_stack_react") },
+                { src: prisma, label: "Prisma ORM", description: t("about_stack_prismaorm") },
+                { src: docker, label: "Docker", description: t("about_stack_docker") },
               ]} />
             </div>
           </div>
