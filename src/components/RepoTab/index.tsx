@@ -47,6 +47,14 @@ export default function RepoTab({ }: {
           <Tooltip text="Rust"><Badge src={rust} /></Tooltip>
         </span><p>{t("zed")}</p>
       </span>
+      <span className="repotab-card">
+        <span style={{ display: "flex", flexDirection: "row" }}>
+          <span style={{ flex: 1 }}>
+            <Badge href="https://www.github.com/mcbalaam/razdor-ui" src={react}>Razdor-UI Component Library <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
+          </span>
+          <Tooltip text="React"><Badge src={react} /></Tooltip>
+        </span><p>{t("razdor")}</p>
+      </span>
     </span>
   );
 }

@@ -9,7 +9,7 @@
         "@fortawesome/fontawesome-svg-core": "^7.1.0",
         "@fortawesome/free-solid-svg-icons": "^7.1.0",
         "@fortawesome/react-fontawesome": "^3.1.1",
-        "@mcbalaam/razdor-ui": "^0.1.24",
+        "@mcbalaam/razdor-ui": "^0.1.26",
         "@noble/curves": "^2.0.1",
         "@noble/hashes": "^2.0.1",
         "@react-spring/web": "^10.0.3",
@@ -217,7 +217,7 @@
 
     "@jridgewell/trace-mapping": ["@jridgewell/trace-mapping@0.3.31", "", { "dependencies": { "@jridgewell/resolve-uri": "^3.1.0", "@jridgewell/sourcemap-codec": "^1.4.14" } }, "sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw=="],
 
-    "@mcbalaam/razdor-ui": ["@mcbalaam/razdor-ui@0.1.24", "https://npm.pkg.github.com/download/@mcbalaam/razdor-ui/0.1.24/e8b886eecaa155ab77199c6971efbe767f1244b0", { "dependencies": { "@fortawesome/fontawesome-svg-core": "^7.2.0" }, "peerDependencies": { "react": "^18.0.0 || ^19.0.0", "react-dom": "^18.0.0 || ^19.0.0" } }, "sha512-gWA0dTC0xE+AhOqXlpCJsICVddziS2AZ3zlLahJK+vHcBPOnFPTnBrjezVlDO3r4em4f0rt3O7WVjq6twECWKQ=="],
+    "@mcbalaam/razdor-ui": ["@mcbalaam/razdor-ui@0.1.26", "https://npm.pkg.github.com/download/@mcbalaam/razdor-ui/0.1.26/764cc58580afcb478191fc73cf602ba2bfd70d12", { "dependencies": { "@fortawesome/fontawesome-svg-core": "^7.2.0" }, "peerDependencies": { "react": "^18.0.0 || ^19.0.0", "react-dom": "^18.0.0 || ^19.0.0" } }, "sha512-2/nr7egsEid0O6m+OdV3FlUQatS4h6cUNgvhdwyEgUh+i0TNTEjkgEIUhOMzDYXqXYTyEmUPW5YTmqdn5eHHfA=="],
 
     "@noble/curves": ["@noble/curves@2.0.1", "", { "dependencies": { "@noble/hashes": "2.0.1" } }, "sha512-vs1Az2OOTBiP4q0pwjW5aF0xp9n4MxVrmkFBxc6EKZc6ddYx5gaZiAsZoq0uRRXWbi3AT/sBqn05eRPtn1JCPw=="],
 

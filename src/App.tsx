@@ -39,7 +39,7 @@ import prisma from "../public/prisma.jpg"
 import docker from "../public/docker.png"
 import StackInfo from "./components/StackInfo";
 
-import { Button, ModalPopup, type ModalControl, useCreateToast, Badge, Tooltip } from "@mcbalaam/razdor-ui"
+import { Button, ModalPopup, type ModalControl, useCreateToast, Badge, Tooltip, Card } from "@mcbalaam/razdor-ui"
 import StatusBubble from "./components/StatusBubble";
 import Timestamp from "./components/Timestamp";
 import AuthButtons from "./components/AccountBar/AccountBar";
@@ -275,7 +275,7 @@ export function App() {
       <Balatro color1="#3C385A" color2="#24313D" color3={theme == "light" ? "#656181" : "#201F31"} mouseInteraction={false}></Balatro>
       <div className="master-container">
         <div className="main-column">
-          <div className="card">
+          <Card>
             <div className="banner">
               <Button className="language-button" faIcon={faLanguage} onClick={toggleLocale} />
               <Button className="theme-button" faIcon={theme === "dark" ? faMoon : faSun} onClick={toggleTheme} />
@@ -285,94 +285,84 @@ export function App() {
               </div>
               <StatusBubble>{(userStatus?.status || "\n").replace(/<br\s*\/?>/gi, "\n")}</StatusBubble>
             </div>
-            <div className="item-container">
-              <div className="name">
-                <div className="nameplate">mcbalaam</div>
-                <Badge small src={robust}>RBST</Badge>
-              </div>
-              <div className="pnouns">
-                mcbalaam <FontAwesomeIcon size="sm" icon={faArrowRightLong} />{" "}
-                эмсибалаам, балаам, макбаклак (he/him)
-              </div>
-              <p className="desc">{t("aboutMe")}</p>
-              <div style={{ display: "flex", height: "fit-content", flexWrap: "wrap", margin: "0px 5px 10px 0" }}>
-                <p>{t("myMidniht")} <Timestamp ts="1764608400" />. {t("active")}</p>
-              </div>
+            <div className="name">
+              <div className="nameplate">mcbalaam</div>
+              <Badge small src={robust}>RBST</Badge>
+            </div>
+            <div className="pnouns">
+              mcbalaam <FontAwesomeIcon size="sm" icon={faArrowRightLong} />{" "}
+              эмсибалаам, балаам, макбаклак (he/him)
+            </div>
+            <p className="desc">{t("aboutMe")}</p>
+            <div style={{ display: "flex", height: "fit-content", flexWrap: "wrap", margin: "0px 5px 10px 0" }}>
+              <p>{t("myMidniht")} <Timestamp ts="1764608400" />. {t("active")}</p>
+            </div>
 
-              <h1>{t("connections")}</h1>
-              <div className="connections">
-                <Badge href="https://www.github.com/mcbalaam" src={github}>GitHub <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
-                <Badge href="https://steamcommunity.com/id/mcbalaam/" src={steam}>Steam <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
-                <Badge href="https://soundcloud.com/mcbalaam" src={soundcloud}>SoundСloud <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
-                <Badge href="https://matrix.to/#/@mcbalaam:matrix.realrobust.space" src={matrix}>Matrix <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
-                <Badge href="https://ko-fi.com/mcbalaam" src={kofi}>Ko-Fi <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
-                <Badge href="https://pay.cloudtips.ru/p/7ac675d4" src={cloudtips}>CloudTips <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
-              </div>
-              <br></br>
-              <div className="reactions">
-                <Tooltip text=":pig2:">
-                  <Reaction
-                    count={reactionCounts["pig"] || 0}
-                    reacted={userReactions.includes("pig")}
-                    onClick={() => handleReactionClick("pig")}
-                  >🐖</Reaction>
-                </Tooltip>
-                <Tooltip text=":dash:">
-                  <Reaction
-                    count={reactionCounts["dash"] || 0}
-                    onClick={() => handleReactionClick("dash")}
-                    reacted={userReactions.includes("dash")}
-                  >💨</Reaction>
-                </Tooltip>
-                <Tooltip text=":heart:">
-                  <Reaction
-                    count={reactionCounts["heart"] || 0}
-                    onClick={() => handleReactionClick("heart")}
-                    reacted={userReactions.includes("heart")}
-                  >❤️</Reaction>
-                </Tooltip>
-                <Tooltip text=":broken_heart:">
-                  <Reaction
-                    count={reactionCounts["broken_heart"] || 0}
-                    onClick={() => handleReactionClick("broken_heart")}
-                    reacted={userReactions.includes("broken_heart")}
-                  >💔</Reaction>
-                </Tooltip>
-              </div>
+            <h1>{t("connections")}</h1>
+            <div className="connections">
+              <Badge href="https://www.github.com/mcbalaam" src={github}>GitHub <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
+              <Badge href="https://steamcommunity.com/id/mcbalaam/" src={steam}>Steam <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
+              <Badge href="https://soundcloud.com/mcbalaam" src={soundcloud}>SoundСloud <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
+              <Badge href="https://matrix.to/#/@mcbalaam:matrix.realrobust.space" src={matrix}>Matrix <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
+              <Badge href="https://ko-fi.com/mcbalaam" src={kofi}>Ko-Fi <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
+              <Badge href="https://pay.cloudtips.ru/p/7ac675d4" src={cloudtips}>CloudTips <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
             </div>
-          </div>
-          <div className="card">
-            <div className="item-container accountbar">
-              <AuthButtons
-                onLoginSuccess={handleLoginSuccess}
-                onLoginError={handleLoginError}
-                onLogoutSuccess={handleLogoutSuccess}
-                onLogoutError={handleLogoutError}
-                onAuthChange={() => { }}
-              />
+            <br></br>
+            <div className="reactions">
+              <Tooltip text=":pig2:">
+                <Reaction
+                  count={reactionCounts["pig"] || 0}
+                  reacted={userReactions.includes("pig")}
+                  onClick={() => handleReactionClick("pig")}
+                >🐖</Reaction>
+              </Tooltip>
+              <Tooltip text=":dash:">
+                <Reaction
+                  count={reactionCounts["dash"] || 0}
+                  onClick={() => handleReactionClick("dash")}
+                  reacted={userReactions.includes("dash")}
+                >💨</Reaction>
+              </Tooltip>
+              <Tooltip text=":heart:">
+                <Reaction
+                  count={reactionCounts["heart"] || 0}
+                  onClick={() => handleReactionClick("heart")}
+                  reacted={userReactions.includes("heart")}
+                >❤️</Reaction>
+              </Tooltip>
+              <Tooltip text=":broken_heart:">
+                <Reaction
+                  count={reactionCounts["broken_heart"] || 0}
+                  onClick={() => handleReactionClick("broken_heart")}
+                  reacted={userReactions.includes("broken_heart")}
+                >💔</Reaction>
+              </Tooltip>
             </div>
-          </div>
-          <div className="card">
-            <div className="item-container accountbar">
-              <SignList
-                onLeaveSignClick={() => openModal()}
-                onSignDeleted={handleSignDeleted}
-                onSignDeleteError={handleSignDeleteError}
-                refreshKey={signsRefreshKey}
-              />
-            </div>
-          </div>
+          </Card>
+          <Card>
+            <AuthButtons
+              onLoginSuccess={handleLoginSuccess}
+              onLoginError={handleLoginError}
+              onLogoutSuccess={handleLogoutSuccess}
+              onLogoutError={handleLogoutError}
+              onAuthChange={() => { }}
+            />
+          </Card>
+          <Card>
+            <SignList
+              onLeaveSignClick={() => openModal()}
+              onSignDeleted={handleSignDeleted}
+              onSignDeleteError={handleSignDeleteError}
+              refreshKey={signsRefreshKey}
+            />
+          </Card>
         </div>
         <div className="side-column">
-          <div className="card side-card">
-            <div className="item-container accountbar">
-              <h1 style={{ marginBottom: "10px" }}>{t("working_on")}</h1>
-              <RepoTab />
-            </div>
-          </div>
-          <div className="card side-card">
-            <div className="item-container accountbar" style={{ display: 'inline-flex', flexDirection: "column" }}>
-              <h1 style={{ marginBottom: "10px" }}>{t("myStack")}</h1>
+          <Card title={t("working_on")}>
+            <RepoTab />
+          </Card>
+          <Card title={t("myStack")}>
+            <div style={{ display: 'inline-flex', flexDirection: "column" }}>
               <StackInfo items={[
                 { src: typescript, label: "TypeScript", description: t("about_stack_typescript") },
                 { src: elysia, label: "ElysiaJS", description: t("about_stack_elysiajs") },
@@ -381,20 +371,18 @@ export function App() {
                 { src: docker, label: "Docker", description: t("about_stack_docker") },
               ]} />
             </div>
-          </div>
-          <div className="card side-card">
-            <div className="item-container">
-              <GitHubActivity locale={locale} username="mcbalaam" />
-            </div>
-          </div>
-          <div className="card side-card">
-            <div className="item-container" style={{ display: 'inline-flex', gap: "10px" }}>
+          </Card>
+          <Card>
+            <GitHubActivity locale={locale} username="mcbalaam" />
+          </Card>
+          <Card>
+            <div style={{ display: 'inline-flex', gap: "10px" }}>
               <TiltCard src={femtanyl} label="femtanyl" />
               <TiltCard src={birthday} label="The Birthday Massacre" />
               <TiltCard src={ksb} label="ksb music" />
               <TiltCard src={bilb} label="билборды" />
             </div>
-          </div>
+          </Card>
           {/* <BalatroStatus title="Fibonacci" badge={<Badge>Uncommon</Badge>}>+4 Mult for every scored face card</BalatroStatus> */}
         </div>
       </div>
