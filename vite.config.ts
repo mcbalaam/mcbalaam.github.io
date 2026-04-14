@@ -32,7 +32,8 @@ manualChunks: (id) => {
     return 'vendor-utils'
   }
 
-  if (id.includes('node_modules/@fortawesome/')) {
+  if (id.includes('node_modules/@fortawesome/') ||
+      id.includes('node_modules/@mcbalaam/razdor-ui/')) {
     return 'vendor-ui'
   }
 

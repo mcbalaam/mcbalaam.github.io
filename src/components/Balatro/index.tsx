@@ -148,7 +148,7 @@ export default function Balatro({
     let resizeObserver: ResizeObserver | null = null;
 
     function resize() {
-      if (!container) return;
+      if (destroyed || !container) return;
       renderer.setSize(container.offsetWidth, container.offsetHeight);
       if (program) {
         program.uniforms.iResolution.value = [
@@ -160,6 +160,7 @@ export default function Balatro({
     }
 
     function forceRedraw() {
+      if (destroyed) return;
       resize();
       if (program) {
         program.uniforms.iTime.value = performance.now() * 0.001;
@@ -190,6 +191,8 @@ export default function Balatro({
       });
       resizeObserver.observe(container);
     }
+
+    let destroyed = false;
 
     resize();
 
@@ -226,6 +229,7 @@ export default function Balatro({
     let animationFrameId: number;
 
     function update(time: number) {
+      if (destroyed) return;
       animationFrameId = requestAnimationFrame(update);
       program.uniforms.iTime.value = time * 0.001;
       renderer.render({ scene: mesh });
@@ -243,6 +247,7 @@ export default function Balatro({
     container.addEventListener("mousemove", handleMouseMove);
 
     return () => {
+      destroyed = true;
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener("resize", resize);
       window.removeEventListener("scroll", forceRedraw);
