@@ -1,6 +1,6 @@
 export default {
   aboutMe:
-    "hey there. name's Max, I'm learning web development and microservice apps with Prisma/Redis. I contribute small features to /tg/station from time to time, write Telegram bots and help set them up. open for bounties -w-",
+    "hey there. name's Max, I'm a web developer learning backend, a tech enthusiast and much more. I contribute small features to /tg/station from time to time, write Telegram bots, create simple and complex websites, set up servers. open for bounties >.>",
   myMidniht: "my midnight is your",
   active: "usually I'm active 9-23",
   connections: "Connections",
@@ -56,11 +56,13 @@ export default {
   extera: "An API server + version control system for exteraGram plugins. Elysia, Prisma+Postgress. Currently undergoing maintenance to switch to microservices",
   zed: "A DreamMaker langserver which provides code highliting and snippets for the Zed editor. Compiled tree-sitter, basic features",
   razdor: "A React general utility component library for making Discord-like UIs. Basic styled components, theme support, toast notifications. Used on this page, btw.",
+  graft: "A Go utility for managing, backuping and restoring sparse directories to Git as \"blobs\" (submodules). Releases available on GitHub and AUR releases planned!",
   github: "GitHub activity · last 4 months",
   less: "Less",
   more: "More",
   myStack: "My stack",
   about_stack_typescript: "Strict (and static) typing appeals to me greatly — so much that I now consider it a de facto requirement in any language or framework. I wrote mis-fortune and exteraStore in TypeScript, and I'm working on another project — a Discord channel scraper that turns your channels into an RSS feed.",
+  about_stack_go: "Go is a great backend language: not interpreted, no VMs needed, no memory control hell, Git integration, an incredible \"package\" system. graft is a project I've written using Go: system shell intergration, argument/config fetching, web requests.",
   about_stack_react: "I spent over a year working with React interfaces and components for Space Station 13. mis-fortune and RazdorUI are my main personal projects built with it (aside from this page).",
   about_stack_elysiajs: "Elysia is a great JS/TS framework for large multi-route APIs. Writing middleware is convenient, chaining and unwrapping requests is a breeze. Used it in exteraStore for user authentication and routing requests between services.",
   about_stack_prismaorm: "Prisma is my first ORM and I'm already in love. Strict TS-style typing, field/table snippets, mapping, JSON storage (not recommended, but it's there). Used it in exteraStore for PostgreSQL: managing users, plugins, and releases.",

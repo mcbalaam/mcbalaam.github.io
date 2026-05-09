@@ -3,9 +3,8 @@ import { t, TranslationContextProvider } from "../translations/translate";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getStatus, type UserStatus } from "./requests";
 import { getVanityConfig } from "./config";
-import TiltCard from "./components/Token";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
+import { ReactionManager } from "./requests";
+import FingerprintJS from '@fingerprintjs/fingerprintjs';
 import {
   faMoon,
   faSun,
@@ -17,9 +16,9 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 import "./index.css";
+import '@mcbalaam/razdor-ui/dist/index.css'
 
-import Balatro from "./components/Balatro";
-
+import TiltCard from "./components/Token";
 import github from "../public/github-tile.svg";
 import steam from "../public/steampowered-tile.svg";
 import robust from "../public/robust.png";
@@ -37,24 +36,19 @@ import typescript from "../public/typescript.jpg"
 import elysia from "../public/elysia.png"
 import prisma from "../public/prisma.jpg"
 import docker from "../public/docker.png"
-import StackInfo from "./components/StackInfo";
+import go from "../public/golang.png"
 
-import { Button, ModalPopup, type ModalControl, useCreateToast, Badge, Tooltip, Card } from "@mcbalaam/razdor-ui"
+import { Button, ModalPopup, type ModalControl, useCreateToast, Badge, Tooltip, Card, Timestamp } from "@mcbalaam/razdor-ui"
 import StatusBubble from "./components/StatusBubble";
-import Timestamp from "./components/Timestamp";
 import AuthButtons from "./components/AccountBar/AccountBar";
 import SignList from "./components/SignList";
 import SignForm from "./components/SignForm/SignForm";
 import Reaction from "./components/Reaction";
 import RepoTab from "./components/RepoTab";
 import GitHubActivity from "./components/GitHubActivity";
-
-import { ReactionManager } from "./requests";
-
-import FingerprintJS from '@fingerprintjs/fingerprintjs';
+import StackInfo from "./components/StackInfo";
+import Balatro from "./components/Balatro";
 import BalatroStatus from "./components/BalatroStatus";
-
-import '@mcbalaam/razdor-ui/dist/index.css'
 
 async function getVisitorToken(): Promise<string> {
   const fp = await FingerprintJS.load();
@@ -358,9 +352,6 @@ export function App() {
           </Card>
         </div>
         <div className="side-column">
-          <Card title={t("working_on")}>
-            <RepoTab />
-          </Card>
           <Card title={t("myStack")}>
             <div style={{ display: 'inline-flex', flexDirection: "column" }}>
               <StackInfo items={[
@@ -368,9 +359,13 @@ export function App() {
                 { src: elysia, label: "ElysiaJS", description: t("about_stack_elysiajs") },
                 { src: react, label: "ReactJS", description: t("about_stack_react") },
                 { src: prisma, label: "Prisma ORM", description: t("about_stack_prismaorm") },
+                { src: go, label: "Go", description: t("about_stack_go") },
                 { src: docker, label: "Docker", description: t("about_stack_docker") },
               ]} />
             </div>
+          </Card>
+          <Card title={t("working_on")}>
+            <RepoTab />
           </Card>
           <Card>
             <GitHubActivity locale={locale} username="mcbalaam" />

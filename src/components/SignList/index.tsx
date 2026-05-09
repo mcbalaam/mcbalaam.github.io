@@ -11,12 +11,10 @@ import type { Sign, SignWithVerification } from "../../requests";
 import "./styles.css";
 
 import { t } from "../../../translations/translate";
-import { Button } from "@mcbalaam/razdor-ui"
-import { ModalPopup } from "@mcbalaam/razdor-ui";
+import { ModalPopup, Tooltip, Button } from "@mcbalaam/razdor-ui";
 import { faHashtag, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { faTrashCan } from "@fortawesome/free-solid-svg-icons/faTrashCan";
 import ContentLoader from "react-content-loader";
-import Tooltip from "../Tooltip";
 
 interface SignListProps {
   showUserSigns?: boolean;
@@ -251,6 +249,7 @@ export default function SignList({
                       onClick={() => handleDeleteClick(sign.id)}
                       disabled={deletingId === sign.id}
                       faIcon={faTrashCan}
+                      color="bad"
                     />
                   )}
 
@@ -269,6 +268,7 @@ export default function SignList({
                         setIsHashModalOpen(true);
                       }}
                       faIcon={faHashtag}
+                      color={sign.signatureValid ? "good" : "bad"}
                     />
                   </Tooltip>
                 </div>

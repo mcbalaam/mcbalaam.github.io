@@ -8,6 +8,8 @@ import typescript from "../../../public/typescript.jpg"
 import elysia from "../../../public/elysia.png"
 import prisma from "../../../public/prisma.jpg"
 import rust from "../../../public/rust.png"
+import go from "../../../public/golang.png"
+import github  from "../../../public/github-tile.svg"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
 import { t } from "../../../translations/translate";
@@ -28,6 +30,14 @@ export default function RepoTab({ }: {
           <Tooltip text="React"><Badge src={react} /></Tooltip>
         </span>
         <p>{t("fortune")}</p>
+      </span>
+      <span className="repotab-card">
+        <span style={{ display: "flex", flexDirection: "row" }}>
+          <span style={{ flex: 1 }}>
+            <Badge href="https://www.github.com/mcbalaam/graft" src={github}>graft <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
+          </span>
+          <Tooltip text="Go"><Badge src={go} /></Tooltip>
+        </span><p>{t("graft")}</p>
       </span>
       <span className="repotab-card">
         <span style={{ display: "flex", flexDirection: "row" }}>

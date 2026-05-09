@@ -1,5 +1,5 @@
 import { useRef, useEffect, useCallback } from "react";
-import Tooltip from "../Tooltip";
+import { Tooltip } from "@mcbalaam/razdor-ui";
 import "./styles.css";
 
 interface TiltCardProps {
