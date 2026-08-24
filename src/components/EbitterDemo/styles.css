@@ -1,0 +1,17 @@
+.ebitter-demo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.ebitter-demo-frame {
+    border: 0;
+    background: #000;
+    display: block;
+    max-width: 100%;
+}
+
+.ebitter-demo-warning {
+    margin: 0;
+    line-height: 1.5;
+}

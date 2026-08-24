@@ -1,5 +1,7 @@
-import { Badge, Tooltip } from "@mcbalaam/razdor-ui"
+import { useState } from "react";
+import { Badge, Button, ModalPopup, Tooltip } from "@mcbalaam/razdor-ui"
 import "./styles.css";
+import EbitterDemo, { isMobileLayout } from "../EbitterDemo";
 import misfortune from "../../../public/mis-fortune.png"
 import extera from "../../../public/extera.png"
 import byond from "../../../public/byond.png"
@@ -9,18 +11,35 @@ import elysia from "../../../public/elysia.png"
 import prisma from "../../../public/prisma.jpg"
 import rust from "../../../public/rust.png"
 import go from "../../../public/golang.png"
+import ebitter  from "../../../public/bitter.png"
 import github  from "../../../public/github-tile.svg"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
+import { faArrowUpRightFromSquare, faPlay } from "@fortawesome/free-solid-svg-icons";
 import { t } from "../../../translations/translate";
 
 export default function RepoTab({ }: {
 
 },) {
 
+  const [isDemoOpen, setIsDemoOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  const openDemo = () => {
+    setIsMobile(isMobileLayout());
+    setIsDemoOpen(true);
+  };
 
   return (
     <span className="repotab-box">
+            <span className="repotab-card">
+        <span style={{ display: "flex", flexDirection: "row" }}>
+          <span style={{ flex: 1 }}>
+            <Badge href="https://www.github.com/mcbalaam/ebitter" src={ebitter}>ebitter <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
+          </span>
+          <Tooltip text="Go"><Badge src={go} /></Tooltip>
+        </span><p>{t("ebitter")}</p>
+        <Button color="good" fill faIcon={faPlay} onClick={openDemo}>{t("run_live_demo")}</Button>
+      </span>
       <span className="repotab-card">
         <span style={{ display: "flex", flexDirection: "row" }}>
           <span style={{ flex: 1 }}>
@@ -52,19 +71,25 @@ export default function RepoTab({ }: {
       <span className="repotab-card">
         <span style={{ display: "flex", flexDirection: "row" }}>
           <span style={{ flex: 1 }}>
-            <Badge href="https://www.github.com/mcbalaam/zed-dreammaker-langserver" src={byond}>Zed DreamMaker Langserver <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
-          </span>
-          <Tooltip text="Rust"><Badge src={rust} /></Tooltip>
-        </span><p>{t("zed")}</p>
-      </span>
-      <span className="repotab-card">
-        <span style={{ display: "flex", flexDirection: "row" }}>
-          <span style={{ flex: 1 }}>
             <Badge href="https://www.github.com/mcbalaam/razdor-ui" src={react}>Razdor-UI Component Library <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
           </span>
           <Tooltip text="React"><Badge src={react} /></Tooltip>
         </span><p>{t("razdor")}</p>
       </span>
+
+      <ModalPopup
+        control={{
+          isOpen: isDemoOpen,
+          onClose: () => setIsDemoOpen(false),
+          closeOnOverlayClick: true,
+          closeOnEscape: true,
+          showCloseButton: true,
+          title: t("demo_title"),
+          size: isMobile ? "small" : "large",
+        }}
+      >
+        <EbitterDemo mobile={isMobile} />
+      </ModalPopup>
     </span>
   );
 }
