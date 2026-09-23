@@ -33,7 +33,9 @@ report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 # Finder (MacOS) folder config
 .DS_Store
 
-config.ts
+# local config with secrets (root only) - src/config.ts is env-based and committed
+/config.ts
+/config.toml
+
 AGENTS.md
 .crush
-.npmrc
