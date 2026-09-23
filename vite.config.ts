@@ -1,8 +1,14 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { ViteImageOptimizer } from 'vite-plugin-image-optimizer';
+import path from 'path';
 
 export default defineConfig({
+  resolve: {
+    alias: {
+      "react/jsx-dev-runtime": path.resolve("./src/jsx-dev-shim.ts"),
+    },
+  },
   plugins: [
     react(),
 ViteImageOptimizer({
