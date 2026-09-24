@@ -4,7 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "bun --hot src/index.ts",
+    "dev": "vite --port 3001 --host 127.0.0.1",
+    "dev:bun": "bun --hot src/index.ts",
     "build": "vite build --minify",
     "start": "NODE_ENV=production bun src/index.ts",
     "predeploy": "npm run build",

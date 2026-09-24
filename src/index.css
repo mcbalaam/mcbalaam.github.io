@@ -1,16 +1,19 @@
 @font-face {
     font-family: NunitoSans;
     src: url("../public/NunitoSans.ttf");
+    font-display: swap;
 }
 
 @font-face {
     font-family: FiraCode;
     src: url("../public/FiraCode-Light.woff2") format("woff2");
+    font-display: swap;
 }
 
 @font-face {
   font-family: 'Twemoji';
   src: url('../public/TwemojiMozilla-colr.woff2') format("woff2");
+  font-display: swap;
 }
 
 :root {
@@ -156,46 +159,46 @@
 }
 
 .master-container {
-    position: absolute;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    justify-content: center;
+    /* grid autoscale: 3 -> 2 -> 1 */
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(3, 400px);
     gap: 15px;
-    margin-top: 100px;
+    justify-content: center;
+    align-items: start;
+    max-width: 1230px;
     width: 100%;
-    left: 0;
+    margin: 100px auto 0 auto;
+    left: auto;
     padding: 0 10px;
     box-sizing: border-box;
 }
 
-.main-column {
+.main-column,
+.side-column,
+.third-column {
     display: flex;
     flex-direction: column;
     gap: 10px;
     width: 400px;
 }
 
-.side-column {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    width: 400px;
-}
-
-@media (max-width: 768px) {
+@media (max-width: 1285px) {
     .master-container {
+        grid-template-columns: repeat(2, 400px);
+        max-width: 815px;
+    }
+}
+
+@media (max-width: 860px) {
+    .master-container {
+        grid-template-columns: 1fr;
+        max-width: 400px;
         margin-top: 10px;
-        flex-direction: column;
-        width: 100%;
-        left: 0;
-        transform: none;
     }
-    .main-column {
-        width: 100%;
-    }
-    .side-column {
+    .main-column,
+    .side-column,
+    .third-column {
         width: 100%;
     }
     .tilt-card {

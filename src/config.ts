@@ -1,13 +1,36 @@
 import santa from "../vanity/santa.png";
 import canopy from "../vanity/canopy.png";
 
-// Vite envs are injected at build time. For local dev create .env from .env.example
-// For GitHub Pages the workflow injects secrets via VITE_* envs.
-export const SUPABASE_URL = (import.meta.env.VITE_SUPABASE_URL as string | undefined)?.trim() || "";
-export const SUPABASE_ANON_KEY = (import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined)?.trim() || "";
+// Vite inlines import.meta.env.VITE_* statically, so use direct access for inlining
+const _env = (import.meta as unknown as { env?: Record<string, string | undefined> })?.env;
+const _processEnv = typeof process !== "undefined" ? (process as unknown as { env?: Record<string, string | undefined> })?.env : undefined;
+
+function pickEnv(viteKey: string, bunKey: string): string | undefined {
+  const fromMeta = _env?.[viteKey] ?? _env?.[bunKey];
+  if (fromMeta !== undefined) return fromMeta.trim();
+  const fromProcess = _processEnv?.[viteKey] ?? _processEnv?.[bunKey];
+  if (fromProcess !== undefined) return fromProcess.trim();
+  return undefined;
+}
+
+export const SUPABASE_URL =
+  (import.meta.env.VITE_SUPABASE_URL as string | undefined)?.trim() ??
+  (import.meta.env.BUN_PUBLIC_SUPABASE_URL as string | undefined)?.trim() ??
+  pickEnv("VITE_SUPABASE_URL", "BUN_PUBLIC_SUPABASE_URL") ??
+  "";
+
+// keep anon key separate to allow Vite inlining
+export const SUPABASE_ANON_KEY =
+  (import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined)?.trim() ??
+  (import.meta.env.BUN_PUBLIC_SUPABASE_ANON_KEY as string | undefined)?.trim() ??
+  pickEnv("VITE_SUPABASE_ANON_KEY", "BUN_PUBLIC_SUPABASE_ANON_KEY") ??
+  "";
 
 export const ADMIN_GITHUB_USERNAME =
-  ((import.meta.env.VITE_ADMIN_GITHUB_USERNAME as string | undefined)?.trim() || "mcbalaam") as string;
+  ((import.meta.env.VITE_ADMIN_GITHUB_USERNAME as string | undefined)?.trim() ??
+  (import.meta.env.BUN_PUBLIC_ADMIN_GITHUB_USERNAME as string | undefined)?.trim() ??
+  pickEnv("VITE_ADMIN_GITHUB_USERNAME", "BUN_PUBLIC_ADMIN_GITHUB_USERNAME") ??
+  "mcbalaam") as string;
 
 export const ADMIN_CONFIG = {
   githubUsername: ADMIN_GITHUB_USERNAME,
@@ -29,7 +52,6 @@ export function getVanityConfig(id: string): VanityConfig | null {
   return VANITY_CONFIG[id] ?? null;
 }
 
-// alias для совместимости со старым configReader
 export const getVanity = getVanityConfig;
 
 if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {

@@ -15,7 +15,6 @@ import {
   faCircleXmark,
 } from "@fortawesome/free-solid-svg-icons";
 
-import "./index.css";
 import '@mcbalaam/razdor-ui/dist/index.css'
 
 import TiltCard from "./components/Token";
@@ -352,6 +351,11 @@ export function App() {
           </Card>
         </div>
         <div className="side-column">
+          <Card title={t("working_on")}>
+            <RepoTab />
+          </Card>
+        </div>
+        <div className="third-column">
           <Card title={t("myStack")}>
             <div style={{ display: 'inline-flex', flexDirection: "column" }}>
               <StackInfo items={[
@@ -363,9 +367,6 @@ export function App() {
                 { src: docker, label: "Docker", description: t("about_stack_docker") },
               ]} />
             </div>
-          </Card>
-          <Card title={t("working_on")}>
-            <RepoTab />
           </Card>
           <Card>
             <GitHubActivity locale={locale} username="mcbalaam" />

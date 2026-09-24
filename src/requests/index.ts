@@ -52,7 +52,13 @@ const supabaseUrl = SUPABASE_URL;
 const supabaseAnonKey = SUPABASE_ANON_KEY;
 const adminGithubUsername = ADMIN_GITHUB_USERNAME;
 
-export const supabase = createClient(supabaseUrl || "", supabaseAnonKey || "", {
+const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey);
+
+// createClient требует валидный URL — при отсутствии env используем placeholder чтобы не падать на импорте
+const _supabaseUrl = supabaseUrl || "https://placeholder.supabase.co";
+const _supabaseAnonKey = supabaseAnonKey || "placeholder-anon-key";
+
+export const supabase = createClient(_supabaseUrl, _supabaseAnonKey, {
   auth: {
     persistSession: true,
     autoRefreshToken: true,
@@ -126,6 +132,7 @@ async function fetchWithRetry(
 
 export class SignManager {
   static async getApprovedSigns(): Promise<SignWithVerification[]> {
+    if (!isSupabaseConfigured) return [];
     try {
       const url = `${supabaseUrl}/rest/v1/signs?select=*&approved=eq.true&order=created_at.desc`;
       const response = await fetchWithRetry(
@@ -523,6 +530,13 @@ export class AuthManager {
 
 export class StatusManager {
   static async getStatus(): Promise<UserStatus | null> {
+    if (!isSupabaseConfigured) {
+      return {
+        status: "busy auracoding",
+        vanity_id: null,
+        updated_at: new Date().toISOString(),
+      };
+    }
     try {
       const url = `${supabaseUrl}/rest/v1/user_status?select=status,vanity_id,updated_at&id=eq.1`;
 
@@ -633,6 +647,7 @@ export class StatusManager {
 
 export class ReactionManager {
   static async addReaction(type: string, token: string) {
+    if (!isSupabaseConfigured) throw new Error("Supabase not configured");
     const { error } = await supabase
       .from("reactions")
       .insert([{ reaction_type: type, visitor_token: token }]);
@@ -640,6 +655,7 @@ export class ReactionManager {
   }
 
   static async removeReaction(type: string, token: string) {
+    if (!isSupabaseConfigured) throw new Error("Supabase not configured");
     const { error } = await supabase
       .from("reactions")
       .delete()
@@ -649,6 +665,7 @@ export class ReactionManager {
   }
 
 static async getUserReactions(token: string): Promise<string[]> {
+  if (!isSupabaseConfigured) return [];
   const { data, error } = await supabase
     .from("reactions")
     .select("reaction_type")
@@ -662,6 +679,7 @@ static async getUserReactions(token: string): Promise<string[]> {
 }
 
   static async getReactionCounts() {
+    if (!isSupabaseConfigured) return {};
     const { data, error } = await supabase.from("reactions").select("reaction_type");
     if (error) throw error;
     return data.reduce((acc: Record<string, number>, curr) => {
