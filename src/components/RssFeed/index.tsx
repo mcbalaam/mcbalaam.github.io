@@ -258,6 +258,7 @@ export default function RssFeed({ locale }: { locale: string }) {
           closeOnEscape: true,
           showCloseButton: true,
           title: selected?.title || "",
+          size: "large"
         }}
       >
         {selected && (

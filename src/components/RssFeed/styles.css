@@ -148,7 +148,7 @@
 
 .rss-modal-content ul,
 .rss-modal-content ol {
-  margin: 8px 0 10px 20px;
+  margin: 8px 0 10px -10px;
   width: auto;
 }
 
