@@ -35,6 +35,8 @@ import typescript from "../public/typescript.jpg"
 import elysia from "../public/elysia.png"
 import prisma from "../public/prisma.jpg"
 import docker from "../public/docker.png"
+import gatus from "../public/gatus.png"
+import ansible from "../public/vscode-ansible.png"
 import go from "../public/golang.png"
 
 import { Button, ModalPopup, type ModalControl, useCreateToast, Badge, Tooltip, Card, Timestamp } from "@mcbalaam/razdor-ui"
@@ -48,6 +50,7 @@ import GitHubActivity from "./components/GitHubActivity";
 import StackInfo from "./components/StackInfo";
 import Balatro from "./components/Balatro";
 import BalatroStatus from "./components/BalatroStatus";
+import RssFeed from "./components/RssFeed";
 
 async function getVisitorToken(): Promise<string> {
   const fp = await FingerprintJS.load();
@@ -359,11 +362,11 @@ export function App() {
           <Card title={t("myStack")}>
             <div style={{ display: 'inline-flex', flexDirection: "column" }}>
               <StackInfo items={[
-                { src: typescript, label: "TypeScript", description: t("about_stack_typescript") },
-                { src: elysia, label: "ElysiaJS", description: t("about_stack_elysiajs") },
-                { src: react, label: "ReactJS", description: t("about_stack_react") },
-                { src: prisma, label: "Prisma ORM", description: t("about_stack_prismaorm") },
                 { src: go, label: "Go", description: t("about_stack_go") },
+                { src: typescript, label: "TypeScript", description: t("about_stack_typescript") },
+                { src: ansible, label: "Ansible", description: t("about_stack_ansible") },
+                { src: gatus, label: "Monitoring", description: t("about_stack_monitoring") },
+                { src: react, label: "ReactJS", description: t("about_stack_react") },
                 { src: docker, label: "Docker", description: t("about_stack_docker") },
               ]} />
             </div>
@@ -371,6 +374,7 @@ export function App() {
           <Card>
             <GitHubActivity locale={locale} username="mcbalaam" />
           </Card>
+          <RssFeed locale={locale} />
           <Card>
             <div style={{ display: 'inline-flex', gap: "10px" }}>
               <TiltCard src={femtanyl} label="femtanyl" />

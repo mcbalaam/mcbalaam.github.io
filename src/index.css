@@ -358,3 +358,10 @@ h1 {
     display: inline-flex;
     gap: 5px;
 }
+
+/* fix toast rounded corners — wrapper was rectangular with overflow:hidden clipping shadow as rect */
+.toast-wrapper {
+    border-radius: 15px;
+    background: transparent !important;
+    overflow: hidden;
+}

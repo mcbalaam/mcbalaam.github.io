@@ -235,7 +235,7 @@ export default function GitHubActivity({ username, locale }: GitHubActivityProps
           style={{ left: tooltip.x, top: tooltip.y }}
         >
           <strong>{pluralizeContributions(tooltip.day.count, locale)}</strong>
-          {" · "}
+          {" - "}
           {formatDate(tooltip.day.date, locale)}
         </div>
       )}

@@ -1,26 +1,26 @@
 import { useState } from "react";
-import { Badge, Button, ModalPopup, Tooltip } from "@mcbalaam/razdor-ui"
+import { Badge, Button, ModalPopup, Tooltip } from "@mcbalaam/razdor-ui";
 import "./styles.css";
 import EbitterDemo, { isMobileLayout } from "../EbitterDemo";
-import misfortune from "../../../public/mis-fortune.png"
-import extera from "../../../public/extera.png"
-import byond from "../../../public/byond.png"
-import react from "../../../public/react.png"
-import typescript from "../../../public/typescript.jpg"
-import elysia from "../../../public/elysia.png"
-import prisma from "../../../public/prisma.jpg"
-import rust from "../../../public/rust.png"
-import go from "../../../public/golang.png"
-import ebitter  from "../../../public/bitter.png"
-import github  from "../../../public/github-tile.svg"
+import misfortune from "../../../public/mis-fortune.png";
+import extera from "../../../public/extera.png";
+import byond from "../../../public/byond.png";
+import react from "../../../public/react.png";
+import typescript from "../../../public/typescript.jpg";
+import elysia from "../../../public/elysia.png";
+import prisma from "../../../public/prisma.jpg";
+import rust from "../../../public/rust.png";
+import go from "../../../public/golang.png";
+import ebitter from "../../../public/bitter.png";
+import github from "../../../public/github-tile.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowUpRightFromSquare, faPlay } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowUpRightFromSquare,
+  faPlay,
+} from "@fortawesome/free-solid-svg-icons";
 import { t } from "../../../translations/translate";
 
-export default function RepoTab({ }: {
-
-},) {
-
+export default function RepoTab({}: {}) {
   const [isDemoOpen, setIsDemoOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -31,50 +31,107 @@ export default function RepoTab({ }: {
 
   return (
     <span className="repotab-box">
-            <span className="repotab-card">
+      <span className="repotab-card">
         <span style={{ display: "flex", flexDirection: "row" }}>
           <span style={{ flex: 1 }}>
-            <Badge href="https://www.github.com/mcbalaam/ebitter" src={ebitter}>ebitter <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
+            <Badge href="https://www.github.com/mcbalaam/ebitter" src={ebitter}>
+              ebitter{" "}
+              <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} />
+            </Badge>
           </span>
-          <Tooltip text="Go"><Badge src={go} /></Tooltip>
-        </span><p>{t("ebitter")}</p>
-        <Button color="good" fill faIcon={faPlay} onClick={openDemo}>{t("run_live_demo")}</Button>
+          <Tooltip text="Go">
+            <Badge src={go} />
+          </Tooltip>
+        </span>
+        <p>{t("ebitter")}</p>
+        <Button color="good" fill faIcon={faPlay} onClick={openDemo}>
+          {t("run_live_demo")}
+        </Button>
       </span>
       <span className="repotab-card">
         <span style={{ display: "flex", flexDirection: "row" }}>
           <span style={{ flex: 1 }}>
-            <Badge href="https://www.github.com/mcbalaam/mis-fortune" src={misfortune}>mis-fortune <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
+            <Badge href="https://www.github.com/mcbalaam/pico-rss" src={go}>
+              pico-rss{" "}
+              <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} />
+            </Badge>
           </span>
-          <Tooltip text="TypeScript"><Badge src={typescript} /></Tooltip>
-          <Tooltip text="React"><Badge src={react} /></Tooltip>
+          <Tooltip text="Go">
+            <Badge src={go} />
+          </Tooltip>
+        </span>
+        <p>{t("picorss")}</p>
+      </span>
+      <span className="repotab-card">
+        <span style={{ display: "flex", flexDirection: "row" }}>
+          <span style={{ flex: 1 }}>
+            <Badge
+              href="https://www.github.com/mcbalaam/mis-fortune"
+              src={misfortune}
+            >
+              mis-fortune{" "}
+              <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} />
+            </Badge>
+          </span>
+          <Tooltip text="TypeScript">
+            <Badge src={typescript} />
+          </Tooltip>
+          <Tooltip text="React">
+            <Badge src={react} />
+          </Tooltip>
         </span>
         <p>{t("fortune")}</p>
       </span>
       <span className="repotab-card">
         <span style={{ display: "flex", flexDirection: "row" }}>
           <span style={{ flex: 1 }}>
-            <Badge href="https://www.github.com/mcbalaam/graft" src={github}>graft <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
+            <Badge href="https://www.github.com/mcbalaam/graft" src={github}>
+              graft{" "}
+              <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} />
+            </Badge>
           </span>
-          <Tooltip text="Go"><Badge src={go} /></Tooltip>
-        </span><p>{t("graft")}</p>
+          <Tooltip text="Go">
+            <Badge src={go} />
+          </Tooltip>
+        </span>
+        <p>{t("graft")}</p>
       </span>
       <span className="repotab-card">
         <span style={{ display: "flex", flexDirection: "row" }}>
           <span style={{ flex: 1 }}>
-            <Badge href="https://www.github.com/mcbalaam/exterastore-server" src={extera}>exteraGram Store <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
+            <Badge
+              href="https://www.github.com/mcbalaam/exterastore-server"
+              src={extera}
+            >
+              exteraGram Store{" "}
+              <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} />
+            </Badge>
           </span>
-          <Tooltip text="TypeScript"><Badge src={typescript} /></Tooltip>
-          <Tooltip text="ElysiaJS"><Badge src={elysia} /></Tooltip>
-          <Tooltip text="Prisma ORM"><Badge src={prisma} /></Tooltip>
-        </span><p>{t("extera")}</p>
+          <Tooltip text="TypeScript">
+            <Badge src={typescript} />
+          </Tooltip>
+          <Tooltip text="ElysiaJS">
+            <Badge src={elysia} />
+          </Tooltip>
+          <Tooltip text="Prisma ORM">
+            <Badge src={prisma} />
+          </Tooltip>
+        </span>
+        <p>{t("extera")}</p>
       </span>
       <span className="repotab-card">
         <span style={{ display: "flex", flexDirection: "row" }}>
           <span style={{ flex: 1 }}>
-            <Badge href="https://www.github.com/mcbalaam/razdor-ui" src={react}>Razdor-UI Component Library <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
+            <Badge href="https://www.github.com/mcbalaam/razdor-ui" src={react}>
+              Razdor-UI Component Library{" "}
+              <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} />
+            </Badge>
           </span>
-          <Tooltip text="React"><Badge src={react} /></Tooltip>
-        </span><p>{t("razdor")}</p>
+          <Tooltip text="React">
+            <Badge src={react} />
+          </Tooltip>
+        </span>
+        <p>{t("razdor")}</p>
       </span>
 
       <ModalPopup
