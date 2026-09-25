@@ -1,0 +1,171 @@
+.webring-bar {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    background-color: color-mix(in srgb, var(--color-bg-card) 40%, transparent);
+    -webkit-backdrop-filter: blur(12px) saturate(1.4);
+    backdrop-filter: blur(12px) saturate(1.4);
+    border-radius: 15px;
+    padding: 10px 12px;
+    border: 1px solid var(--color-border-primary);
+    box-shadow: 0px 0px 23px 5px var(--color-shadow);
+}
+
+.webring-nav-button {
+    flex: 0 0 auto;
+    background-color: color-mix(in srgb, var(--color-bg-card) 40%, transparent);
+    border: none;
+    transition: 200ms;
+}
+
+/*.card {
+    background-color: color-mix(in srgb, var(--color-bg-card) 40%, transparent);
+    backdrop-filter: blur(12px) saturate(1.4);
+}*/
+
+.webring-nav-button:hover {
+    background-color: color-mix(in srgb, var(--color-bg-card) 20%, transparent);
+}
+
+.webring-slugs {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 14px;
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.webring-slug {
+    text-decoration: none;
+    font-family: NunitoSans;
+    line-height: 1.2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: 0.2s;
+}
+
+.webring-slug:hover {
+    text-decoration: underline;
+    transform: scale(1.1);
+    opacity: 1;
+    color: oklch(from currentColor calc(l + 0.15) c h);
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.webring-current {
+    color: var(--color-text-primary);
+    font-size: 17px;
+    font-weight: 700;
+    flex: 0 0 auto;
+}
+
+.webring-current:hover {
+    transform: scale(1.2);
+}
+
+.webring-dist-1 {
+    color: var(--color-text-secondary);
+    font-size: 15px;
+    font-weight: 600;
+    opacity: 0.85;
+}
+
+.webring-dist-2 {
+    color: var(--color-text-secondary);
+    font-size: 13px;
+    font-weight: 500;
+    opacity: 0.6;
+}
+
+.webring-dist-3 {
+    color: var(--color-text-secondary);
+    font-size: 11px;
+    font-weight: 400;
+    opacity: 0.4;
+}
+
+:root[data-theme="light"] .webring-dist-1 {
+    opacity: 1;
+}
+
+:root[data-theme="light"] .webring-dist-2 {
+    opacity: 0.8;
+}
+
+:root[data-theme="light"] .webring-dist-3 {
+    opacity: 0.65;
+}
+
+@media (max-width: 860px) {
+    .webring-dist-3 {
+        display: none;
+    }
+
+    .webring-slugs {
+        gap: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .webring-dist-2 {
+        display: none;
+    }
+}
+
+.webring-loading {
+    pointer-events: none;
+}
+
+.webring-skeleton-btn {
+    flex: 0 0 auto;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background-color: var(--color-bg-button);
+    animation: webring-pulse 1.2s ease-in-out infinite;
+}
+
+.webring-slugs .webring-skeleton-slug {
+    display: inline-block;
+    height: 1em;
+    border-radius: 4px;
+    background-color: var(--color-bg-button);
+    animation: webring-pulse 1.2s ease-in-out infinite;
+}
+
+.webring-skeleton-slug.webring-current {
+    width: 110px;
+    font-size: 17px;
+}
+
+.webring-skeleton-slug.webring-dist-1 {
+    width: 80px;
+    font-size: 15px;
+}
+
+.webring-skeleton-slug.webring-dist-2 {
+    width: 60px;
+    font-size: 13px;
+}
+
+.webring-skeleton-slug.webring-dist-3 {
+    width: 45px;
+    font-size: 11px;
+}
+
+@keyframes webring-pulse {
+    0%, 100% {
+        opacity: 0.4;
+    }
+    50% {
+        opacity: 0.9;
+    }
+}

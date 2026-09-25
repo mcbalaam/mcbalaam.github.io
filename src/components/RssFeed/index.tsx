@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Card, ModalPopup, Button, useCreateToast } from "@mcbalaam/razdor-ui";
 import { faLink, faCheck } from "@fortawesome/free-solid-svg-icons";
 import ContentLoader from "react-content-loader";
-import { t } from "../../../translations/translate";
+import { t, getTranslator } from "../../../translations/translate";
 import "./styles.css";
 
 const RSS_URL = "https://rss.mcblm.xyz/rss.xml";
@@ -168,7 +168,8 @@ export default function RssFeed({ locale }: { locale: string }) {
     try {
       await navigator.clipboard.writeText(data.channelLink);
       setCopied(true);
-      createSuccessToast({ children: t("rss_copied"), duration: 2000, position: "bottom-center", icon: faCheck });
+      const tr = await getTranslator(locale);
+      createSuccessToast({ children: String(tr("rss_copied")), duration: 2000, position: "bottom-center", icon: faCheck });
       setTimeout(() => setCopied(false), 2000);
     } catch {
       window.open(data.channelLink, "_blank");

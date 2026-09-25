@@ -10,9 +10,9 @@ import {
 import type { Sign, SignWithVerification } from "../../requests";
 import "./styles.css";
 
-import { t } from "../../../translations/translate";
+import { t, getTranslator } from "../../../translations/translate";
 import { ModalPopup, Tooltip, Button } from "@mcbalaam/razdor-ui";
-import { faHashtag, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faCheckCircle, faHashtag, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { faTrashCan } from "@fortawesome/free-solid-svg-icons/faTrashCan";
 import ContentLoader from "react-content-loader";
 
@@ -20,6 +20,7 @@ interface SignListProps {
   showUserSigns?: boolean;
   showAdminControls?: boolean;
   className?: string;
+  locale?: string;
   onLeaveSignClick?: () => void;
   onSignDeleted?: () => void;
   onSignDeleteError?: (errorMessage: string) => void;
@@ -30,6 +31,7 @@ export default function SignList({
   showUserSigns = false,
   showAdminControls = false,
   className = "",
+  locale = "en",
   onLeaveSignClick,
   onSignDeleted,
   onSignDeleteError,
@@ -75,7 +77,7 @@ export default function SignList({
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load signs");
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
 
@@ -118,8 +120,9 @@ export default function SignList({
         onSignDeleted();
       }
     } catch (err) {
+      const tr = await getTranslator(locale);
       const errorMessage =
-        err instanceof Error ? err.message.toString() : t("sign_toastDeleteError").toString();
+        err instanceof Error ? err.message.toString() : String(tr("sign_toastDeleteError"));
       if (onSignDeleteError) {
         onSignDeleteError(errorMessage);
       }
@@ -164,7 +167,7 @@ export default function SignList({
   style={{ display: 'block',   }}
 >
   <rect x="0" y="0" ry="5" rx="5" width="100%" height="70px" />
-  
+
 </ContentLoader>
     )
   }
@@ -267,8 +270,8 @@ export default function SignList({
                         setSelectedSign(sign);
                         setIsHashModalOpen(true);
                       }}
-                      faIcon={faHashtag}
-                      color={sign.signatureValid ? "good" : "bad"}
+                      faIcon={faCheckCircle}
+                      color={sign.signatureValid ? "transparent" : "bad"}
                     />
                   </Tooltip>
                 </div>
@@ -277,13 +280,10 @@ export default function SignList({
                   <div className="sign-message">{sign.message}</div>
                 )}
 
-                {(sign.is_anonymous ||
+                {(
                   !sign.approved ||
                   (showAdminControls && currentUser?.is_admin)) && (
                   <div className="sign-footer">
-                    {sign.is_anonymous && (
-                      <span className="anonymous-badge">Anonymous</span>
-                    )}
                     {!sign.approved && (
                       <span className="pending-badge">Pending Approval</span>
                     )}

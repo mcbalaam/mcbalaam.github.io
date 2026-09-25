@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { t, TranslationContextProvider } from "../translations/translate";
+import { t, getTranslator, TranslationContextProvider } from "../translations/translate";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getStatus, type UserStatus } from "./requests";
 import { getVanityConfig } from "./config";
@@ -52,6 +52,7 @@ import StackInfo from "./components/StackInfo";
 import Balatro from "./components/Balatro";
 import BalatroStatus from "./components/BalatroStatus";
 import RssFeed from "./components/RssFeed";
+import WebringBar from "./components/WebringBar";
 
 async function getVisitorToken(): Promise<string> {
   const fp = await FingerprintJS.load();
@@ -244,42 +245,50 @@ export function App() {
     title: t("sign_header"),
   };
 
-  const handleSignFormSuccess = () => {
+  const handleSignFormSuccess = async () => {
     setIsModalOpen(false);
-    createSuccessToast({ children: t("sign_toastSent"), duration: 3000, position: "bottom-center", icon: faCircleCheck });
+    const tr = await getTranslator(locale);
+    createSuccessToast({ children: String(tr("sign_toastSent")), duration: 3000, position: "bottom-center", icon: faCircleCheck });
     setSignsRefreshKey((prev) => prev + 1);
   };
 
-  const handleSignFormError = (errorMessage: string) => {
+  const handleSignFormError = async (errorMessage: string) => {
     setIsModalOpen(false);
-    createErrorToast({ children: `${t("sign_error")}: ${errorMessage}`, position: "bottom-center", icon: faCircleXmark });
+    const tr = await getTranslator(locale);
+    createErrorToast({ children: `${String(tr("sign_error"))}: ${errorMessage}`, position: "bottom-center", icon: faCircleXmark });
   };
 
-  const handleSignDeleted = () => {
-    createSuccessToast({ children: t("sign_toastDeleted"), duration: 3000, position: "bottom-center", icon: faCircleCheck });
+  const handleSignDeleted = async () => {
+    const tr = await getTranslator(locale);
+    createSuccessToast({ children: String(tr("sign_toastDeleted")), duration: 3000, position: "bottom-center", icon: faCircleCheck });
     setSignsRefreshKey((prev) => prev + 1);
   };
 
-  const handleSignDeleteError = (errorMessage: string) => {
-    createErrorToast({ children: `${t("sign_toastDeleteError")}: ${errorMessage}`, position: "bottom-center", icon: faCircleXmark });
+  const handleSignDeleteError = async (errorMessage: string) => {
+    const tr = await getTranslator(locale);
+    createErrorToast({ children: `${String(tr("sign_toastDeleteError"))}: ${errorMessage}`, position: "bottom-center", icon: faCircleXmark });
   };
 
-  const handleLogoutSuccess = () => {
-    createSuccessToast({ children: t("logout_toastSuccess"), duration: 3000, position: "bottom-center", icon: faCircleCheck });
+  const handleLogoutSuccess = async () => {
+    const tr = await getTranslator(locale);
+    createSuccessToast({ children: String(tr("logout_toastSuccess")), duration: 3000, position: "bottom-center", icon: faCircleCheck });
     setSignsRefreshKey((prev) => prev + 1);
   };
 
-  const handleLogoutError = (errorMessage: string) => {
-    createErrorToast({ children: `${t("logout_toastError")}: ${errorMessage}`, position: "bottom-center", icon: faCircleXmark });
+  const handleLogoutError = async (errorMessage: string) => {
+    const tr = await getTranslator(locale);
+    createErrorToast({ children: `${String(tr("logout_toastError"))}: ${errorMessage}`, position: "bottom-center", icon: faCircleXmark });
   };
 
-  const handleLoginSuccess = () => {
-    createSuccessToast({ children: t("authViaGitHub"), duration: 3000, position: "bottom-center", icon: faCircleCheck });
+  const handleLoginSuccess = async () => {
+    const tr = await getTranslator(locale);
+    createSuccessToast({ children: String(tr("authViaGitHub")), duration: 3000, position: "bottom-center", icon: faCircleCheck });
     setSignsRefreshKey((prev) => prev + 1);
   };
 
-  const handleLoginError = (errorMessage: string) => {
-    createErrorToast({ children: `${t("sign_error")}: ${errorMessage}`, position: "bottom-center", icon: faCircleXmark });
+  const handleLoginError = async (errorMessage: string) => {
+    const tr = await getTranslator(locale);
+    createErrorToast({ children: `${String(tr("sign_error"))}: ${errorMessage}`, position: "bottom-center", icon: faCircleXmark });
   };
 
   const VanityOverlay = ({ vanityId }: { vanityId: string }) => {
@@ -395,6 +404,7 @@ export function App() {
   const signsCard = (
     <Card>
       <SignList
+        locale={locale}
         onLeaveSignClick={() => openModal()}
         onSignDeleted={handleSignDeleted}
         onSignDeleteError={handleSignDeleteError}
@@ -445,11 +455,14 @@ export function App() {
     </Card>
   );
 
+  const webringBar = <WebringBar />;
+
   return (
     <TranslationContextProvider locale={locale}>
       <Balatro color1="#3C385A" color2="#24313D" color3={theme == "light" ? "#656181" : "#201F31"} mouseInteraction={false}></Balatro>
       {layout === "triple" && (
         <div className="master-container is-triple">
+          {webringBar}
           <div className="column profile-column">
             {profileCard}
             {authCard}
@@ -468,6 +481,7 @@ export function App() {
       )}
       {layout === "double" && (
         <div className="master-container is-double">
+          {webringBar}
           <div className="column primary-column">
             {profileCard}
             {authCard}
@@ -484,6 +498,7 @@ export function App() {
       )}
       {layout === "single" && (
         <div className="master-container is-single">
+          {webringBar}
           <div className="column single-column">
             {profileCard}
             {authCard}
