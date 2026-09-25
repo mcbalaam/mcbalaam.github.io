@@ -77,4 +77,6 @@ export default {
   rss_empty: "Пока пусто",
   rss_error: "Не удалось загрузить RSS",
   rss_copied: "Ссылка скопирована!",
+  mailme: "Договориться о заказе",
+  mailme_hover: "Продолжить в почте"
 } as const;

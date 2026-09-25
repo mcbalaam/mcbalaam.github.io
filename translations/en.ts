@@ -75,4 +75,6 @@ export default {
   rss_empty: "No posts yet",
   rss_error: "Failed to load RSS",
   rss_copied: "Link copied!",
+  mailme: "Disscuss a bounty",
+  mailme_hover: "Continue in your mail"
 } as const;

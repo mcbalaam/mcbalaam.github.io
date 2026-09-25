@@ -24,7 +24,6 @@
 
 .stack-badge-wrap--active {
     opacity: 1;
-    background-color: var(--color-bg-button-blue);
 }
 
 .stack-desc {

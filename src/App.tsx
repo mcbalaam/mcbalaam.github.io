@@ -13,6 +13,7 @@ import {
   faArrowUpRightFromSquare,
   faCircleCheck,
   faCircleXmark,
+  faEnvelope,
 } from "@fortawesome/free-solid-svg-icons";
 
 import '@mcbalaam/razdor-ui/dist/index.css'
@@ -58,6 +59,34 @@ async function getVisitorToken(): Promise<string> {
   return result.visitorId;
 }
 
+type LayoutMode = "triple" | "double" | "single";
+
+function getLayoutMode(): LayoutMode {
+  if (typeof window === "undefined") return "triple";
+  if (window.matchMedia("(max-width: 860px)").matches) return "single";
+  if (window.matchMedia("(max-width: 1285px)").matches) return "double";
+  return "triple";
+}
+
+function useLayoutMode(): LayoutMode {
+  const [mode, setMode] = useState<LayoutMode>(getLayoutMode);
+
+  useEffect(() => {
+    const singleQuery = window.matchMedia("(max-width: 860px)");
+    const doubleQuery = window.matchMedia("(max-width: 1285px)");
+    const update = () => setMode(getLayoutMode());
+    singleQuery.addEventListener("change", update);
+    doubleQuery.addEventListener("change", update);
+    update();
+    return () => {
+      singleQuery.removeEventListener("change", update);
+      doubleQuery.removeEventListener("change", update);
+    };
+  }, []);
+
+  return mode;
+}
+
 export function App() {
   const [locale, setLocale] = useState("en");
   const [theme, setTheme] = useState<"dark" | "light">("dark");
@@ -67,6 +96,7 @@ export function App() {
   const [userStatus, setUserStatus] = useState<UserStatus | null>(null);
   const [processingReactions, setProcessingReactions] = useState<Set<string>>(new Set());
   const [visitorToken, setVisitorToken] = useState<string | null>(null);
+  const layout = useLayoutMode();
 
   useEffect(() => {
     const initToken = async () => {
@@ -266,126 +296,206 @@ export function App() {
     return <img src={config.path} style={style} />;
   };
 
+  const profileCard = (
+    <Card>
+      <div className="banner">
+        <Button className="language-button" faIcon={faLanguage} onClick={toggleLocale} />
+        <Button className="theme-button" faIcon={theme === "dark" ? faMoon : faSun} onClick={toggleTheme} />
+        <div className="avatar-container">
+          <img className="pfp" src={pfp}></img>
+          {userStatus?.vanity_id && <VanityOverlay vanityId={userStatus.vanity_id} />}
+        </div>
+        <StatusBubble>{(userStatus?.status || "\n").replace(/<br\s*\/?>/gi, "\n")}</StatusBubble>
+      </div>
+      <div className="name">
+        <div className="nameplate">mcbalaam</div>
+        <Badge small src={robust}>RBST</Badge>
+      </div>
+      <div className="pnouns">
+        mcbalaam <FontAwesomeIcon size="sm" icon={faArrowRightLong} />{" "}
+        эмсибалаам, балаам, макбаклак (he/him)
+      </div>
+      <p className="desc">{t("aboutMe")}</p>
+      <div style={{ display: "flex", height: "fit-content", flexWrap: "wrap", margin: "0px 5px 10px 0" }}>
+        <p>{t("myMidniht")} <Timestamp ts="1764608400" />. {t("active")}</p>
+      </div>
+
+      <h1>{t("connections")}</h1>
+      <div className="connections">
+        <Badge href="https://www.github.com/mcbalaam" src={github}>GitHub <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
+        <Badge href="https://steamcommunity.com/id/mcbalaam/" src={steam}>Steam <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
+        <Badge href="https://soundcloud.com/mcbalaam" src={soundcloud}>SoundСloud <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
+        <Badge href="https://ko-fi.com/mcbalaam" src={kofi}>Ko-Fi <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
+        <Badge href="https://pay.cloudtips.ru/p/7ac675d4" src={cloudtips}>CloudTips <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
+      </div>
+      <br></br>
+      <Button
+        className="mail-button"
+        fill
+        color="secondary"
+        onClick={() => window.location.href = "mailto:mcbalaam@proton.me"}
+        faIcon={faEnvelope}
+      >
+        <span className="mail-button-labels">
+          <span className="mail-button-label mail-button-label-default">
+            {t("mailme")}
+          </span>
+          <span className="mail-button-label mail-button-label-hover" aria-hidden="true">
+            {t("mailme_hover")}
+          </span>
+        </span>
+        <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} />
+      </Button>
+      <br></br>
+      <div className="reactions">
+        <Tooltip text=":pig2:">
+          <Reaction
+            count={reactionCounts["pig"] || 0}
+            reacted={userReactions.includes("pig")}
+            onClick={() => handleReactionClick("pig")}
+          >🐖</Reaction>
+        </Tooltip>
+        <Tooltip text=":dash:">
+          <Reaction
+            count={reactionCounts["dash"] || 0}
+            onClick={() => handleReactionClick("dash")}
+            reacted={userReactions.includes("dash")}
+          >💨</Reaction>
+        </Tooltip>
+        <Tooltip text=":heart:">
+          <Reaction
+            count={reactionCounts["heart"] || 0}
+            onClick={() => handleReactionClick("heart")}
+            reacted={userReactions.includes("heart")}
+          >❤️</Reaction>
+        </Tooltip>
+        <Tooltip text=":broken_heart:">
+          <Reaction
+            count={reactionCounts["broken_heart"] || 0}
+            onClick={() => handleReactionClick("broken_heart")}
+            reacted={userReactions.includes("broken_heart")}
+          >💔</Reaction>
+        </Tooltip>
+      </div>
+    </Card>
+  );
+
+  const authCard = (
+    <Card>
+      <AuthButtons
+        onLoginSuccess={handleLoginSuccess}
+        onLoginError={handleLoginError}
+        onLogoutSuccess={handleLogoutSuccess}
+        onLogoutError={handleLogoutError}
+        onAuthChange={() => { }}
+      />
+    </Card>
+  );
+
+  const signsCard = (
+    <Card>
+      <SignList
+        onLeaveSignClick={() => openModal()}
+        onSignDeleted={handleSignDeleted}
+        onSignDeleteError={handleSignDeleteError}
+        refreshKey={signsRefreshKey}
+      />
+    </Card>
+  );
+
+  const stackCard = (
+    <Card title={t("myStack")}>
+      <div style={{ display: 'inline-flex', flexDirection: "column" }}>
+        <StackInfo items={[
+          { src: go, label: "Go", description: t("about_stack_go") },
+          { src: typescript, label: "TypeScript", description: t("about_stack_typescript") },
+          { src: ansible, label: "Ansible", description: t("about_stack_ansible") },
+          { src: gatus, label: "Monitoring", description: t("about_stack_monitoring") },
+          { src: react, label: "ReactJS", description: t("about_stack_react") },
+          { src: docker, label: "Docker", description: t("about_stack_docker") },
+        ]} />
+      </div>
+    </Card>
+  );
+
+  const workingCard = (
+    <Card title={t("working_on")}>
+      <RepoTab />
+    </Card>
+  );
+
+  const rssCard = (
+    <RssFeed locale={locale} />
+  );
+
+  const githubCard = (
+    <Card>
+      <GitHubActivity locale={locale} username="mcbalaam" />
+    </Card>
+  );
+
+  const musicCard = (
+    <Card>
+      <div style={{ display: 'inline-flex', gap: "10px" }}>
+        <TiltCard src={femtanyl} label="femtanyl" />
+        <TiltCard src={birthday} label="The Birthday Massacre" />
+        <TiltCard src={ksb} label="ksb music" />
+        <TiltCard src={bilb} label="билборды" />
+      </div>
+    </Card>
+  );
+
   return (
     <TranslationContextProvider locale={locale}>
       <Balatro color1="#3C385A" color2="#24313D" color3={theme == "light" ? "#656181" : "#201F31"} mouseInteraction={false}></Balatro>
-      <div className="master-container">
-        <div className="main-column">
-          <Card>
-            <div className="banner">
-              <Button className="language-button" faIcon={faLanguage} onClick={toggleLocale} />
-              <Button className="theme-button" faIcon={theme === "dark" ? faMoon : faSun} onClick={toggleTheme} />
-              <div className="avatar-container">
-                <img className="pfp" src={pfp}></img>
-                {userStatus?.vanity_id && <VanityOverlay vanityId={userStatus.vanity_id} />}
-              </div>
-              <StatusBubble>{(userStatus?.status || "\n").replace(/<br\s*\/?>/gi, "\n")}</StatusBubble>
-            </div>
-            <div className="name">
-              <div className="nameplate">mcbalaam</div>
-              <Badge small src={robust}>RBST</Badge>
-            </div>
-            <div className="pnouns">
-              mcbalaam <FontAwesomeIcon size="sm" icon={faArrowRightLong} />{" "}
-              эмсибалаам, балаам, макбаклак (he/him)
-            </div>
-            <p className="desc">{t("aboutMe")}</p>
-            <div style={{ display: "flex", height: "fit-content", flexWrap: "wrap", margin: "0px 5px 10px 0" }}>
-              <p>{t("myMidniht")} <Timestamp ts="1764608400" />. {t("active")}</p>
-            </div>
-
-            <h1>{t("connections")}</h1>
-            <div className="connections">
-              <Badge href="https://www.github.com/mcbalaam" src={github}>GitHub <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
-              <Badge href="https://steamcommunity.com/id/mcbalaam/" src={steam}>Steam <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
-              <Badge href="https://soundcloud.com/mcbalaam" src={soundcloud}>SoundСloud <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
-              <Badge href="https://matrix.to/#/@mcbalaam:matrix.realrobust.space" src={matrix}>Matrix <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
-              <Badge href="https://ko-fi.com/mcbalaam" src={kofi}>Ko-Fi <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
-              <Badge href="https://pay.cloudtips.ru/p/7ac675d4" src={cloudtips}>CloudTips <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
-            </div>
-            <br></br>
-            <div className="reactions">
-              <Tooltip text=":pig2:">
-                <Reaction
-                  count={reactionCounts["pig"] || 0}
-                  reacted={userReactions.includes("pig")}
-                  onClick={() => handleReactionClick("pig")}
-                >🐖</Reaction>
-              </Tooltip>
-              <Tooltip text=":dash:">
-                <Reaction
-                  count={reactionCounts["dash"] || 0}
-                  onClick={() => handleReactionClick("dash")}
-                  reacted={userReactions.includes("dash")}
-                >💨</Reaction>
-              </Tooltip>
-              <Tooltip text=":heart:">
-                <Reaction
-                  count={reactionCounts["heart"] || 0}
-                  onClick={() => handleReactionClick("heart")}
-                  reacted={userReactions.includes("heart")}
-                >❤️</Reaction>
-              </Tooltip>
-              <Tooltip text=":broken_heart:">
-                <Reaction
-                  count={reactionCounts["broken_heart"] || 0}
-                  onClick={() => handleReactionClick("broken_heart")}
-                  reacted={userReactions.includes("broken_heart")}
-                >💔</Reaction>
-              </Tooltip>
-            </div>
-          </Card>
-          <Card>
-            <AuthButtons
-              onLoginSuccess={handleLoginSuccess}
-              onLoginError={handleLoginError}
-              onLogoutSuccess={handleLogoutSuccess}
-              onLogoutError={handleLogoutError}
-              onAuthChange={() => { }}
-            />
-          </Card>
-          <Card>
-            <SignList
-              onLeaveSignClick={() => openModal()}
-              onSignDeleted={handleSignDeleted}
-              onSignDeleteError={handleSignDeleteError}
-              refreshKey={signsRefreshKey}
-            />
-          </Card>
+      {layout === "triple" && (
+        <div className="master-container is-triple">
+          <div className="column profile-column">
+            {profileCard}
+            {authCard}
+            {signsCard}
+          </div>
+          <div className="column projects-column">
+            {workingCard}
+          </div>
+          <div className="column extra-column">
+            {stackCard}
+            {githubCard}
+            {rssCard}
+            {musicCard}
+          </div>
         </div>
-        <div className="side-column">
-          <Card title={t("working_on")}>
-            <RepoTab />
-          </Card>
+      )}
+      {layout === "double" && (
+        <div className="master-container is-double">
+          <div className="column primary-column">
+            {profileCard}
+            {authCard}
+            {signsCard}
+            {githubCard}
+            {musicCard}
+          </div>
+          <div className="column secondary-column">
+            {stackCard}
+            {workingCard}
+            {rssCard}
+          </div>
         </div>
-        <div className="third-column">
-          <Card title={t("myStack")}>
-            <div style={{ display: 'inline-flex', flexDirection: "column" }}>
-              <StackInfo items={[
-                { src: go, label: "Go", description: t("about_stack_go") },
-                { src: typescript, label: "TypeScript", description: t("about_stack_typescript") },
-                { src: ansible, label: "Ansible", description: t("about_stack_ansible") },
-                { src: gatus, label: "Monitoring", description: t("about_stack_monitoring") },
-                { src: react, label: "ReactJS", description: t("about_stack_react") },
-                { src: docker, label: "Docker", description: t("about_stack_docker") },
-              ]} />
-            </div>
-          </Card>
-          <Card>
-            <GitHubActivity locale={locale} username="mcbalaam" />
-          </Card>
-          <RssFeed locale={locale} />
-          <Card>
-            <div style={{ display: 'inline-flex', gap: "10px" }}>
-              <TiltCard src={femtanyl} label="femtanyl" />
-              <TiltCard src={birthday} label="The Birthday Massacre" />
-              <TiltCard src={ksb} label="ksb music" />
-              <TiltCard src={bilb} label="билборды" />
-            </div>
-          </Card>
-          {/* <BalatroStatus title="Fibonacci" badge={<Badge>Uncommon</Badge>}>+4 Mult for every scored face card</BalatroStatus> */}
+      )}
+      {layout === "single" && (
+        <div className="master-container is-single">
+          <div className="column single-column">
+            {profileCard}
+            {authCard}
+            {signsCard}
+            {stackCard}
+            {workingCard}
+            {rssCard}
+            {githubCard}
+            {musicCard}
+          </div>
         </div>
-      </div>
+      )}
       <ModalPopup control={modalLeaveSign}>
         <SignForm onSignCreated={handleSignFormSuccess} onSignError={handleSignFormError} />
       </ModalPopup>
