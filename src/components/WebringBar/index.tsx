@@ -52,15 +52,6 @@ function neighbors(sites: WebringSite[], index: number, step: -1 | 1): WebringSi
 }
 
 export default function WebringBar({ slug = WEBRING_SLUG }: { slug?: string }) {
-  // Тестовый режим: ?webring=<slug> в URL подменяет центральный slug,
-  // чтобы посмотреть плашку до принятия заявки. Например: ?webring=vita
-  const [effectiveSlug] = useState(() => {
-    try {
-      return new URLSearchParams(window.location.search).get("webring")?.trim() || slug;
-    } catch {
-      return slug;
-    }
-  });
   const [sites, setSites] = useState<WebringSite[] | null>(() => readCache());
   const [failed, setFailed] = useState(false);
 
@@ -86,7 +77,6 @@ export default function WebringBar({ slug = WEBRING_SLUG }: { slug?: string }) {
 
   if (failed) return null;
 
-  // Данных ещё нет — рисуем скелетон того же размера, чтобы не прыгала раскладка.
   if (!sites) {
     return (
       <nav className="webring-bar webring-loading" aria-label="Webring">
@@ -106,7 +96,7 @@ export default function WebringBar({ slug = WEBRING_SLUG }: { slug?: string }) {
     );
   }
 
-  const index = sites.findIndex((site) => site.slug === effectiveSlug);
+  const index = sites.findIndex((site) => site.slug === slug);
   if (index === -1) return null;
 
   const curr = sites[index] as WebringSite;
@@ -126,7 +116,7 @@ export default function WebringBar({ slug = WEBRING_SLUG }: { slug?: string }) {
         className="webring-nav-button"
         faIcon={faArrowLeft}
         onClick={() => {
-          window.location.href = `${WEBRING_URL}/${effectiveSlug}/prev`;
+          window.location.href = `${WEBRING_URL}/${slug}/prev`;
         }}
       />
       <div className="webring-slugs">
@@ -157,7 +147,7 @@ export default function WebringBar({ slug = WEBRING_SLUG }: { slug?: string }) {
         className="webring-nav-button"
         faIcon={faArrowRight}
         onClick={() => {
-          window.location.href = `${WEBRING_URL}/${effectiveSlug}/next`;
+          window.location.href = `${WEBRING_URL}/${slug}/next`;
         }}
       />
     </nav>
