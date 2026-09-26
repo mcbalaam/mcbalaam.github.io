@@ -2,17 +2,17 @@ import { useState } from "react";
 import { Badge, Button, ModalPopup, Tooltip } from "@mcbalaam/razdor-ui";
 import "./styles.css";
 import EbitterDemo, { isMobileLayout } from "../EbitterDemo";
-import misfortune from "../../../public/mis-fortune.png";
-import extera from "../../../public/extera.png";
-import byond from "../../../public/byond.png";
-import react from "../../../public/react.png";
-import typescript from "../../../public/typescript.jpg";
-import elysia from "../../../public/elysia.png";
-import prisma from "../../../public/prisma.jpg";
-import rust from "../../../public/rust.png";
-import go from "../../../public/golang.png";
-import ebitter from "../../../public/bitter.png";
-import github from "../../../public/github-tile.svg";
+import misfortune from "/mis-fortune.png";
+import extera from "/extera.png";
+import byond from "/byond.png";
+import react from "/react.png";
+import typescript from "/typescript.jpg";
+import elysia from "/elysia.png";
+import prisma from "/prisma.jpg";
+import rust from "/rust.png";
+import go from "/golang.png";
+import ebitter from "/bitter.png";
+import github from "/github-tile.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowUpRightFromSquare,

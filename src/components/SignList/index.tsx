@@ -257,7 +257,6 @@ export default function SignList({
                   )}
 
                   <Tooltip
-                    className="mobile-check"
                     text={
                       sign.signatureValid
                         ? t("sign_hashMatched")

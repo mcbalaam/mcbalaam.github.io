@@ -11,7 +11,6 @@
     backdrop-filter: blur(12px) saturate(1.4);
     border-radius: 15px;
     padding: 10px 12px;
-    border: 1px solid var(--color-border-primary);
     box-shadow: 0px 0px 23px 5px var(--color-shadow);
 }
 
@@ -21,11 +20,6 @@
     border: none;
     transition: 200ms;
 }
-
-/*.card {
-    background-color: color-mix(in srgb, var(--color-bg-card) 40%, transparent);
-    backdrop-filter: blur(12px) saturate(1.4);
-}*/
 
 .webring-nav-button:hover {
     background-color: color-mix(in srgb, var(--color-bg-card) 20%, transparent);

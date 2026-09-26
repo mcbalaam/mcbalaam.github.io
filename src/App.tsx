@@ -19,26 +19,23 @@ import {
 import '@mcbalaam/razdor-ui/dist/index.css'
 
 import TiltCard from "./components/Token";
-import github from "../public/github-tile.svg";
-import steam from "../public/steampowered-tile.svg";
-import robust from "../public/robust.png";
-import soundcloud from "../public/soundcloud.png";
-import matrix from "../public/matrix.png"
-import kofi from "../public/kofi.png";
-import cloudtips from "../public/cloudtips.png";
-import pfp from "../public/mcbalaam.webp";
-import femtanyl from "../public/femtanyl.jpg";
-import birthday from "../public/birthday.jpg";
-import ksb from "../public/ksb.jpg";
-import bilb from "../public/bilb.jpg";
-import react from "../public/react.png"
-import typescript from "../public/typescript.jpg"
-import elysia from "../public/elysia.png"
-import prisma from "../public/prisma.jpg"
-import docker from "../public/docker.png"
-import gatus from "../public/gatus.png"
-import ansible from "../public/vscode-ansible.png"
-import go from "../public/golang.png"
+import github from "/github-tile.svg";
+import steam from "/steampowered-tile.svg";
+import robust from "/robust.png";
+import soundcloud from "/soundcloud.png";
+import kofi from "/kofi.png";
+import cloudtips from "/cloudtips.png";
+import pfp from "/mcbalaam.webp";
+import femtanyl from "/femtanyl.jpg";
+import birthday from "/birthday.jpg";
+import ksb from "/ksb.jpg";
+import bilb from "/bilb.jpg";
+import react from "/react.png"
+import typescript from "/typescript.jpg"
+import docker from "/docker.png"
+import gatus from "/gatus.png"
+import ansible from "/vscode-ansible.png"
+import go from "/golang.png"
 
 import { Button, ModalPopup, type ModalControl, useCreateToast, Badge, Tooltip, Card, Timestamp } from "@mcbalaam/razdor-ui"
 import StatusBubble from "./components/StatusBubble";
@@ -475,7 +472,6 @@ export function App() {
             {stackCard}
             {githubCard}
             {rssCard}
-            {musicCard}
           </div>
         </div>
       )}
@@ -487,7 +483,6 @@ export function App() {
             {authCard}
             {signsCard}
             {githubCard}
-            {musicCard}
           </div>
           <div className="column secondary-column">
             {stackCard}
@@ -507,7 +502,6 @@ export function App() {
             {workingCard}
             {rssCard}
             {githubCard}
-            {musicCard}
           </div>
         </div>
       )}

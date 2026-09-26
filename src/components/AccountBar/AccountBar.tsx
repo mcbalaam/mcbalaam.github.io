@@ -9,7 +9,7 @@ import "./styles.css";
 
 import { t } from "../../../translations/translate";
 import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
-import github from "../../../public/github-tile.svg";
+import github from "/github-tile.svg";
 import { Button } from "@mcbalaam/razdor-ui"
 
 interface AuthButtonsProps {

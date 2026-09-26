@@ -1,18 +1,18 @@
 @font-face {
     font-family: NunitoSans;
-    src: url("../public/NunitoSans.ttf");
+    src: url("NunitoSans.ttf");
     font-display: swap;
 }
 
 @font-face {
     font-family: FiraCode;
-    src: url("../public/FiraCode-Light.woff2") format("woff2");
+    src: url("FiraCode-Light.woff2") format("woff2");
     font-display: swap;
 }
 
 @font-face {
   font-family: 'Twemoji';
-  src: url('../public/TwemojiMozilla-colr.woff2') format("woff2");
+  src: url('TwemojiMozilla-colr.woff2') format("woff2");
   font-display: swap;
 }
 
@@ -22,7 +22,6 @@
     color-scheme: light dark;
     transition: 500ms;
 
-    /* Base colors - dark theme */
     --color-bg-primary: #1e1e30;
     --color-bg-secondary: #2d2c42;
     --color-bg-tertiary: #252535;
@@ -51,7 +50,6 @@
     --color-shadow-medium: rgba(0, 0, 0, 0.1);
     --color-overlay: rgba(100, 100, 200, 0.2);
 
-    /* Status colors */
     --color-success: #1f3120;
     --color-success-border: #2b3a2c;
     --color-success-light: #d4edda;
@@ -67,7 +65,6 @@
     --color-info: #201f31;
     --color-info-border: #2b2b3a;
 
-    /* Special colors */
     --color-accent-blue: #5865f2;
     --color-accent-purple: #8c78a1;
     --color-accent-red: #553d4f;
@@ -77,7 +74,6 @@
     --color-accent-gray: #3f3f5a;
     --color-accent-gray-light: #454555;
 
-    /* Transparent variants */
     --color-bg-transparent: rgba(32, 31, 49, 0.4);
     --color-border-transparent: rgba(47, 47, 63, 0.4);
     --color-bg-transparent-hover: rgba(47, 47, 63, 0.6);
@@ -112,7 +108,7 @@
     --color-border-button-blue-hover: #7a98f2;
 
     --color-text-primary: #213547;
-    --color-text-secondary: #6c757d;
+    --color-text-secondary: #213547;
     --color-text-disabled: #a6ade6;
     --color-text-success: #39813f;
     --color-text-error: #a14652;
@@ -122,7 +118,6 @@
     --color-shadow-medium: rgba(0, 0, 0, 0.1);
     --color-overlay: rgba(100, 100, 200, 0.4);
 
-    /* Status colors for light theme */
     --color-success: #d4edda;
     --color-success-border: #c3e6cb;
     --color-warning: #fff3cd;
@@ -132,7 +127,6 @@
     --color-info: #ffffff;
     --color-info-border: #e0e0e0;
 
-    /* Special colors for light theme */
     --color-accent-blue: #5865f2;
     --color-accent-purple: #8c78a1;
     --color-accent-red: #553d4f;
@@ -142,7 +136,6 @@
     --color-accent-gray: #e9ecef;
     --color-accent-gray-light: #dee2e6;
 
-    /* Transparent variants for light theme */
     --color-bg-transparent: rgba(32, 31, 49, 0.4);
     --color-border-transparent: rgba(47, 47, 63, 0.4);
     --color-bg-transparent-hover: rgba(47, 47, 63, 0.6);
@@ -159,7 +152,6 @@
 }
 
 .master-container {
-    /* grid autoscale: 3 -> 2 -> 1 (columns are chosen in App.tsx via useLayoutMode) */
     position: relative;
     display: grid;
     gap: 15px;
@@ -215,7 +207,7 @@
     width: calc(100% + 40px);
     margin: -20px -20px 30px -20px;
     height: 100px;
-    background-image: url("../public/delta-rune-maker.png");
+    background-image: url("delta-rune-maker.png");
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
@@ -331,7 +323,6 @@ h1 {
     gap: 5px;
 }
 
-/* Keep colored button variants readable on their dark backgrounds in the light theme. */
 :root[data-theme="light"] .fancy-button.secondary:not(:disabled),
 :root[data-theme="light"] .fancy-button.contrast:not(:disabled),
 :root[data-theme="light"] .fancy-button.good:not(:disabled),
@@ -341,7 +332,6 @@ h1 {
     color: #fff;
 }
 
-/* The same contrast rule applies to non-info toasts. */
 :root[data-theme="light"] .toast-success,
 :root[data-theme="light"] .toast-warning,
 :root[data-theme="light"] .toast-error {
@@ -357,15 +347,11 @@ h1 {
     color: inherit;
 }
 
-/* A button has a user-agent color, so explicitly inherit the toast color for
-   the close control as well. */
 .toast-notification .toast-close-button,
 .toast-notification .toast-close-button .button-img.icon {
     color: inherit;
 }
 
-/* The component sets an explicit color on its text and icon; inherit the
-   button's variant color so both foregrounds stay in sync. */
 .fancy-button .fancy-button-text,
 .fancy-button .button-img.icon {
     color: inherit;
@@ -450,7 +436,6 @@ h1 {
     gap: 5px;
 }
 
-/* fix toast rounded corners — wrapper was rectangular with overflow:hidden clipping shadow as rect */
 .toast-wrapper {
     border-radius: 15px;
     background: transparent !important;
