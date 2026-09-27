@@ -9,7 +9,6 @@ import {
 import { Button } from "@mcbalaam/razdor-ui";import "./styles.css";
 
 export const WEBRING_URL = "https://webring.otomir23.me";
-// Твой slug в вебринке. Пока заявки нет в списке — плашка просто не показывается.
 export const WEBRING_SLUG = "mcbalaam";
 
 const NEIGHBORS = 3;
