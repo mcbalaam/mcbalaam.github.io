@@ -340,3 +340,10 @@ h1 {
     align-self: center;
     vertical-align: middle;
 }
+
+@media (max-width: 860px) {
+    .tooltip-wrapper .tooltip-text,
+    .gh-tooltip {
+        display: none !important;
+    }
+}
