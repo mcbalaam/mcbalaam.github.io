@@ -1,20 +1,17 @@
 import { useState, useEffect, useRef } from "react";
 import { t, getTranslator, TranslationContextProvider } from "../translations/translate";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getStatus, type UserStatus } from "./requests";
 import { getVanityConfig } from "./config";
 import { ReactionManager } from "./requests";
 import FingerprintJS from '@fingerprintjs/fingerprintjs';
 import {
-  faMoon,
-  faSun,
-  faLanguage,
-  faArrowRightLong,
-  faArrowUpRightFromSquare,
-  faCircleCheck,
-  faCircleXmark,
-  faEnvelope,
-} from "@fortawesome/free-solid-svg-icons";
+  Languages,
+  ArrowRight,
+  ArrowUpRight,
+  CircleCheck,
+  CircleX,
+  Mail,
+} from "lucide-react";
 
 import '@mcbalaam/razdor-ui/dist/index.css'
 
@@ -47,9 +44,61 @@ import RepoTab from "./components/RepoTab";
 import GitHubActivity from "./components/GitHubActivity";
 import StackInfo from "./components/StackInfo";
 import Balatro from "./components/Balatro";
-import BalatroStatus from "./components/BalatroStatus";
 import RssFeed from "./components/RssFeed";
 import WebringBar from "./components/WebringBar";
+import ColorPicker from "./components/ColorPicker";
+
+function hexToHsl(hex: string): [number, number, number] {
+  const h = hex.replace("#", "");
+  const r = parseInt(h.slice(0, 2), 16) / 255;
+  const g = parseInt(h.slice(2, 4), 16) / 255;
+  const b = parseInt(h.slice(4, 6), 16) / 255;
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  const l = (max + min) / 2;
+  const d = max - min;
+  let hue = 0;
+  let s = 0;
+  if (d !== 0) {
+    s = d / (1 - Math.abs(2 * l - 1));
+    if (max === r) hue = ((g - b) / d) % 6;
+    else if (max === g) hue = (b - r) / d + 2;
+    else hue = (r - g) / d + 4;
+    hue *= 60;
+    if (hue < 0) hue += 360;
+  }
+  return [hue, s, l];
+}
+
+function hslToHex(h: number, s: number, l: number): string {
+  const c = (1 - Math.abs(2 * l - 1)) * s;
+  const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+  const m = l - c / 2;
+  let r = 0;
+  let g = 0;
+  let b = 0;
+  if (h < 60) [r, g, b] = [c, x, 0];
+  else if (h < 120) [r, g, b] = [x, c, 0];
+  else if (h < 180) [r, g, b] = [0, c, x];
+  else if (h < 240) [r, g, b] = [0, x, c];
+  else if (h < 300) [r, g, b] = [x, 0, c];
+  else [r, g, b] = [c, 0, x];
+  const to = (v: number) =>
+    Math.round((v + m) * 255).toString(16).padStart(2, "0");
+  return `#${to(r)}${to(g)}${to(b)}`;
+}
+
+function seedToBalatroColors(
+  seed: string,
+  theme: "dark" | "light",
+): [string, string, string] {
+  const [h] = hexToHsl(seed);
+  const color1 = hslToHex(h, 0.24, 0.29);
+  const color2 = hslToHex((h + 360 - 47) % 360, 0.24, 0.20);
+  const color3 =
+    theme === "light" ? hslToHex(h, 0.13, 0.44) : hslToHex(h, 0.22, 0.16);
+  return [color1, color2, color3];
+}
 
 async function getVisitorToken(): Promise<string> {
   const fp = await FingerprintJS.load();
@@ -88,6 +137,7 @@ function useLayoutMode(): LayoutMode {
 export function App() {
   const [locale, setLocale] = useState("en");
   const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [seed, setSeed] = useState<string>("#5865f2");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { createSuccessToast, createErrorToast } = useCreateToast();
   const [signsRefreshKey, setSignsRefreshKey] = useState(0);
@@ -211,6 +261,12 @@ export function App() {
     setTheme(initialTheme);
     document.documentElement.setAttribute("data-theme", initialTheme);
     document.documentElement.style.setProperty("color-scheme", initialTheme);
+
+    const savedSeed = getCookie("seed");
+    if (savedSeed) {
+      setSeed(savedSeed);
+      document.documentElement.style.setProperty("--seed", savedSeed);
+    }
   }, []);
 
   const toggleLocale = () => {
@@ -231,6 +287,14 @@ export function App() {
     });
   };
 
+  const handleSeedChange = (next: string) => {
+    setSeed(next);
+    document.documentElement.style.setProperty("--seed", next);
+    document.cookie = `seed=${next}; path=/; max-age=31536000`;
+  };
+
+  const [balatro1, balatro2, balatro3] = seedToBalatroColors(seed, theme);
+
   const openModal = () => setIsModalOpen(true);
 
   const modalLeaveSign: ModalControl = {
@@ -245,47 +309,47 @@ export function App() {
   const handleSignFormSuccess = async () => {
     setIsModalOpen(false);
     const tr = await getTranslator(locale);
-    createSuccessToast({ children: String(tr("sign_toastSent")), duration: 3000, position: "bottom-center", icon: faCircleCheck });
+    createSuccessToast({ children: String(tr("sign_toastSent")), duration: 3000, position: "bottom-center", icon: CircleCheck });
     setSignsRefreshKey((prev) => prev + 1);
   };
 
   const handleSignFormError = async (errorMessage: string) => {
     setIsModalOpen(false);
     const tr = await getTranslator(locale);
-    createErrorToast({ children: `${String(tr("sign_error"))}: ${errorMessage}`, position: "bottom-center", icon: faCircleXmark });
+    createErrorToast({ children: `${String(tr("sign_error"))}: ${errorMessage}`, position: "bottom-center", icon: CircleX });
   };
 
   const handleSignDeleted = async () => {
     const tr = await getTranslator(locale);
-    createSuccessToast({ children: String(tr("sign_toastDeleted")), duration: 3000, position: "bottom-center", icon: faCircleCheck });
+    createSuccessToast({ children: String(tr("sign_toastDeleted")), duration: 3000, position: "bottom-center", icon: CircleCheck });
     setSignsRefreshKey((prev) => prev + 1);
   };
 
   const handleSignDeleteError = async (errorMessage: string) => {
     const tr = await getTranslator(locale);
-    createErrorToast({ children: `${String(tr("sign_toastDeleteError"))}: ${errorMessage}`, position: "bottom-center", icon: faCircleXmark });
+    createErrorToast({ children: `${String(tr("sign_toastDeleteError"))}: ${errorMessage}`, position: "bottom-center", icon: CircleX });
   };
 
   const handleLogoutSuccess = async () => {
     const tr = await getTranslator(locale);
-    createSuccessToast({ children: String(tr("logout_toastSuccess")), duration: 3000, position: "bottom-center", icon: faCircleCheck });
+    createSuccessToast({ children: String(tr("logout_toastSuccess")), duration: 3000, position: "bottom-center", icon: CircleCheck });
     setSignsRefreshKey((prev) => prev + 1);
   };
 
   const handleLogoutError = async (errorMessage: string) => {
     const tr = await getTranslator(locale);
-    createErrorToast({ children: `${String(tr("logout_toastError"))}: ${errorMessage}`, position: "bottom-center", icon: faCircleXmark });
+    createErrorToast({ children: `${String(tr("logout_toastError"))}: ${errorMessage}`, position: "bottom-center", icon: CircleX });
   };
 
   const handleLoginSuccess = async () => {
     const tr = await getTranslator(locale);
-    createSuccessToast({ children: String(tr("authViaGitHub")), duration: 3000, position: "bottom-center", icon: faCircleCheck });
+    createSuccessToast({ children: String(tr("authViaGitHub")), duration: 3000, position: "bottom-center", icon: CircleCheck });
     setSignsRefreshKey((prev) => prev + 1);
   };
 
   const handleLoginError = async (errorMessage: string) => {
     const tr = await getTranslator(locale);
-    createErrorToast({ children: `${String(tr("sign_error"))}: ${errorMessage}`, position: "bottom-center", icon: faCircleXmark });
+    createErrorToast({ children: `${String(tr("sign_error"))}: ${errorMessage}`, position: "bottom-center", icon: CircleX });
   };
 
   const VanityOverlay = ({ vanityId }: { vanityId: string }) => {
@@ -305,8 +369,8 @@ export function App() {
   const profileCard = (
     <Card>
       <div className="banner">
-        <Button className="language-button" faIcon={faLanguage} onClick={toggleLocale} />
-        <Button className="theme-button" faIcon={theme === "dark" ? faMoon : faSun} onClick={toggleTheme} />
+        <Button className="language-button" icon={Languages} onClick={toggleLocale} />
+        <ColorPicker seed={seed} onChange={handleSeedChange} theme={theme} onToggleTheme={toggleTheme} />
         <div className="avatar-container">
           <img className="pfp" src={pfp}></img>
           {userStatus?.vanity_id && <VanityOverlay vanityId={userStatus.vanity_id} />}
@@ -318,7 +382,7 @@ export function App() {
         <Badge small src={robust}>RBST</Badge>
       </div>
       <div className="pnouns">
-        mcbalaam <FontAwesomeIcon size="sm" icon={faArrowRightLong} />{" "}
+        mcbalaam <ArrowRight size={14} />{" "}
         эмсибалаам, балаам, макбаклак (he/him)
       </div>
       <p className="desc">{t("aboutMe")}</p>
@@ -328,11 +392,11 @@ export function App() {
 
       <h1>{t("connections")}</h1>
       <div className="connections">
-        <Badge href="https://www.github.com/mcbalaam" src={github}>GitHub <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
-        <Badge href="https://steamcommunity.com/id/mcbalaam/" src={steam}>Steam <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
-        <Badge href="https://soundcloud.com/mcbalaam" src={soundcloud}>SoundСloud <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
-        <Badge href="https://ko-fi.com/mcbalaam" src={kofi}>Ko-Fi <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
-        <Badge href="https://pay.cloudtips.ru/p/7ac675d4" src={cloudtips}>CloudTips <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} /></Badge>
+        <Badge href="https://www.github.com/mcbalaam" src={github}>GitHub <ArrowUpRight size={12} /></Badge>
+        <Badge href="https://steamcommunity.com/id/mcbalaam/" src={steam}>Steam <ArrowUpRight size={12} /></Badge>
+        <Badge href="https://soundcloud.com/mcbalaam" src={soundcloud}>SoundСloud <ArrowUpRight size={12} /></Badge>
+        <Badge href="https://ko-fi.com/mcbalaam" src={kofi}>Ko-Fi <ArrowUpRight size={12} /></Badge>
+        <Badge href="https://pay.cloudtips.ru/p/7ac675d4" src={cloudtips}>CloudTips <ArrowUpRight size={12} /></Badge>
       </div>
       <br></br>
       <Button
@@ -340,7 +404,7 @@ export function App() {
         fill
         color="secondary"
         onClick={() => window.location.href = "mailto:mcbalaam@proton.me"}
-        faIcon={faEnvelope}
+        icon={Mail}
       >
         <span className="mail-button-labels">
           <span className="mail-button-label mail-button-label-default">
@@ -350,7 +414,7 @@ export function App() {
             {t("mailme_hover")}
           </span>
         </span>
-        <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} />
+        <ArrowUpRight size={12} />
       </Button>
       <br></br>
       <div className="reactions">
@@ -386,7 +450,7 @@ export function App() {
     </Card>
   );
 
-  const authCard = (
+  const accountCard = (
     <Card>
       <AuthButtons
         onLoginSuccess={handleLoginSuccess}
@@ -395,11 +459,7 @@ export function App() {
         onLogoutError={handleLogoutError}
         onAuthChange={() => { }}
       />
-    </Card>
-  );
-
-  const signsCard = (
-    <Card>
+      <br></br>
       <SignList
         locale={locale}
         onLeaveSignClick={() => openModal()}
@@ -456,14 +516,13 @@ export function App() {
 
   return (
     <TranslationContextProvider locale={locale}>
-      <Balatro color1="#3C385A" color2="#24313D" color3={theme == "light" ? "#656181" : "#201F31"} mouseInteraction={false}></Balatro>
+      <Balatro color1={balatro1} color2={balatro2} color3={balatro3} mouseInteraction={false}></Balatro>
       {layout === "triple" && (
         <div className="master-container is-triple">
           {webringBar}
           <div className="column profile-column">
             {profileCard}
-            {authCard}
-            {signsCard}
+            {accountCard}
           </div>
           <div className="column projects-column">
             {workingCard}
@@ -480,8 +539,7 @@ export function App() {
           {webringBar}
           <div className="column primary-column">
             {profileCard}
-            {authCard}
-            {signsCard}
+            {accountCard}
             {githubCard}
           </div>
           <div className="column secondary-column">
@@ -496,8 +554,7 @@ export function App() {
           {webringBar}
           <div className="column single-column">
             {profileCard}
-            {authCard}
-            {signsCard}
+            {accountCard}
             {stackCard}
             {workingCard}
             {rssCard}

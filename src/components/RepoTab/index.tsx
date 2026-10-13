@@ -13,11 +13,7 @@ import rust from "/rust.png";
 import go from "/golang.png";
 import ebitter from "/bitter.png";
 import github from "/github-tile.svg";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faArrowUpRightFromSquare,
-  faPlay,
-} from "@fortawesome/free-solid-svg-icons";
+import { ArrowUpRight, Play } from "lucide-react";
 import { t } from "../../../translations/translate";
 
 export default function RepoTab({}: {}) {
@@ -36,7 +32,7 @@ export default function RepoTab({}: {}) {
           <span style={{ flex: 1 }}>
             <Badge href="https://www.github.com/mcbalaam/ebitter" src={ebitter}>
               ebitter{" "}
-              <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} />
+              <ArrowUpRight size={12} />
             </Badge>
           </span>
           <Tooltip text="Go">
@@ -44,7 +40,7 @@ export default function RepoTab({}: {}) {
           </Tooltip>
         </span>
         <p>{t("ebitter")}</p>
-        <Button color="good" fill faIcon={faPlay} onClick={openDemo}>
+        <Button color="secondary" fill icon={Play} onClick={openDemo}>
           {t("run_live_demo")}
         </Button>
       </span>
@@ -53,7 +49,7 @@ export default function RepoTab({}: {}) {
           <span style={{ flex: 1 }}>
             <Badge href="https://www.github.com/mcbalaam/pico-rss" src={go}>
               pico-rss{" "}
-              <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} />
+              <ArrowUpRight size={12} />
             </Badge>
           </span>
           <Tooltip text="Go">
@@ -70,7 +66,7 @@ export default function RepoTab({}: {}) {
               src={misfortune}
             >
               mis-fortune{" "}
-              <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} />
+              <ArrowUpRight size={12} />
             </Badge>
           </span>
           <Tooltip text="TypeScript">
@@ -87,7 +83,7 @@ export default function RepoTab({}: {}) {
           <span style={{ flex: 1 }}>
             <Badge href="https://www.github.com/mcbalaam/graft" src={github}>
               graft{" "}
-              <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} />
+              <ArrowUpRight size={12} />
             </Badge>
           </span>
           <Tooltip text="Go">
@@ -104,7 +100,7 @@ export default function RepoTab({}: {}) {
               src={extera}
             >
               exteraGram Store{" "}
-              <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} />
+              <ArrowUpRight size={12} />
             </Badge>
           </span>
           <Tooltip text="TypeScript">
@@ -124,7 +120,7 @@ export default function RepoTab({}: {}) {
           <span style={{ flex: 1 }}>
             <Badge href="https://www.github.com/mcbalaam/razdor-ui" src={react}>
               Razdor-UI Component Library{" "}
-              <FontAwesomeIcon size="xs" icon={faArrowUpRightFromSquare} />
+              <ArrowUpRight size={12} />
             </Badge>
           </span>
           <Tooltip text="React">

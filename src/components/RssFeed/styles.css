@@ -44,7 +44,7 @@
 .rss-tile:hover {
   background-color: var(--color-bg-button-hover);
   border-color: var(--color-border-button);
-  box-shadow: 0 2px 8px var(--color-shadow-light);
+  box-shadow: var(--shadow-soft);
 }
 
 .rss-tile-title {

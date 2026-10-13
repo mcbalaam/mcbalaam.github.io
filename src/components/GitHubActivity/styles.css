@@ -55,7 +55,7 @@
     pointer-events: none;
     z-index: 1000;
     white-space: nowrap;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    box-shadow: var(--shadow-soft);
     transform: translate(-50%, -110%);
 }
 

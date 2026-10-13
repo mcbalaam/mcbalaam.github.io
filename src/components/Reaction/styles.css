@@ -10,7 +10,7 @@
   transition: background-color 0.1s ease;
   font-size: 20px;
   line-height: 23px;
-  color: #dbdee1;
+  color: var(--color-text-primary);
   font-family: Twemoji;
   height: fit-content;
 }
@@ -21,8 +21,8 @@
 }
 
 .reaction-badge.reacted {
-  background-color: var(--reaction-badge-reacted);
-  border-color: var(--reaction-badge-reacted-border);
+  background-color: color-mix(in oklch, var(--color-accent) 22%, var(--color-bg-button));
+  border-color: var(--color-accent);
 }
 
 .reaction-text {

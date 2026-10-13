@@ -8,7 +8,7 @@ import {
 import "./styles.css";
 
 import { t } from "../../../translations/translate";
-import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import { LogOut } from "lucide-react";
 import github from "/github-tile.svg";
 import { Button } from "@mcbalaam/razdor-ui"
 
@@ -155,8 +155,8 @@ const AuthButtons: React.FC<AuthButtonsProps> = ({
           className="logout"
           onClick={handleLogout}
           disabled={isLoading}
-          faIcon={faRightFromBracket}
-          style={{ minWidth: "43px" }}
+          icon={LogOut}
+          style={{ paddingLeft: "1em", paddingRight: "1em" }}
         />
       </div>
     );

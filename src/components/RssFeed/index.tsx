@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Card, ModalPopup, Button, useCreateToast } from "@mcbalaam/razdor-ui";
-import { faLink, faCheck } from "@fortawesome/free-solid-svg-icons";
+import { Link, Check } from "lucide-react";
 import ContentLoader from "react-content-loader";
 import { t, getTranslator } from "../../../translations/translate";
 import "./styles.css";
@@ -169,7 +169,7 @@ export default function RssFeed({ locale }: { locale: string }) {
       await navigator.clipboard.writeText(data.channelLink);
       setCopied(true);
       const tr = await getTranslator(locale);
-      createSuccessToast({ children: String(tr("rss_copied")), duration: 2000, position: "bottom-center", icon: faCheck });
+      createSuccessToast({ children: String(tr("rss_copied")), duration: 2000, position: "bottom-center", icon: Check });
       setTimeout(() => setCopied(false), 2000);
     } catch {
       window.open(data.channelLink, "_blank");
@@ -230,7 +230,7 @@ export default function RssFeed({ locale }: { locale: string }) {
           <span style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}>
             {data.channelTitle}
             <Button
-              faIcon={copied ? faCheck : faLink}
+              icon={copied ? Check : Link}
               onClick={handleCopyLink}
               tiny
               style={{ padding: "2px 6px", minHeight: "22px", height: "22px" }}

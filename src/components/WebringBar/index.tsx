@@ -1,11 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  faArrowLeft,
-  faArrowRight,
-  faArrowUpFromBracket,
-  faArrowUpRightFromSquare,
-  faRing,
-} from "@fortawesome/free-solid-svg-icons";
+import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
 import { Button } from "@mcbalaam/razdor-ui";import "./styles.css";
 
 export const WEBRING_URL = "https://webring.otomir23.me";
@@ -107,13 +101,13 @@ export default function WebringBar({ slug = WEBRING_SLUG }: { slug?: string }) {
       <Button
         tiny
         className="webring-nav-button"
-        faIcon={faArrowUpRightFromSquare}
+        icon={ArrowUpRight}
         onClick={() => window.open(WEBRING_URL, "_blank", "noopener,noreferrer")}
       />
       <Button
         tiny
         className="webring-nav-button"
-        faIcon={faArrowLeft}
+        icon={ArrowLeft}
         onClick={() => {
           window.location.href = `${WEBRING_URL}/${slug}/prev`;
         }}
@@ -144,7 +138,7 @@ export default function WebringBar({ slug = WEBRING_SLUG }: { slug?: string }) {
       <Button
         tiny
         className="webring-nav-button"
-        faIcon={faArrowRight}
+        icon={ArrowRight}
         onClick={() => {
           window.location.href = `${WEBRING_URL}/${slug}/next`;
         }}

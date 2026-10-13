@@ -1,14 +1,16 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { ViteImageOptimizer } from 'vite-plugin-image-optimizer';
-import path from 'path';
 
 export default defineConfig({
   resolve: {
-    alias: {
-      "react/jsx-dev-runtime": path.resolve("./src/jsx-dev-shim.ts"),
-    },
+    dedupe: [
+      "react",
+      "react-dom",
+      "lucide-react",
+    ],
   },
+  optimizeDeps: { exclude: ["@mcbalaam/razdor-ui"] },
   plugins: [
     react(),
 ViteImageOptimizer({
@@ -25,7 +27,7 @@ exclude: 'canopy.png',
     rollupOptions: {
       output: {
 manualChunks: (id) => {
-  if (id.includes('node_modules/react/') || 
+  if (id.includes('node_modules/react/') ||
       id.includes('node_modules/react-dom/') ||
       id.includes('node_modules/framer-motion/') ||
       id.includes('node_modules/@react-spring/')) {

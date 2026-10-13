@@ -12,8 +12,7 @@ import "./styles.css";
 
 import { t, getTranslator } from "../../../translations/translate";
 import { ModalPopup, Tooltip, Button } from "@mcbalaam/razdor-ui";
-import { faCheck, faCheckCircle, faHashtag, faPlus } from "@fortawesome/free-solid-svg-icons";
-import { faTrashCan } from "@fortawesome/free-solid-svg-icons/faTrashCan";
+import { CircleCheck, Plus, Trash } from "lucide-react";
 import ContentLoader from "react-content-loader";
 
 interface SignListProps {
@@ -197,10 +196,11 @@ export default function SignList({
       {currentUser && onLeaveSignClick && (
         <div style={{ marginBottom: "20px" }}>
           <Button
-            faIcon={faPlus}
+            icon={Plus}
             onClick={onLeaveSignClick}
             fill
             disabled={checkingPermissions || !canCreateSign}
+            color="secondary"
           >
             {checkingPermissions
               ? "Loading..."
@@ -251,7 +251,7 @@ export default function SignList({
                       className="delete-button"
                       onClick={() => handleDeleteClick(sign.id)}
                       disabled={deletingId === sign.id}
-                      faIcon={faTrashCan}
+                      icon={Trash}
                       color="bad"
                     />
                   )}
@@ -269,7 +269,7 @@ export default function SignList({
                         setSelectedSign(sign);
                         setIsHashModalOpen(true);
                       }}
-                      faIcon={faCheckCircle}
+                      icon={CircleCheck}
                       color={sign.signatureValid ? "transparent" : "bad"}
                     />
                   </Tooltip>

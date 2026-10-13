@@ -17,6 +17,9 @@ interface BalatroProps {
   spinEase?: number;
   isRotate?: boolean;
   mouseInteraction?: boolean;
+  pulseStrength?: number;
+  pulseDuration?: number;
+  colorDuration?: number;
 }
 
 function hexToVec4(hex: string): [number, number, number, number] {
@@ -36,6 +39,17 @@ function hexToVec4(hex: string): [number, number, number, number] {
     a = parseInt(hexStr.slice(6, 8), 16) / 255;
   }
   return [r, g, b, a];
+}
+
+type RGBA = [number, number, number, number];
+
+function lerpRGBA(a: RGBA, b: RGBA, t: number): RGBA {
+  return [
+    a[0] + (b[0] - a[0]) * t,
+    a[1] + (b[1] - a[1]) * t,
+    a[2] + (b[2] - a[2]) * t,
+    a[3] + (b[3] - a[3]) * t,
+  ];
 }
 
 const vertexShader = `
@@ -68,6 +82,8 @@ uniform float uPixelFilter;
 uniform float uSpinEase;
 uniform bool uIsRotate;
 uniform vec2 uMouse;
+uniform float uPulse;
+uniform float uPhase;
 
 varying vec2 vUv;
 
@@ -90,7 +106,7 @@ vec4 effect(vec2 screenSize, vec2 screen_coords) {
     uv = (vec2(uv_len * cos(new_pixel_angle) + mid.x, uv_len * sin(new_pixel_angle) + mid.y) - mid);
 
     uv *= 30.0;
-    float baseSpeed = iTime * uSpinSpeed;
+    float baseSpeed = iTime * uSpinSpeed + uPhase;
     speed = baseSpeed + mouseInfluence * 2.0;
 
     vec2 uv2 = vec2(uv.x + uv.y);
@@ -111,7 +127,7 @@ vec4 effect(vec2 screenSize, vec2 screen_coords) {
     float c3p = 1.0 - min(1.0, c1p + c2p);
     float light = (uLighting - 0.2) * max(c1p * 5.0 - 4.0, 0.0) + uLighting * max(c2p * 5.0 - 4.0, 0.0);
 
-    return (0.3 / uContrast) * uColor1 + (1.0 - 0.3 / uContrast) * (uColor1 * c1p + uColor2 * c2p + vec4(c3p * uColor3.rgb, c3p * uColor1.a)) + light;
+    return (0.3 / uContrast) * uColor1 + (1.0 - 0.3 / uContrast) * (uColor1 * c1p + uColor2 * c2p + vec4(c3p * uColor3.rgb, c3p * uColor1.a)) + light + uPulse * 0.02;
 }
 
 void main() {
@@ -134,8 +150,46 @@ export default function Balatro({
   spinEase = 1.0,
   isRotate = false,
   mouseInteraction = true,
+  pulseStrength = 3.0,
+  pulseDuration = 1600,
+  colorDuration = pulseDuration * 2,
 }: BalatroProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const programRef = useRef<Program | null>(null);
+
+  const colorRef = useRef<{ c1: RGBA; c2: RGBA; c3: RGBA }>({
+    c1: hexToVec4(color1),
+    c2: hexToVec4(color2),
+    c3: hexToVec4(color3),
+  });
+  const colorAnim = useRef<{
+    from: { c1: RGBA; c2: RGBA; c3: RGBA };
+    to: { c1: RGBA; c2: RGBA; c3: RGBA };
+    start: number;
+  } | null>(null);
+  const pulseRef = useRef<number | null>(null);
+  const prevColors = useRef<[string, string, string] | null>(null);
+
+  useEffect(() => {
+    colorAnim.current = {
+      from: {
+        c1: [...colorRef.current.c1] as RGBA,
+        c2: [...colorRef.current.c2] as RGBA,
+        c3: [...colorRef.current.c3] as RGBA,
+      },
+      to: {
+        c1: hexToVec4(color1),
+        c2: hexToVec4(color2),
+        c3: hexToVec4(color3),
+      },
+      start: performance.now(),
+    };
+    const prev = prevColors.current;
+    if (prev && (prev[0] !== color1 || prev[1] !== color2 || prev[2] !== color3)) {
+      pulseRef.current = performance.now();
+    }
+    prevColors.current = [color1, color2, color3];
+  }, [color1, color2, color3]);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -193,6 +247,8 @@ export default function Balatro({
     }
 
     let destroyed = false;
+    let spinPhase = 0;
+    let lastTime = 0;
 
     resize();
 
@@ -212,9 +268,9 @@ export default function Balatro({
         uSpinRotation: { value: spinRotation },
         uSpinSpeed: { value: spinSpeed },
         uOffset: { value: offset },
-        uColor1: { value: hexToVec4(color1) },
-        uColor2: { value: hexToVec4(color2) },
-        uColor3: { value: hexToVec4(color3) },
+        uColor1: { value: colorRef.current.c1 },
+        uColor2: { value: colorRef.current.c2 },
+        uColor3: { value: colorRef.current.c3 },
         uContrast: { value: contrast },
         uLighting: { value: lighting },
         uSpinAmount: { value: spinAmount },
@@ -222,9 +278,12 @@ export default function Balatro({
         uSpinEase: { value: spinEase },
         uIsRotate: { value: isRotate },
         uMouse: { value: [0.5, 0.5] },
+        uPulse: { value: 0 },
+        uPhase: { value: 0 },
       },
     });
 
+    programRef.current = program;
     const mesh = new Mesh(gl, { geometry, program });
     let animationFrameId: number;
 
@@ -232,6 +291,42 @@ export default function Balatro({
       if (destroyed) return;
       animationFrameId = requestAnimationFrame(update);
       program.uniforms.iTime.value = time * 0.001;
+
+      const anim = colorAnim.current;
+      if (anim) {
+        const t = Math.min(1, (time - anim.start) / colorDuration);
+        const e = 1 - Math.pow(1 - t, 3);
+        const cur = {
+          c1: lerpRGBA(anim.from.c1, anim.to.c1, e),
+          c2: lerpRGBA(anim.from.c2, anim.to.c2, e),
+          c3: lerpRGBA(anim.from.c3, anim.to.c3, e),
+        };
+        colorRef.current = cur;
+        program.uniforms.uColor1.value = cur.c1;
+        program.uniforms.uColor2.value = cur.c2;
+        program.uniforms.uColor3.value = cur.c3;
+        if (t >= 1) colorAnim.current = null;
+      }
+
+      let pulseVal = 0;
+      if (pulseRef.current != null) {
+        const t = Math.min(1, (time - pulseRef.current) / pulseDuration);
+        const attack = 0.12;
+        const env =
+          t < attack
+            ? 1 - Math.pow(1 - t / attack, 2)
+            : 1 - Math.pow((t - attack) / (1 - attack), 2);
+        pulseVal = env * pulseStrength;
+        if (t >= 1) pulseRef.current = null;
+      }
+      program.uniforms.uPulse.value = pulseVal;
+
+      const seconds = time * 0.001;
+      const dt = lastTime ? Math.min(0.05, seconds - lastTime) : 0;
+      lastTime = seconds;
+      spinPhase += dt * spinSpeed * pulseVal;
+      program.uniforms.uPhase.value = spinPhase;
+
       renderer.render({ scene: mesh });
     }
     animationFrameId = requestAnimationFrame(update);
@@ -249,6 +344,7 @@ export default function Balatro({
     return () => {
       destroyed = true;
       cancelAnimationFrame(animationFrameId);
+      programRef.current = null;
       window.removeEventListener("resize", resize);
       window.removeEventListener("scroll", forceRedraw);
       if (resizeObserver) {
@@ -257,21 +353,7 @@ export default function Balatro({
       container.removeEventListener("mousemove", handleMouseMove);
       container.removeChild(gl.canvas);
     };
-  }, [
-    spinRotation,
-    spinSpeed,
-    offset,
-    color1,
-    color2,
-    color3,
-    contrast,
-    lighting,
-    spinAmount,
-    pixelFilter,
-    spinEase,
-    isRotate,
-    mouseInteraction,
-  ]);
+  }, []);
 
   return <div ref={containerRef} className="balatro-container" />;
 }
