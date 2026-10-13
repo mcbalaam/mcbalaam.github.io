@@ -293,10 +293,11 @@ h1 {
 .balatro-container {
     position: fixed;
     z-index: -100;
-    width: 100vw;
-    height: 100vh;
     top: 0;
     left: 0;
+    width: 100%;
+    height: calc(100vh + 120px);
+    height: calc(100svh + 120px);
     transition: 1000ms;
 }
 
@@ -308,4 +309,17 @@ h1 {
 .toast-wrapper {
     border-radius: 15px;
     background: transparent !important;
+}
+
+/* razdor-ui Tooltip keeps hidden tooltips in layout (visibility: hidden) with
+   white-space: nowrap; anchored near a card's right edge they extend past the
+   viewport and create a phantom horizontal scrollbar. Take them out of layout
+   until they are actually shown. */
+.tooltip-wrapper .tooltip-text {
+    display: none;
+}
+
+.tooltip-wrapper:hover > .tooltip-text,
+.tooltip-wrapper:focus-within > .tooltip-text {
+    display: block;
 }

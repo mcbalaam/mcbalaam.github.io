@@ -200,10 +200,17 @@ export default function Balatro({
 
     let program: Program;
     let resizeObserver: ResizeObserver | null = null;
+    let lastWidth = 0;
+    let lastHeight = 0;
 
     function resize() {
       if (destroyed || !container) return;
-      renderer.setSize(container.offsetWidth, container.offsetHeight);
+      const width = container.offsetWidth;
+      const height = container.offsetHeight;
+      if (width === lastWidth && height === lastHeight) return;
+      lastWidth = width;
+      lastHeight = height;
+      renderer.setSize(width, height);
       if (program) {
         program.uniforms.iResolution.value = [
           gl.canvas.width,
@@ -236,8 +243,6 @@ export default function Balatro({
     }
 
     window.addEventListener("resize", resize);
-
-    window.addEventListener("scroll", forceRedraw);
 
     if (typeof ResizeObserver !== "undefined") {
       resizeObserver = new ResizeObserver(() => {
@@ -346,7 +351,6 @@ export default function Balatro({
       cancelAnimationFrame(animationFrameId);
       programRef.current = null;
       window.removeEventListener("resize", resize);
-      window.removeEventListener("scroll", forceRedraw);
       if (resizeObserver) {
         resizeObserver.disconnect();
       }
