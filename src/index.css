@@ -166,6 +166,12 @@
     font-weight: 500;
 }
 
+.pnouns svg {
+    vertical-align: middle;
+    position: relative;
+    top: -1px;
+}
+
 p {
     font-size: 15px;
     width: fit-content;
@@ -311,10 +317,6 @@ h1 {
     background: transparent !important;
 }
 
-/* razdor-ui Tooltip keeps hidden tooltips in layout (visibility: hidden) with
-   white-space: nowrap; anchored near a card's right edge they extend past the
-   viewport and create a phantom horizontal scrollbar. Take them out of layout
-   until they are actually shown. */
 .tooltip-wrapper .tooltip-text {
     display: none;
 }
@@ -322,4 +324,19 @@ h1 {
 .tooltip-wrapper:hover > .tooltip-text,
 .tooltip-wrapper:focus-within > .tooltip-text {
     display: block;
+}
+
+.badge .badge-text {
+    top: 0;
+}
+
+.badge-text svg {
+    vertical-align: middle;
+    position: relative;
+    top: -2px;
+}
+
+.badge .badge-img {
+    align-self: center;
+    vertical-align: middle;
 }
