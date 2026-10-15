@@ -163,6 +163,12 @@
     font-weight: 500;
 }
 
+.pnouns svg {
+    vertical-align: middle;
+    position: relative;
+    top: -1px;
+}
+
 p {
     font-size: 15px;
     width: fit-content;
@@ -290,10 +296,11 @@ h1 {
 .balatro-container {
     position: fixed;
     z-index: -100;
-    width: 100vw;
-    height: 100vh;
     top: 0;
     left: 0;
+    width: 100%;
+    height: calc(100vh + 120px);
+    height: calc(100svh + 120px);
     transition: 1000ms;
 }
 
@@ -305,4 +312,35 @@ h1 {
 .toast-wrapper {
     border-radius: 15px;
     background: transparent !important;
+}
+
+.tooltip-wrapper .tooltip-text {
+    display: none;
+}
+
+.tooltip-wrapper:hover > .tooltip-text,
+.tooltip-wrapper:focus-within > .tooltip-text {
+    display: block;
+}
+
+.badge .badge-text {
+    top: 0;
+}
+
+.badge-text svg {
+    vertical-align: middle;
+    position: relative;
+    top: -2px;
+}
+
+.badge .badge-img {
+    align-self: center;
+    vertical-align: middle;
+}
+
+@media (max-width: 860px) {
+    .tooltip-wrapper .tooltip-text,
+    .gh-tooltip {
+        display: none !important;
+    }
 }
