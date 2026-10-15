@@ -126,8 +126,6 @@ export default function ColorPicker({
 		};
 	}, [open]);
 
-	const preview = hsvToHex(hsv);
-
 	const pickFrom = (kind: "area" | "hue") => (e: ReactPointerEvent) => {
 		const el = kind === "area" ? areaRef.current : hueRef.current;
 		if (!el) return;

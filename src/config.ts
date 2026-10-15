@@ -1,5 +1,6 @@
-import santa from "../vanity/santa.png";
-import canopy from "../vanity/canopy.png";
+import santaWebp from "../vanity/santa.webp";
+import santaAvif from "../vanity/santa.avif";
+import canopyWebp from "../vanity/canopy.webp";
 
 // Vite inlines import.meta.env.VITE_* statically, so use direct access for inlining
 const _env = (import.meta as unknown as { env?: Record<string, string | undefined> })?.env;
@@ -37,15 +38,16 @@ export const ADMIN_CONFIG = {
 };
 
 export interface VanityConfig {
-  path: string;
+  webp: string;
+  avif?: string;
   x: number;
   y: number;
   angle: number;
 }
 
 export const VANITY_CONFIG: Record<string, VanityConfig> = {
-  christmas: { path: santa, x: 15, y: -5, angle: 0 },
-  canopy: { path: canopy, x: 10, y: 50, angle: 0 },
+  christmas: { webp: santaWebp, avif: santaAvif, x: 15, y: -5, angle: 0 },
+  canopy: { webp: canopyWebp, x: 10, y: 50, angle: 0 },
 };
 
 export function getVanityConfig(id: string): VanityConfig | null {

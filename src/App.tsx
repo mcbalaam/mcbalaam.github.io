@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from "react";
-import { t, getTranslator, TranslationContextProvider } from "../translations/translate";
+import { useState, useEffect } from "react";
+import { t, getTranslator, useTranslator, TranslationContextProvider } from "../translations/translate";
 import { getStatus, type UserStatus } from "./requests";
 import { getVanityConfig } from "./config";
 import { ReactionManager } from "./requests";
@@ -15,24 +15,20 @@ import {
 
 import '@mcbalaam/razdor-ui/dist/index.css'
 
-import TiltCard from "./components/Token";
+import Picture from "./components/Picture";
 import github from "/github-tile.svg";
 import steam from "/steampowered-tile.svg";
-import robust from "/robust.png";
-import soundcloud from "/soundcloud.png";
-import kofi from "/kofi.png";
+import robust from "/robust.webp";
+import soundcloud from "/soundcloud.webp";
+import kofi from "/kofi.webp";
 import cloudtips from "/cloudtips.png";
 import pfp from "/mcbalaam.webp";
-import femtanyl from "/femtanyl.jpg";
-import birthday from "/birthday.jpg";
-import ksb from "/ksb.jpg";
-import bilb from "/bilb.jpg";
-import react from "/react.png"
-import typescript from "/typescript.jpg"
-import docker from "/docker.png"
-import gatus from "/gatus.png"
-import ansible from "/vscode-ansible.png"
-import go from "/golang.png"
+import react from "/react.webp"
+import typescript from "/typescript.webp"
+import docker from "/docker.webp"
+import gatus from "/gatus.webp"
+import ansible from "/vscode-ansible.webp"
+import go from "/golang.webp"
 
 import { Button, ModalPopup, type ModalControl, useCreateToast, Badge, Tooltip, Card, Timestamp } from "@mcbalaam/razdor-ui"
 import StatusBubble from "./components/StatusBubble";
@@ -142,9 +138,9 @@ export function App() {
   const { createSuccessToast, createErrorToast } = useCreateToast();
   const [signsRefreshKey, setSignsRefreshKey] = useState(0);
   const [userStatus, setUserStatus] = useState<UserStatus | null>(null);
-  const [processingReactions, setProcessingReactions] = useState<Set<string>>(new Set());
   const [visitorToken, setVisitorToken] = useState<string | null>(null);
   const layout = useLayoutMode();
+  const tr = useTranslator(locale);
 
   useEffect(() => {
     const initToken = async () => {
@@ -363,7 +359,7 @@ export function App() {
       width: "auto", height: "auto", maxWidth: "120px", maxHeight: "120px",
       pointerEvents: "none" as const, zIndex: 3,
     };
-    return <img src={config.path} style={style} />;
+    return <Picture avif={config.avif} webp={config.webp} alt="" style={style} />;
   };
 
   const profileCard = (
@@ -471,7 +467,7 @@ export function App() {
   );
 
   const stackCard = (
-    <Card title={t("myStack")}>
+    <Card title={tr("myStack")}>
       <div style={{ display: 'inline-flex', flexDirection: "column" }}>
         <StackInfo items={[
           { src: go, label: "Go", description: t("about_stack_go") },
@@ -486,7 +482,7 @@ export function App() {
   );
 
   const workingCard = (
-    <Card title={t("working_on")}>
+    <Card title={tr("working_on")}>
       <RepoTab />
     </Card>
   );
@@ -498,17 +494,6 @@ export function App() {
   const githubCard = (
     <Card>
       <GitHubActivity locale={locale} username="mcbalaam" />
-    </Card>
-  );
-
-  const musicCard = (
-    <Card>
-      <div style={{ display: 'inline-flex', gap: "10px" }}>
-        <TiltCard src={femtanyl} label="femtanyl" />
-        <TiltCard src={birthday} label="The Birthday Massacre" />
-        <TiltCard src={ksb} label="ksb music" />
-        <TiltCard src={bilb} label="билборды" />
-      </div>
     </Card>
   );
 

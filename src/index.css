@@ -1,6 +1,6 @@
 @font-face {
     font-family: NunitoSans;
-    src: url("/NunitoSans.ttf");
+    src: url("/NunitoSans.woff2") format("woff2");
     font-display: swap;
 }
 
@@ -12,7 +12,7 @@
 
 @font-face {
   font-family: 'Twemoji';
-  src: url("/TwemojiMozilla-colr.woff2") format("woff2");
+  src: url("/Twemoji.woff2") format("woff2");
   font-display: swap;
 }
 
@@ -73,13 +73,6 @@
     width: 100%;
 }
 
-@media (max-width: 860px) {
-    .tilt-card {
-        width: 70px !important;
-        height: 70px !important;
-    }
-}
-
 .card-title {
     margin-bottom: -10px;
 }
@@ -94,7 +87,11 @@
     width: calc(100% + 40px);
     margin: -20px -20px 30px -20px;
     height: 100px;
-    background-image: url("/public/delta-rune-maker.png");
+    background-image: url("/delta-rune-maker.webp");
+    background-image: image-set(
+        url("/delta-rune-maker.avif") type("image/avif"),
+        url("/delta-rune-maker.webp") type("image/webp")
+    );
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;

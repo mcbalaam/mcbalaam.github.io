@@ -21,9 +21,9 @@
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
 
-    "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@mcbalaam/razdor-ui": ["./node_modules/@mcbalaam/razdor-ui/dist/index.d.ts"]
     },
 
     "noUnusedLocals": true,

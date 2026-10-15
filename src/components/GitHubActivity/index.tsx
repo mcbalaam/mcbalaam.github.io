@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { ADMIN_CONFIG } from "../../config"
 import "./styles.css";
 import { t } from "../../../translations/translate";
 import ContentLoader from "react-content-loader";
@@ -16,7 +15,7 @@ interface GitHubActivityProps {
 
 async function fetchContributions(username: string): Promise<DayData[]> {
   const response = await fetch(
-    `https://github-contributions-api.jogruber.de/v4/${ADMIN_CONFIG.githubUsername}?y=last`
+    `https://github-contributions-api.jogruber.de/v4/${username}?y=last`
   );
   const data = await response.json();
 

@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { Badge } from "@mcbalaam/razdor-ui"
 import "./styles.css";
 
 interface StackItem {
   src: string;
   label: string;
-  description: string;
+  description: ReactNode;
 }
 
 interface StackInfoProps {
@@ -30,7 +30,7 @@ export default function StackInfo({ items }: StackInfoProps) {
           </span>
         ))}
       </div>
-      <p className="stack-desc">{items[active].description}</p>
+      <p className="stack-desc">{items[active]?.description}</p>
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import { serve } from "bun";
 import index from "../index.html";
 
-const server = serve({
+serve({
   port: 3001,
   hostname: "127.0.0.1",
   routes: {
@@ -13,5 +13,3 @@ const server = serve({
     console: true,
   },
 });
-
-console.log(`🚀 Server running at ${server.url}`);

@@ -227,7 +227,7 @@ export default function RssFeed({ locale }: { locale: string }) {
     <>
       <Card
         title={
-          <span style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}>
+          (<span style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}>
             {data.channelTitle}
             <Button
               icon={copied ? Check : Link}
@@ -235,7 +235,7 @@ export default function RssFeed({ locale }: { locale: string }) {
               tiny
               style={{ padding: "2px 6px", minHeight: "22px", height: "22px" }}
             />
-          </span>
+          </span>) as unknown as string
         }
       >
         <div className="rss-feed">

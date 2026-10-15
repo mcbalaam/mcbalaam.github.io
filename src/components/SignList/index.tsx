@@ -10,7 +10,7 @@ import {
 import type { Sign, SignWithVerification } from "../../requests";
 import "./styles.css";
 
-import { t, getTranslator } from "../../../translations/translate";
+import { t, getTranslator, useTranslator } from "../../../translations/translate";
 import { ModalPopup, Tooltip, Button } from "@mcbalaam/razdor-ui";
 import { CircleCheck, Plus, Trash } from "lucide-react";
 import ContentLoader from "react-content-loader";
@@ -44,6 +44,8 @@ export default function SignList({
   const [canCreateSign, setCanCreateSign] = useState<boolean>(true);
   const [canCreateReason, setCanCreateReason] = useState<string>("");
   const [checkingPermissions, setCheckingPermissions] = useState<boolean>(true);
+
+  const tr = useTranslator(locale);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [signToDelete, setSignToDelete] = useState<number | null>(null);
@@ -206,7 +208,7 @@ export default function SignList({
               ? "Loading..."
               : canCreateSign
                 ? t("sign_header")
-                : t(canCreateReason)}
+                : t(canCreateReason as Parameters<typeof t>[0])}
           </Button>
         </div>
       )}
@@ -259,8 +261,8 @@ export default function SignList({
                   <Tooltip
                     text={
                       sign.signatureValid
-                        ? t("sign_hashMatched")
-                        : t("sign_hashMismatch")
+                        ? tr("sign_hashMatched")
+                        : tr("sign_hashMismatch")
                     }
                   >
                     <Button

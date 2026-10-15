@@ -16,6 +16,8 @@ declare module "*.module.css" {
   export = classes;
 }
 
+declare module "*.css";
+
 declare module "*.png" {
   const path: `${string}.png`;
   export = path;
@@ -23,6 +25,11 @@ declare module "*.png" {
 
 declare module "*.webp" {
   const path: `${string}.webp`;
+  export = path;
+}
+
+declare module "*.avif" {
+  const path: `${string}.avif`;
   export = path;
 }
 

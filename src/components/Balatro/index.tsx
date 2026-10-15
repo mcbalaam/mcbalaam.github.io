@@ -221,20 +221,6 @@ export default function Balatro({
       }
     }
 
-    function checkVisibilityAndRedraw() {
-      if (!container) return;
-      const rect = container.getBoundingClientRect();
-      const isVisible =
-        rect.top < window.innerHeight &&
-        rect.bottom > 0 &&
-        rect.left < window.innerWidth &&
-        rect.right > 0;
-
-      if (isVisible) {
-        forceRedraw();
-      }
-    }
-
     window.addEventListener("resize", resize);
 
     window.addEventListener("scroll", forceRedraw);

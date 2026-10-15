@@ -7,7 +7,7 @@ import {
 } from "../../requests";
 import "./styles.css";
 
-import { t } from "../../../translations/translate";
+import { t, useTranslator } from "../../../translations/translate";
 import { LogOut } from "lucide-react";
 import github from "/github-tile.svg";
 import { Button } from "@mcbalaam/razdor-ui"
@@ -18,7 +18,6 @@ interface AuthButtonsProps {
   onLoginError?: (errorMessage: string) => void;
   onLogoutSuccess?: () => void;
   onLogoutError?: (errorMessage: string) => void;
-  className?: string;
 }
 
 const AuthButtons: React.FC<AuthButtonsProps> = ({
@@ -27,8 +26,8 @@ const AuthButtons: React.FC<AuthButtonsProps> = ({
   onLoginError,
   onLogoutSuccess,
   onLogoutError,
-  className,
 }) => {
+  const tr = useTranslator();
   const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useState<any>(null);
   const [authChecked, setAuthChecked] = useState(false);
@@ -125,7 +124,7 @@ const AuthButtons: React.FC<AuthButtonsProps> = ({
     } catch (err) {
       console.error("Logout failed:", err);
       const errorMessage =
-        err instanceof Error ? err.message : String(t("logout_toastError"));
+        err instanceof Error ? err.message : tr("logout_toastError");
       if (onLogoutError) {
         onLogoutError(errorMessage);
       }

@@ -11,7 +11,7 @@ interface SignFormProps {
 
 import { useTranslator } from "../../../translations/translate";
 
-import { Button, Textarea } from "@mcbalaam/razdor-ui"
+import { Button } from "@mcbalaam/razdor-ui"
 
 const SignForm: React.FC<SignFormProps> = ({
   onSignCreated,
