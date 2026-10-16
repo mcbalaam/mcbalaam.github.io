@@ -6,6 +6,9 @@ out
 dist
 *.tgz
 
+# to18ml generated output
+**/locales/generated/
+
 # code coverage
 coverage
 *.lcov

@@ -7,7 +7,7 @@ export interface KeyPair {
   privateKey: Uint8Array;
 }
 
-import { t } from "../../translations/translate";
+import { i18n } from "../translate";
 
 export interface SignatureData {
   message: string;
@@ -118,7 +118,7 @@ export class Crypto {
       if (!sign.public_key || !sign.signature) {
         return {
           isValid: false,
-          error: t("hashes_signature").toString(),
+          error: i18n.t("hashes.signature"),
         };
       }
 

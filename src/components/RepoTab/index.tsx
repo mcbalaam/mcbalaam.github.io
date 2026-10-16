@@ -12,9 +12,10 @@ import go from "/golang.webp";
 import ebitter from "/bitter.png";
 import github from "/github-tile.svg";
 import { ArrowUpRight, Play } from "lucide-react";
-import { t } from "../../../translations/translate";
+import { useT } from "../../translate";
 
 export default function RepoTab({}: {}) {
+  const t = useT();
   const [isDemoOpen, setIsDemoOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -37,9 +38,9 @@ export default function RepoTab({}: {}) {
             <Badge src={go} />
           </Tooltip>
         </span>
-        <p>{t("ebitter")}</p>
+        <p>{t("projects.ebitter")}</p>
         <Button color="secondary" fill icon={Play} onClick={openDemo}>
-          {t("run_live_demo")}
+          {t("page.runLiveDemo")}
         </Button>
       </span>
       <span className="repotab-card">
@@ -54,7 +55,7 @@ export default function RepoTab({}: {}) {
             <Badge src={go} />
           </Tooltip>
         </span>
-        <p>{t("picorss")}</p>
+        <p>{t("projects.picorss")}</p>
       </span>
       <span className="repotab-card">
         <span style={{ display: "flex", flexDirection: "row" }}>
@@ -74,7 +75,7 @@ export default function RepoTab({}: {}) {
             <Badge src={react} />
           </Tooltip>
         </span>
-        <p>{t("fortune")}</p>
+        <p>{t("projects.fortune")}</p>
       </span>
       <span className="repotab-card">
         <span style={{ display: "flex", flexDirection: "row" }}>
@@ -88,7 +89,7 @@ export default function RepoTab({}: {}) {
             <Badge src={go} />
           </Tooltip>
         </span>
-        <p>{t("graft")}</p>
+        <p>{t("projects.graft")}</p>
       </span>
       <span className="repotab-card">
         <span style={{ display: "flex", flexDirection: "row" }}>
@@ -111,7 +112,7 @@ export default function RepoTab({}: {}) {
             <Badge src={prisma} />
           </Tooltip>
         </span>
-        <p>{t("extera")}</p>
+        <p>{t("projects.extera")}</p>
       </span>
       <span className="repotab-card">
         <span style={{ display: "flex", flexDirection: "row" }}>
@@ -125,7 +126,7 @@ export default function RepoTab({}: {}) {
             <Badge src={react} />
           </Tooltip>
         </span>
-        <p>{t("razdor")}</p>
+        <p>{t("projects.razdor")}</p>
       </span>
 
       <ModalPopup
@@ -135,7 +136,7 @@ export default function RepoTab({}: {}) {
           closeOnOverlayClick: true,
           closeOnEscape: true,
           showCloseButton: true,
-          title: t("demo_title"),
+          title: t("demo.title"),
           size: isMobile ? "small" : "large",
         }}
       >

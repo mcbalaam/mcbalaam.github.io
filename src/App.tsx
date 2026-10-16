@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { t, getTranslator, useTranslator, TranslationContextProvider } from "../translations/translate";
+import { i18n, useT } from "./translate";
 import { getStatus, type UserStatus } from "./requests";
 import { getVanityConfig } from "./config";
 import { ReactionManager } from "./requests";
@@ -140,7 +140,11 @@ export function App() {
   const [userStatus, setUserStatus] = useState<UserStatus | null>(null);
   const [visitorToken, setVisitorToken] = useState<string | null>(null);
   const layout = useLayoutMode();
-  const tr = useTranslator(locale);
+  const t = useT();
+
+  useEffect(() => {
+    i18n.setLocale(locale);
+  }, [locale]);
 
   useEffect(() => {
     const initToken = async () => {
@@ -299,53 +303,45 @@ export function App() {
     closeOnOverlayClick: true,
     closeOnEscape: true,
     showCloseButton: true,
-    title: t("sign_header"),
+    title: t("sign.header"),
   };
 
   const handleSignFormSuccess = async () => {
     setIsModalOpen(false);
-    const tr = await getTranslator(locale);
-    createSuccessToast({ children: String(tr("sign_toastSent")), duration: 3000, position: "bottom-center", icon: CircleCheck });
+    createSuccessToast({ children: t("sign.toastSent"), duration: 3000, position: "bottom-center", icon: CircleCheck });
     setSignsRefreshKey((prev) => prev + 1);
   };
 
   const handleSignFormError = async (errorMessage: string) => {
     setIsModalOpen(false);
-    const tr = await getTranslator(locale);
-    createErrorToast({ children: `${String(tr("sign_error"))}: ${errorMessage}`, position: "bottom-center", icon: CircleX });
+    createErrorToast({ children: `${t("sign.error")}: ${errorMessage}`, position: "bottom-center", icon: CircleX });
   };
 
   const handleSignDeleted = async () => {
-    const tr = await getTranslator(locale);
-    createSuccessToast({ children: String(tr("sign_toastDeleted")), duration: 3000, position: "bottom-center", icon: CircleCheck });
+    createSuccessToast({ children: t("sign.toastDeleted"), duration: 3000, position: "bottom-center", icon: CircleCheck });
     setSignsRefreshKey((prev) => prev + 1);
   };
 
   const handleSignDeleteError = async (errorMessage: string) => {
-    const tr = await getTranslator(locale);
-    createErrorToast({ children: `${String(tr("sign_toastDeleteError"))}: ${errorMessage}`, position: "bottom-center", icon: CircleX });
+    createErrorToast({ children: `${t("sign.toastDeleteError")}: ${errorMessage}`, position: "bottom-center", icon: CircleX });
   };
 
   const handleLogoutSuccess = async () => {
-    const tr = await getTranslator(locale);
-    createSuccessToast({ children: String(tr("logout_toastSuccess")), duration: 3000, position: "bottom-center", icon: CircleCheck });
+    createSuccessToast({ children: t("auth.logoutSuccess"), duration: 3000, position: "bottom-center", icon: CircleCheck });
     setSignsRefreshKey((prev) => prev + 1);
   };
 
   const handleLogoutError = async (errorMessage: string) => {
-    const tr = await getTranslator(locale);
-    createErrorToast({ children: `${String(tr("logout_toastError"))}: ${errorMessage}`, position: "bottom-center", icon: CircleX });
+    createErrorToast({ children: `${t("auth.logoutError")}: ${errorMessage}`, position: "bottom-center", icon: CircleX });
   };
 
   const handleLoginSuccess = async () => {
-    const tr = await getTranslator(locale);
-    createSuccessToast({ children: String(tr("authViaGitHub")), duration: 3000, position: "bottom-center", icon: CircleCheck });
+    createSuccessToast({ children: t("auth.authViaGitHub"), duration: 3000, position: "bottom-center", icon: CircleCheck });
     setSignsRefreshKey((prev) => prev + 1);
   };
 
   const handleLoginError = async (errorMessage: string) => {
-    const tr = await getTranslator(locale);
-    createErrorToast({ children: `${String(tr("sign_error"))}: ${errorMessage}`, position: "bottom-center", icon: CircleX });
+    createErrorToast({ children: `${t("sign.error")}: ${errorMessage}`, position: "bottom-center", icon: CircleX });
   };
 
   const VanityOverlay = ({ vanityId }: { vanityId: string }) => {
@@ -381,12 +377,12 @@ export function App() {
         mcbalaam <ArrowRight size={14} />{" "}
         эмсибалаам, балаам, макбаклак (he/him)
       </div>
-      <p className="desc">{t("aboutMe")}</p>
+      <p className="desc">{t("page.aboutMe")}</p>
       <div style={{ display: "flex", height: "fit-content", flexWrap: "wrap", margin: "0px 5px 10px 0" }}>
-        <p>{t("myMidniht")} <Timestamp ts="1764608400" />. {t("active")}</p>
+        <p>{t("page.myMidniht")} <Timestamp ts="1764608400" />. {t("page.active")}</p>
       </div>
 
-      <h1>{t("connections")}</h1>
+      <h1>{t("page.connections")}</h1>
       <div className="connections">
         <Badge href="https://www.github.com/mcbalaam" src={github}>GitHub <ArrowUpRight size={12} /></Badge>
         <Badge href="https://steamcommunity.com/id/mcbalaam/" src={steam}>Steam <ArrowUpRight size={12} /></Badge>
@@ -404,10 +400,10 @@ export function App() {
       >
         <span className="mail-button-labels">
           <span className="mail-button-label mail-button-label-default">
-            {t("mailme")}
+            {t("page.mailme")}
           </span>
           <span className="mail-button-label mail-button-label-hover" aria-hidden="true">
-            {t("mailme_hover")}
+            {t("page.mailmeHover")}
           </span>
         </span>
         <ArrowUpRight size={12} />
@@ -457,7 +453,6 @@ export function App() {
       />
       <br></br>
       <SignList
-        locale={locale}
         onLeaveSignClick={() => openModal()}
         onSignDeleted={handleSignDeleted}
         onSignDeleteError={handleSignDeleteError}
@@ -467,22 +462,22 @@ export function App() {
   );
 
   const stackCard = (
-    <Card title={tr("myStack")}>
+    <Card title={t("page.myStack")}>
       <div style={{ display: 'inline-flex', flexDirection: "column" }}>
         <StackInfo items={[
-          { src: go, label: "Go", description: t("about_stack_go") },
-          { src: typescript, label: "TypeScript", description: t("about_stack_typescript") },
-          { src: ansible, label: "Ansible", description: t("about_stack_ansible") },
-          { src: gatus, label: "Monitoring", description: t("about_stack_monitoring") },
-          { src: react, label: "ReactJS", description: t("about_stack_react") },
-          { src: docker, label: "Docker", description: t("about_stack_docker") },
+          { src: go, label: "Go", description: t("stack.go") },
+          { src: typescript, label: "TypeScript", description: t("stack.typescript") },
+          { src: ansible, label: "Ansible", description: t("stack.ansible") },
+          { src: gatus, label: "Monitoring", description: t("stack.monitoring") },
+          { src: react, label: "ReactJS", description: t("stack.react") },
+          { src: docker, label: "Docker", description: t("stack.docker") },
         ]} />
       </div>
     </Card>
   );
 
   const workingCard = (
-    <Card title={tr("working_on")}>
+    <Card title={t("page.workingOn")}>
       <RepoTab />
     </Card>
   );
@@ -500,7 +495,7 @@ export function App() {
   const webringBar = <WebringBar />;
 
   return (
-    <TranslationContextProvider locale={locale}>
+    <>
       <Balatro color1={balatro1} color2={balatro2} color3={balatro3} mouseInteraction={false}></Balatro>
       {layout === "triple" && (
         <div className="master-container is-triple">
@@ -552,7 +547,7 @@ export function App() {
       </ModalPopup>
 
 
-    </TranslationContextProvider>
+    </>
   );
 }
 

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Card, ModalPopup, Button, useCreateToast } from "@mcbalaam/razdor-ui";
 import { Link, Check } from "lucide-react";
 import ContentLoader from "react-content-loader";
-import { t, getTranslator } from "../../../translations/translate";
+import { useT } from "../../translate";
 import "./styles.css";
 
 const RSS_URL = "https://rss.mcblm.xyz/rss.xml";
@@ -156,6 +156,7 @@ async function fetchRss(): Promise<RssFeedData> {
 }
 
 export default function RssFeed({ locale }: { locale: string }) {
+  const t = useT();
   const [data, setData] = useState<RssFeedData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -168,8 +169,7 @@ export default function RssFeed({ locale }: { locale: string }) {
     try {
       await navigator.clipboard.writeText(data.channelLink);
       setCopied(true);
-      const tr = await getTranslator(locale);
-      createSuccessToast({ children: String(tr("rss_copied")), duration: 2000, position: "bottom-center", icon: Check });
+      createSuccessToast({ children: t("rss.copied"), duration: 2000, position: "bottom-center", icon: Check });
       setTimeout(() => setCopied(false), 2000);
     } catch {
       window.open(data.channelLink, "_blank");
@@ -210,7 +210,7 @@ export default function RssFeed({ locale }: { locale: string }) {
   if (error) {
     return (
       <Card title={data?.channelTitle || "RSS"}>
-        <div className="rss-error">{t("rss_error")}: {error}</div>
+        <div className="rss-error">{t("rss.error")}: {error}</div>
       </Card>
     );
   }
@@ -218,7 +218,7 @@ export default function RssFeed({ locale }: { locale: string }) {
   if (!data || data.items.length === 0) {
     return (
       <Card title={data?.channelTitle || "RSS"}>
-        <div className="rss-empty">{t("rss_empty")}</div>
+        <div className="rss-empty">{t("rss.empty")}</div>
       </Card>
     );
   }

@@ -4,6 +4,10 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "i18n": "to18ml",
+    "i18n:check": "to18ml --check",
+    "predev": "to18ml",
+    "prebuild": "to18ml",
     "dev": "vite --port 3001 --host 0.0.0.0",
     "dev:bun": "bun --hot src/index.ts",
     "build": "vite build --minify",
@@ -16,6 +20,7 @@
   "dependencies": {
     "@fingerprintjs/fingerprintjs": "^5.1.0",
     "@mcbalaam/razdor-ui": "^0.3.0",
+    "@mcbalaam/to18ml": "^0.1.0",
     "@noble/curves": "^2.0.1",
     "@noble/hashes": "^2.0.1",
     "@react-spring/web": "^10.0.3",
@@ -28,8 +33,7 @@
     "react-countup": "^6.5.3",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
-    "react-dom": "^19",
-    "schummar-translate": "^1.25.2"
+    "react-dom": "^19"
   },
   "devDependencies": {
     "@types/bun": "latest",

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import "./styles.css";
-import { t } from "../../../translations/translate";
+import { useT } from "../../translate";
 import ContentLoader from "react-content-loader";
 
 interface DayData {
@@ -59,6 +59,7 @@ function pluralizeContributions(n: number, locale: string): string {
 }
 
 export default function GitHubActivity({ username, locale }: GitHubActivityProps) {
+  const t = useT();
   const [days, setDays] = useState<DayData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -146,7 +147,7 @@ export default function GitHubActivity({ username, locale }: GitHubActivityProps
     <>
       <div className="gh-activity">
         <div className="gh-header">
-          <span className="gh-title">{t("github")}</span>
+          <span className="gh-title">{t("page.github")}</span>
           <span className="gh-count">{pluralizeContributions(totalContributions, locale)}</span>
         </div>
 
@@ -220,11 +221,11 @@ export default function GitHubActivity({ username, locale }: GitHubActivityProps
         </div>
 
         <div className="gh-legend">
-          <span className="gh-legend-label">{t("less")}</span>
+          <span className="gh-legend-label">{t("page.less")}</span>
           {["var(--gh-empty)", "var(--gh-low)", "var(--gh-mid)", "var(--gh-high)", "var(--gh-max)"].map((c, i) => (
             <div key={i} className="gh-legend-cell" style={{ background: c }} />
           ))}
-          <span className="gh-legend-label">{t("more")}</span>
+          <span className="gh-legend-label">{t("page.more")}</span>
         </div>
       </div>
 

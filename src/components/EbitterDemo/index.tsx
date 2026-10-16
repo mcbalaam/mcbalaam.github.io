@@ -1,4 +1,4 @@
-import { t } from "../../../translations/translate";
+import { useT } from "../../translate";
 import "./styles.css";
 
 const WASM_EXEC_URL = "https://mcblm.xyz/ebitter/wasm_exec.js";
@@ -38,8 +38,9 @@ const DEMO_HTML = `<!DOCTYPE html>
 </html>`;
 
 export default function EbitterDemo({ mobile }: { mobile: boolean }) {
+  const t = useT();
   if (mobile) {
-    return <p className="ebitter-demo-warning">{t("demo_screenTooSmall")}</p>;
+    return <p className="ebitter-demo-warning">{t("demo.screenTooSmall")}</p>;
   }
 
   return (

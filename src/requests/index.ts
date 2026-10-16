@@ -253,7 +253,7 @@ export class SignManager {
       } = await supabase.auth.getUser();
 
       if (authError || !user) {
-        return { canCreate: false, reason: "User not authenticated" };
+        return { canCreate: false, reason: "auth.notAuthenticated" };
       }
 
       const { data: blacklistData, error: blacklistError } = await supabase
@@ -263,7 +263,7 @@ export class SignManager {
         .single();
 
       if (!blacklistError && blacklistData) {
-        return { canCreate: false, reason: "sign_blacklisted" };
+        return { canCreate: false, reason: "sign.blacklisted" };
       }
 
       const { data: existingSigns, error: existingError } = await supabase
@@ -272,13 +272,13 @@ export class SignManager {
         .eq("user_id", user.id);
 
       if (!existingError && existingSigns && existingSigns.length > 0) {
-        return { canCreate: false, reason: "sign_alreadyLeft" };
+        return { canCreate: false, reason: "sign.alreadyLeft" };
       }
 
       return { canCreate: true };
     } catch (error: any) {
       console.error("Error checking if user can create sign:", error);
-      return { canCreate: false, reason: "sign_error" };
+      return { canCreate: false, reason: "sign.error" };
     }
   }
 

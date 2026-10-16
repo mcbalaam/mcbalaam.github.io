@@ -10,7 +10,7 @@ import {
 import type { Sign, SignWithVerification } from "../../requests";
 import "./styles.css";
 
-import { t, getTranslator, useTranslator } from "../../../translations/translate";
+import { useT } from "../../translate";
 import { ModalPopup, Tooltip, Button } from "@mcbalaam/razdor-ui";
 import { CircleCheck, Plus, Trash } from "lucide-react";
 import ContentLoader from "react-content-loader";
@@ -19,7 +19,6 @@ interface SignListProps {
   showUserSigns?: boolean;
   showAdminControls?: boolean;
   className?: string;
-  locale?: string;
   onLeaveSignClick?: () => void;
   onSignDeleted?: () => void;
   onSignDeleteError?: (errorMessage: string) => void;
@@ -30,7 +29,6 @@ export default function SignList({
   showUserSigns = false,
   showAdminControls = false,
   className = "",
-  locale = "en",
   onLeaveSignClick,
   onSignDeleted,
   onSignDeleteError,
@@ -45,7 +43,7 @@ export default function SignList({
   const [canCreateReason, setCanCreateReason] = useState<string>("");
   const [checkingPermissions, setCheckingPermissions] = useState<boolean>(true);
 
-  const tr = useTranslator(locale);
+  const t = useT();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [signToDelete, setSignToDelete] = useState<number | null>(null);
@@ -121,9 +119,8 @@ export default function SignList({
         onSignDeleted();
       }
     } catch (err) {
-      const tr = await getTranslator(locale);
       const errorMessage =
-        err instanceof Error ? err.message.toString() : String(tr("sign_toastDeleteError"));
+        err instanceof Error ? err.message.toString() : t("sign.toastDeleteError");
       if (onSignDeleteError) {
         onSignDeleteError(errorMessage);
       }
@@ -207,7 +204,7 @@ export default function SignList({
             {checkingPermissions
               ? "Loading..."
               : canCreateSign
-                ? t("sign_header")
+                ? t("sign.header")
                 : t(canCreateReason as Parameters<typeof t>[0])}
           </Button>
         </div>
@@ -215,7 +212,7 @@ export default function SignList({
 
       {signs.length === 0 ? (
         <div style={{ padding: "auto" }}>
-          <p>{t("sign_noneYet")}</p>
+          <p>{t("sign.noneYet")}</p>
         </div>
       ) : (
         <div className="signs-container">
@@ -261,8 +258,8 @@ export default function SignList({
                   <Tooltip
                     text={
                       sign.signatureValid
-                        ? tr("sign_hashMatched")
-                        : tr("sign_hashMismatch")
+                        ? t("sign.hashMatched")
+                        : t("sign.hashMismatch")
                     }
                   >
                     <Button
@@ -308,20 +305,20 @@ export default function SignList({
           closeOnOverlayClick: true,
           closeOnEscape: true,
           showCloseButton: true,
-          title: t("sign_deleteTitle"),
+          title: t("sign.deleteTitle"),
           footerButtons: (
             <>
               <Button onClick={handleDeleteCancel}>
-                {t("sign_deleteCancel")}
+                {t("sign.deleteCancel")}
               </Button>
               <Button color="bad" onClick={handleDeleteConfirm}>
-                {t("sign_deleteConfirm")}
+                {t("sign.deleteConfirm")}
               </Button>
             </>
           ),
         }}
       >
-        <p>{t("sign_deleteText")}</p>
+        <p>{t("sign.deleteText")}</p>
       </ModalPopup>
 
       <ModalPopup
@@ -335,20 +332,20 @@ export default function SignList({
           closeOnEscape: true,
           showCloseButton: true,
           title: selectedSign?.signatureValid
-            ? t("hashes_title")
-            : t("hashes_mismatchTitle"),
+            ? t("hashes.title")
+            : t("hashes.mismatchTitle"),
         }}
       >
         {selectedSign && (
           <>
             <p>
               {selectedSign.signatureValid
-                ? t("hashes_about")
-                : t("hashes_mismatchAbout")}
+                ? t("hashes.about")
+                : t("hashes.mismatchAbout")}
               <br />
               <br />
             </p>
-            <p>{selectedSign.signatureValid && t("hashes_matched")}</p>
+            <p>{selectedSign.signatureValid && t("hashes.matched")}</p>
 
             {selectedSign.publicKeyDisplay && (
               <>
@@ -360,7 +357,7 @@ export default function SignList({
             )}
             {selectedSign.verificationError && (
               <p>
-                <strong>{t("hashes_error")}:</strong>{" "}
+                <strong>{t("hashes.error")}:</strong>{" "}
                 {selectedSign.verificationError}
               </p>
             )}

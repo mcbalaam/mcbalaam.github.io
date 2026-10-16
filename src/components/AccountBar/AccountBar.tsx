@@ -7,7 +7,7 @@ import {
 } from "../../requests";
 import "./styles.css";
 
-import { t, useTranslator } from "../../../translations/translate";
+import { useT } from "../../translate";
 import { LogOut } from "lucide-react";
 import github from "/github-tile.svg";
 import { Button } from "@mcbalaam/razdor-ui"
@@ -27,7 +27,7 @@ const AuthButtons: React.FC<AuthButtonsProps> = ({
   onLogoutSuccess,
   onLogoutError,
 }) => {
-  const tr = useTranslator();
+  const t = useT();
   const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useState<any>(null);
   const [authChecked, setAuthChecked] = useState(false);
@@ -124,7 +124,7 @@ const AuthButtons: React.FC<AuthButtonsProps> = ({
     } catch (err) {
       console.error("Logout failed:", err);
       const errorMessage =
-        err instanceof Error ? err.message : tr("logout_toastError");
+        err instanceof Error ? err.message : t("auth.logoutError");
       if (onLogoutError) {
         onLogoutError(errorMessage);
       }
@@ -139,7 +139,7 @@ const AuthButtons: React.FC<AuthButtonsProps> = ({
   };
 
   if (!authChecked) {
-    return <p>{t("auth")}</p>;
+    return <p>{t("auth.inProgress")}</p>;
   }
 
   if (user) {
@@ -148,7 +148,7 @@ const AuthButtons: React.FC<AuthButtonsProps> = ({
         <img src={user.github_avatar} className="user-avatar" />
         <div className="user-profile-stack">
           <p className="username">{getUserDisplayName()}</p>
-          <p className="about">{t("authViaGitHub")}</p>
+          <p className="about">{t("auth.authViaGitHub")}</p>
         </div>
         <Button
           className="logout"
@@ -169,9 +169,9 @@ const AuthButtons: React.FC<AuthButtonsProps> = ({
         disabled={isLoading}
         color="contrast"
       >
-        {isLoading ? "Connecting..." : t("loginWithGithub")}
+        {isLoading ? "Connecting..." : t("auth.loginWithGithub")}
       </Button>
-      <p style={{ lineHeight: "40px" }}>{t("toLeaveSigns")}</p>
+      <p style={{ lineHeight: "40px" }}>{t("auth.toLeaveSigns")}</p>
     </div>
   );
 };

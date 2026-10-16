@@ -9,7 +9,7 @@ interface SignFormProps {
   className?: string;
 }
 
-import { useTranslator } from "../../../translations/translate";
+import { useT } from "../../translate";
 
 import { Button } from "@mcbalaam/razdor-ui"
 
@@ -18,7 +18,7 @@ const SignForm: React.FC<SignFormProps> = ({
   onSignError,
   className,
 }) => {
-  const t = useTranslator();
+  const t = useT();
   const [message, setMessage] = useState("");
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -81,7 +81,7 @@ const SignForm: React.FC<SignFormProps> = ({
             id="message"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            placeholder={t("sign_placeholder")}
+            placeholder={t("sign.placeholder")}
             rows={2}
             maxLength={100}
             disabled={isSubmitting}
@@ -94,9 +94,9 @@ const SignForm: React.FC<SignFormProps> = ({
               onChange={(e) => setIsAnonymous(e.target.checked)}
               disabled={isSubmitting}
             />
-            <span>{t("sign_anonymous")}</span>
+            <span>{t("sign.anonymous")}</span>
           </label>
-          <p className="help-text">{t("sign_anonymousExplain")}</p>
+          <p className="help-text">{t("sign.anonymousExplain")}</p>
         </div>
 
         {error && (
@@ -112,7 +112,7 @@ const SignForm: React.FC<SignFormProps> = ({
         )}
 
         <Button type="submit" disabled={isSubmitting} fill color="contrast">
-          {isSubmitting ? t("sign_sending") : t("sign_sendAction")}
+          {isSubmitting ? t("sign.sending") : t("sign.sendAction")}
         </Button>
       </form>
     </div>
