@@ -192,7 +192,7 @@
 
     "@jridgewell/trace-mapping": ["@jridgewell/trace-mapping@0.3.31", "", { "dependencies": { "@jridgewell/resolve-uri": "^3.1.0", "@jridgewell/sourcemap-codec": "^1.4.14" } }, "sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw=="],
 
-    "@mcbalaam/razdor-ui": ["@mcbalaam/razdor-ui@0.3.0", "https://npm.pkg.github.com/download/@mcbalaam/razdor-ui/0.3.0/16d35a3aa83383e5010bf5ae5d867c46d47c6638", { "peerDependencies": { "lucide-react": "^0.400.0 || ^1.0.0", "react": "^18.0.0 || ^19.0.0", "react-dom": "^18.0.0 || ^19.0.0" } }, "sha512-BXYG0pAOHETHhQ78JZyHCnuPbjFj8fkl5V0+SLDbRH3ITVgNhd5nVyXhxYkua9jUDqJSB9j3iJQOT6qxp1y5hg=="],
+    "@mcbalaam/razdor-ui": ["@mcbalaam/razdor-ui@0.3.0", "", { "peerDependencies": { "lucide-react": "^0.400.0 || ^1.0.0", "react": "^18.0.0 || ^19.0.0", "react-dom": "^18.0.0 || ^19.0.0" } }, "sha512-X4Gw3oeJ+KMGTIMirjLfPEP9qA5qArS/FuZOBZBZK2UthXYK4OXRvevY/yWKcwSNIyZrKUsy4Rm4+dNnCFr6qg=="],
 
     "@mcbalaam/to18ml": ["@mcbalaam/to18ml@0.1.0", "", { "dependencies": { "smol-toml": "^1.9.1" }, "peerDependencies": { "react": ">=18", "typescript": "^7" }, "optionalPeers": ["react"], "bin": { "to18ml": "src/cli/index.ts" } }, "sha512-h/sJdb8x5nctc+BNRgx+wOLo8WPkaMKBHHyazne/9Q7wGOuyoQ65XfIdNmAR/snfx4AO6Yu10b2SuDBhLfcKtQ=="],
 
