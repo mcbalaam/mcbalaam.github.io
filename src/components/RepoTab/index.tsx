@@ -3,11 +3,8 @@ import { Badge, Button, ModalPopup, Tooltip } from "@mcbalaam/razdor-ui";
 import "./styles.css";
 import EbitterDemo, { isMobileLayout } from "../EbitterDemo";
 import misfortune from "/mis-fortune.webp";
-import extera from "/extera.webp";
 import react from "/react.webp";
 import typescript from "/typescript.webp";
-import elysia from "/elysia.webp";
-import prisma from "/prisma.webp";
 import go from "/golang.webp";
 import ebitter from "/bitter.png";
 import github from "/github-tile.svg";
@@ -61,6 +58,23 @@ export default function RepoTab({}: {}) {
         <span style={{ display: "flex", flexDirection: "row" }}>
           <span style={{ flex: 1 }}>
             <Badge
+              href="https://www.github.com/mcbalaam/to18ml"
+              src={typescript}
+            >
+              to18ml{" "}
+              <ArrowUpRight size={12} />
+            </Badge>
+          </span>
+          <Tooltip text="TypeScript">
+            <Badge src={typescript} />
+          </Tooltip>
+        </span>
+        <p>{t("projects.to18ml")}</p>
+      </span>
+      <span className="repotab-card">
+        <span style={{ display: "flex", flexDirection: "row" }}>
+          <span style={{ flex: 1 }}>
+            <Badge
               href="https://www.github.com/mcbalaam/mis-fortune"
               src={misfortune}
             >
@@ -90,29 +104,6 @@ export default function RepoTab({}: {}) {
           </Tooltip>
         </span>
         <p>{t("projects.graft")}</p>
-      </span>
-      <span className="repotab-card">
-        <span style={{ display: "flex", flexDirection: "row" }}>
-          <span style={{ flex: 1 }}>
-            <Badge
-              href="https://www.github.com/mcbalaam/exterastore-server"
-              src={extera}
-            >
-              exteraGram Store{" "}
-              <ArrowUpRight size={12} />
-            </Badge>
-          </span>
-          <Tooltip text="TypeScript">
-            <Badge src={typescript} />
-          </Tooltip>
-          <Tooltip text="ElysiaJS">
-            <Badge src={elysia} />
-          </Tooltip>
-          <Tooltip text="Prisma ORM">
-            <Badge src={prisma} />
-          </Tooltip>
-        </span>
-        <p>{t("projects.extera")}</p>
       </span>
       <span className="repotab-card">
         <span style={{ display: "flex", flexDirection: "row" }}>

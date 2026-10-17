@@ -61,7 +61,7 @@ signature = "missing signature data"
 
 [projects]
 fortune = "A Twitch chat overlay utility styled as SS13 chat that runs in your browser, hosted on GitHub Pages. Supports 7TV/BTTV/FFZ and Twitch's native emotes and badges"
-extera = "An API server + version control system for exteraGram plugins. Elysia, Prisma+Postgress. Currently undergoing maintenance to switch to microservices"
+to18ml = "A framework-agnostic i18n library sourced from TOML supporting pluralization, nested lists and typed snippets."
 ebitter = "A set of utilities for developing games in Go using ebitengine. Provides Aseprite spritesheet and Tiled map support, scene and camera systems and much more"
 razdor = "A React general utility component library for making Discord-like UIs. Basic styled components, theme support, toast notifications. Used on this page, btw."
 graft = "A Go utility for managing, backuping and restoring sparse directories to Git as \"blobs\" (submodules). Releases available on GitHub and AUR releases planned!"
