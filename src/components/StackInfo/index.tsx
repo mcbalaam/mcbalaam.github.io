@@ -1,11 +1,12 @@
-import { useState, type ReactNode } from "react";
-import { Badge } from "@mcbalaam/razdor-ui"
+import { useState } from "preact/hooks";
+import type { ComponentChildren } from "preact";
+import { Badge } from "@mcbalaam/razdor-ui";
 import "./styles.css";
 
 interface StackItem {
   src: string;
   label: string;
-  description: ReactNode;
+  description: ComponentChildren;
 }
 
 interface StackInfoProps {

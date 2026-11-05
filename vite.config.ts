@@ -1,5 +1,6 @@
 import { defineConfig, type Plugin } from "vite";
-import react from "@vitejs/plugin-react";
+import { visualizer } from 'rollup-plugin-visualizer'
+import preact from "@preact/preset-vite";
 
 function stripRazdorFontFace(): Plugin {
   return {
@@ -19,8 +20,12 @@ export default defineConfig({
   optimizeDeps: { exclude: ["@mcbalaam/razdor-ui"] },
   plugins: [
     stripRazdorFontFace(),
-    react()
+    preact(),
+    visualizer({ open: true }),
   ],
+  esbuild: {
+    drop: ['console', 'debugger'],
+  },
   build: {
     rollupOptions: {
       output: {

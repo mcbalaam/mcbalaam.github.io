@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from "preact/hooks";
 import { Card, ModalPopup, Button, useCreateToast } from "@mcbalaam/razdor-ui";
 import { Link, Check } from "lucide-react";
 import ContentLoader from "react-content-loader";

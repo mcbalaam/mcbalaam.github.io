@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "preact/hooks";
 import {
   signInWithGitHub,
   signOut,
@@ -20,13 +20,21 @@ interface AuthButtonsProps {
   onLogoutError?: (errorMessage: string) => void;
 }
 
-const AuthButtons: React.FC<AuthButtonsProps> = ({
+interface AuthButtonsProps {
+  onAuthChange?: (isAuthenticated: boolean) => void;
+  onLoginSuccess?: () => void;
+  onLoginError?: (errorMessage: string) => void;
+  onLogoutSuccess?: () => void;
+  onLogoutError?: (errorMessage: string) => void;
+}
+
+function AuthButtons({
   onAuthChange,
   onLoginSuccess,
   onLoginError,
   onLogoutSuccess,
   onLogoutError,
-}) => {
+}: AuthButtonsProps) {
   const t = useT();
   const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useState<any>(null);

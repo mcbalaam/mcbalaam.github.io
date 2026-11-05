@@ -1,9 +1,12 @@
+import type { TargetedPointerEvent } from "preact";
+
+type PickerPointerEvent = TargetedPointerEvent<HTMLDivElement>;
+
 import {
-	useEffect,
-	useRef,
-	useState,
-	type PointerEvent as ReactPointerEvent,
-} from "react";
+  useEffect,
+  useRef,
+  useState
+} from "preact/hooks";
 import { Palette, Sun, Moon } from "lucide-react";
 import { Button } from "@mcbalaam/razdor-ui";
 import "./styles.css";
@@ -126,7 +129,7 @@ export default function ColorPicker({
 		};
 	}, [open]);
 
-	const pickFrom = (kind: "area" | "hue") => (e: ReactPointerEvent) => {
+	const pickFrom = (kind: "area" | "hue") => (e: PickerPointerEvent) => {
 		const el = kind === "area" ? areaRef.current : hueRef.current;
 		if (!el) return;
 		const rect = el.getBoundingClientRect();
@@ -141,19 +144,19 @@ export default function ColorPicker({
 		setHsv(next);
 	};
 
-	const startDrag = (kind: "area" | "hue") => (e: ReactPointerEvent) => {
+	const startDrag = (kind: "area" | "hue") => (e: PickerPointerEvent) => {
 		e.preventDefault();
 		dragging.current = true;
 		e.currentTarget.setPointerCapture(e.pointerId);
 		pickFrom(kind)(e);
 	};
 
-	const moveDrag = (kind: "area" | "hue") => (e: ReactPointerEvent) => {
+	const moveDrag = (kind: "area" | "hue") => (e: PickerPointerEvent) => {
 		if (!dragging.current) return;
 		pickFrom(kind)(e);
 	};
 
-	const endDrag = (e: ReactPointerEvent) => {
+	const endDrag = (e: PickerPointerEvent) => {
 		if (!dragging.current) return;
 		dragging.current = false;
 		try {

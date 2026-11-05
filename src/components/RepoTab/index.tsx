@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from "preact/hooks";
 import { Badge, Button, ModalPopup, Tooltip } from "@mcbalaam/razdor-ui";
 import "./styles.css";
 import EbitterDemo, { isMobileLayout } from "../EbitterDemo";

@@ -1,5 +1,5 @@
 import { Renderer, Program, Mesh, Triangle } from "ogl";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef } from "preact/hooks";
 
 import "./styles.css";
 

@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import { useState } from "preact/hooks";
+import type { TargetedSubmitEvent } from "preact";
 import { createSign } from "../../requests";
 import type { SignFormData } from "../../requests";
 import "./styles.css";
@@ -11,13 +12,9 @@ interface SignFormProps {
 
 import { useT } from "../../translate";
 
-import { Button } from "@mcbalaam/razdor-ui"
+import { Button } from "@mcbalaam/razdor-ui";
 
-const SignForm: React.FC<SignFormProps> = ({
-  onSignCreated,
-  onSignError,
-  className,
-}) => {
+function SignForm({ onSignCreated, onSignError, className }: SignFormProps) {
   const t = useT();
   const [message, setMessage] = useState("");
   const [isAnonymous, setIsAnonymous] = useState(false);
@@ -25,7 +22,7 @@ const SignForm: React.FC<SignFormProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: TargetedSubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
     setSuccess(false);
@@ -80,7 +77,7 @@ const SignForm: React.FC<SignFormProps> = ({
           <textarea
             id="message"
             value={message}
-            onChange={(e) => setMessage(e.target.value)}
+            onChange={(e) => setMessage(e.currentTarget.value)}
             placeholder={t("sign.placeholder")}
             rows={2}
             maxLength={100}
@@ -91,7 +88,7 @@ const SignForm: React.FC<SignFormProps> = ({
             <input
               type="checkbox"
               checked={isAnonymous}
-              onChange={(e) => setIsAnonymous(e.target.checked)}
+              onChange={(e) => setIsAnonymous(e.currentTarget.checked)}
               disabled={isSubmitting}
             />
             <span>{t("sign.anonymous")}</span>
@@ -117,6 +114,6 @@ const SignForm: React.FC<SignFormProps> = ({
       </form>
     </div>
   );
-};
+}
 
 export default SignForm;

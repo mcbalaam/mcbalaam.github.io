@@ -1,4 +1,5 @@
-import { createClient } from "@supabase/supabase-js";
+import { GoTrueClient } from "@supabase/auth-js";
+import { PostgrestClient } from "@supabase/postgrest-js";
 import {
   SUPABASE_URL,
   SUPABASE_ANON_KEY,
@@ -52,25 +53,47 @@ const adminGithubUsername = ADMIN_GITHUB_USERNAME;
 
 const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey);
 
-// createClient требует валидный URL — при отсутствии env используем placeholder чтобы не падать на импорте
 const _supabaseUrl = supabaseUrl || "https://placeholder.supabase.co";
 const _supabaseAnonKey = supabaseAnonKey || "placeholder-anon-key";
 
-export const supabase = createClient(_supabaseUrl, _supabaseAnonKey, {
-  auth: {
-    persistSession: true,
-    autoRefreshToken: true,
-    detectSessionInUrl: true,
-    flowType: "pkce",
-    storageKey: "supabase.auth.token",
+export const auth = new GoTrueClient({
+  url: `${_supabaseUrl}/auth/v1`,
+  headers: {
+    apikey: _supabaseAnonKey,
+    "X-Client-Info": "auth-js/2.86.0",
   },
-  global: {
-    headers: {
-      "X-Client-Info": "supabase-js/2.86.0",
-    },
+  persistSession: true,
+  autoRefreshToken: true,
+  detectSessionInUrl: true,
+  flowType: "pkce",
+  storageKey: "supabase.auth.token",
+});
+
+export const db = new PostgrestClient(`${_supabaseUrl}/rest/v1`, {
+  headers: {
+    apikey: _supabaseAnonKey,
+    Authorization: `Bearer ${_supabaseAnonKey}`,
+    "X-Client-Info": "postgrest-js/2.86.0",
   },
 });
 
+async function syncAuthToken() {
+  const { data } = await auth.getSession();
+  const token = data.session?.access_token ?? _supabaseAnonKey;
+  db.headers = {
+    ...db.headers,
+    // @ts-expect-error
+    apikey: _supabaseAnonKey,
+    Authorization: `Bearer ${token}`,
+  };
+}
+
+async function getUser() {
+  const { data } = await auth.getUser();
+  return data.user;
+}
+
+// ---- fetchWithRetry (оставлен как был) ----
 async function fetchWithRetry(
   url: string,
   options: RequestInit = {},
@@ -153,7 +176,6 @@ export class SignManager {
 
       const data = await response.json();
 
-      // Verify signatures for all signs
       return (data || []).map((sign: Sign) => {
         const verification = Crypto.verifySign(sign);
         return {
@@ -172,25 +194,24 @@ export class SignManager {
   }
 
   static async createSign(formData: SignFormData): Promise<Sign> {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+    await syncAuthToken();
+    const user = await getUser();
 
     if (!user) {
       throw new Error("User must be authenticated to create a sign");
     }
 
-    const { data: blacklistData, error: blacklistError } = await supabase
+    const { data: blacklistData, error: blacklistError } = await db
       .from("blacklist")
       .select("id")
       .eq("user_id", user.id)
-      .single();
+      .maybeSingle();
 
     if (!blacklistError && blacklistData) {
       throw new Error("User is blacklisted and cannot create signs");
     }
 
-    const { data: existingSigns, error: existingError } = await supabase
+    const { data: existingSigns, error: existingError } = await db
       .from("signs")
       .select("id")
       .eq("user_id", user.id);
@@ -199,17 +220,15 @@ export class SignManager {
       throw new Error("User has already created a sign");
     }
 
-    const userMetadata = user.user_metadata;
+    const userMetadata = user.user_metadata ?? {};
     const githubUsername = userMetadata.user_name;
     const githubAvatar = userMetadata.avatar_url;
 
     const isAdmin =
       adminGithubUsername && githubUsername === adminGithubUsername;
 
-    // Generate timestamp first
     const timestamp = new Date().toISOString();
 
-    // Generate signature with the timestamp
     const signatureData = Crypto.generateSignatureForSign(
       formData.message || "",
       user.id,
@@ -228,7 +247,7 @@ export class SignManager {
       created_at: timestamp,
     };
 
-    const { data, error } = await supabase
+    const { data, error } = await db
       .from("signs")
       .insert([signData])
       .select()
@@ -239,7 +258,7 @@ export class SignManager {
       throw error;
     }
 
-    return data;
+    return data as Sign;
   }
 
   static async canUserCreateSign(): Promise<{
@@ -247,26 +266,24 @@ export class SignManager {
     reason?: string;
   }> {
     try {
-      const {
-        data: { user },
-        error: authError,
-      } = await supabase.auth.getUser();
+      await syncAuthToken();
+      const user = await getUser();
 
-      if (authError || !user) {
+      if (!user) {
         return { canCreate: false, reason: "auth.notAuthenticated" };
       }
 
-      const { data: blacklistData, error: blacklistError } = await supabase
+      const { data: blacklistData, error: blacklistError } = await db
         .from("blacklist")
         .select("id")
         .eq("user_id", user.id)
-        .single();
+        .maybeSingle();
 
       if (!blacklistError && blacklistData) {
         return { canCreate: false, reason: "sign.blacklisted" };
       }
 
-      const { data: existingSigns, error: existingError } = await supabase
+      const { data: existingSigns, error: existingError } = await db
         .from("signs")
         .select("id")
         .eq("user_id", user.id);
@@ -284,21 +301,14 @@ export class SignManager {
 
   static async getUserSigns(): Promise<SignWithVerification[]> {
     try {
-      const {
-        data: { user },
-        error: authError,
-      } = await supabase.auth.getUser();
-
-      if (authError) {
-        console.error("Auth error fetching user:", authError);
-        return [];
-      }
+      await syncAuthToken();
+      const user = await getUser();
 
       if (!user) {
         return [];
       }
 
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from("signs")
         .select("*")
         .eq("user_id", user.id)
@@ -309,7 +319,6 @@ export class SignManager {
         return [];
       }
 
-      // Verify signatures for all signs
       return (data || []).map((sign: Sign) => {
         const verification = Crypto.verifySign(sign);
         return {
@@ -321,9 +330,6 @@ export class SignManager {
       });
     } catch (error: any) {
       console.error("Network error fetching user signs:", error);
-      if (error.name === "AbortError") {
-        console.warn("Request timeout fetching user signs");
-      }
       return [];
     }
   }
@@ -332,15 +338,14 @@ export class SignManager {
     signId: number,
     updates: Partial<SignFormData>,
   ): Promise<Sign> {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+    await syncAuthToken();
+    const user = await getUser();
 
     if (!user) {
       throw new Error("User must be authenticated to update a sign");
     }
 
-    const { data, error } = await supabase
+    const { data, error } = await db
       .from("signs")
       .update(updates)
       .eq("id", signId)
@@ -353,24 +358,23 @@ export class SignManager {
       throw error;
     }
 
-    return data;
+    return data as Sign;
   }
 
   static async deleteSign(signId: number): Promise<void> {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+    await syncAuthToken();
+    const user = await getUser();
 
     if (!user) {
       throw new Error("User must be authenticated to delete a sign");
     }
 
-    const userMetadata = user.user_metadata;
+    const userMetadata = user.user_metadata ?? {};
     const githubUsername = userMetadata?.github_username;
     const isAdmin =
       adminGithubUsername && githubUsername === adminGithubUsername;
 
-    let query = supabase.from("signs").delete().eq("id", signId);
+    let query = db.from("signs").delete().eq("id", signId);
 
     if (!isAdmin) {
       query = query.eq("user_id", user.id);
@@ -388,15 +392,14 @@ export class SignManager {
     signId: number,
     approved: boolean,
   ): Promise<Sign> {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+    await syncAuthToken();
+    const user = await getUser();
 
     if (!user) {
       throw new Error("User must be authenticated");
     }
 
-    const userMetadata = user.user_metadata;
+    const userMetadata = user.user_metadata ?? {};
     const githubUsername = userMetadata?.github_username;
     const isAdmin =
       adminGithubUsername && githubUsername === adminGithubUsername;
@@ -404,7 +407,7 @@ export class SignManager {
       throw new Error("Only admin can toggle approval");
     }
 
-    const { data, error } = await supabase
+    const { data, error } = await db
       .from("signs")
       .update({ approved })
       .eq("id", signId)
@@ -416,19 +419,18 @@ export class SignManager {
       throw error;
     }
 
-    return data;
+    return data as Sign;
   }
 
   static async adminRemoveComment(signId: number): Promise<Sign> {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+    await syncAuthToken();
+    const user = await getUser();
 
     if (!user) {
       throw new Error("User must be authenticated");
     }
 
-    const userMetadata = user.user_metadata;
+    const userMetadata = user.user_metadata ?? {};
     const githubUsername = userMetadata?.github_username;
     const isAdmin =
       adminGithubUsername && githubUsername === adminGithubUsername;
@@ -436,7 +438,7 @@ export class SignManager {
       throw new Error("Only admin can remove comments");
     }
 
-    const { data, error } = await supabase
+    const { data, error } = await db
       .from("signs")
       .update({ message: null })
       .eq("id", signId)
@@ -448,13 +450,13 @@ export class SignManager {
       throw error;
     }
 
-    return data;
+    return data as Sign;
   }
 }
 
 export class AuthManager {
   static async signInWithGitHub() {
-    const { data, error } = await supabase.auth.signInWithOAuth({
+    const { data, error } = await auth.signInWithOAuth({
       provider: "github",
       options: {
         redirectTo: window.location.origin,
@@ -475,7 +477,7 @@ export class AuthManager {
   }
 
   static async signOut() {
-    const { error } = await supabase.auth.signOut();
+    const { error } = await auth.signOut();
 
     if (error) {
       console.error("Error signing out:", error);
@@ -485,26 +487,25 @@ export class AuthManager {
 
   static async getCurrentSession(): Promise<UserSession | null> {
     try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const { data } = await auth.getUser();
+      const user = data.user;
 
       if (!user) {
         return null;
       }
 
-      const userMetadata = user.user_metadata;
+      const userMetadata = user.user_metadata ?? {};
       const githubUsername = userMetadata?.user_name;
       const githubAvatar = userMetadata?.avatar_url || userMetadata?.picture;
-      const isAdmin =
-        adminGithubUsername && githubUsername === adminGithubUsername;
-      const isAdminBool = !!isAdmin;
+      const isAdmin = !!(
+        adminGithubUsername && githubUsername === adminGithubUsername
+      );
 
       return {
         id: user.id,
         github_username: githubUsername,
         github_avatar: githubAvatar,
-        is_admin: isAdminBool,
+        is_admin: isAdmin,
       };
     } catch (error: any) {
       console.error("Network error getting user session:", error);
@@ -514,11 +515,8 @@ export class AuthManager {
 
   static async isAuthenticated(): Promise<boolean> {
     try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      return !!user;
+      const { data } = await auth.getUser();
+      return !!data.user;
     } catch (error: any) {
       console.error("Network error checking authentication:", error);
       return false;
@@ -585,9 +583,8 @@ export class StatusManager {
     status?: string,
     vanityId?: string | null,
   ): Promise<UserStatus> {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+    await syncAuthToken();
+    const user = await getUser();
 
     if (!user) {
       throw new Error("User must be authenticated to update status");
@@ -597,7 +594,7 @@ export class StatusManager {
     if (status !== undefined) updates.status = status;
     if (vanityId !== undefined) updates.vanity_id = vanityId;
 
-    const { data, error } = await supabase
+    const { data, error } = await db
       .from("user_status")
       .update(updates)
       .eq("id", 1)
@@ -609,22 +606,20 @@ export class StatusManager {
       throw error;
     }
 
-    return data;
+    return data as UserStatus;
   }
 
   static async getStatusForAdmin(): Promise<{
     canUpdate: boolean;
     currentStatus: UserStatus | null;
   }> {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+    const user = await getUser();
 
     if (!user) {
       return { canUpdate: false, currentStatus: null };
     }
 
-    const userMetadata = user.user_metadata;
+    const userMetadata = user.user_metadata ?? {};
     const githubUsername = userMetadata?.user_name;
     const isAdmin =
       adminGithubUsername && githubUsername === adminGithubUsername;
@@ -646,7 +641,7 @@ export class StatusManager {
 export class ReactionManager {
   static async addReaction(type: string, token: string) {
     if (!isSupabaseConfigured) throw new Error("Supabase not configured");
-    const { error } = await supabase
+    const { error } = await db
       .from("reactions")
       .insert([{ reaction_type: type, visitor_token: token }]);
     if (error) throw error;
@@ -654,7 +649,7 @@ export class ReactionManager {
 
   static async removeReaction(type: string, token: string) {
     if (!isSupabaseConfigured) throw new Error("Supabase not configured");
-    const { error } = await supabase
+    const { error } = await db
       .from("reactions")
       .delete()
       .eq("reaction_type", type)
@@ -662,32 +657,33 @@ export class ReactionManager {
     if (error) throw error;
   }
 
-static async getUserReactions(token: string): Promise<string[]> {
-  if (!isSupabaseConfigured) return [];
-  const { data, error } = await supabase
-    .from("reactions")
-    .select("reaction_type")
-    .eq("visitor_token", token);
+  static async getUserReactions(token: string): Promise<string[]> {
+    if (!isSupabaseConfigured) return [];
+    const { data, error } = await db
+      .from("reactions")
+      .select("reaction_type")
+      .eq("visitor_token", token);
 
-  if (error) {
-    console.error("Error fetching user reactions:", error);
-    return [];
+    if (error) {
+      console.error("Error fetching user reactions:", error);
+      return [];
+    }
+    return (data ?? []).map((r: { reaction_type: string }) => r.reaction_type);
   }
-  return data.map(r => r.reaction_type);
-}
 
   static async getReactionCounts() {
     if (!isSupabaseConfigured) return {};
-    const { data, error } = await supabase.from("reactions").select("reaction_type");
+    const { data, error } = await db.from("reactions").select("reaction_type");
     if (error) throw error;
-    return data.reduce((acc: Record<string, number>, curr) => {
-      acc[curr.reaction_type] = (acc[curr.reaction_type] || 0) + 1;
-      return acc;
-    }, {});
+    return (data ?? []).reduce(
+      (acc: Record<string, number>, curr: { reaction_type: string }) => {
+        acc[curr.reaction_type] = (acc[curr.reaction_type] || 0) + 1;
+        return acc;
+      },
+      {},
+    );
   }
 }
-
-
 
 export const getApprovedSigns = SignManager.getApprovedSigns;
 export const createSign = SignManager.createSign;

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from "preact/hooks";
 import { i18n, useT } from "./translate";
 import { getStatus, type UserStatus } from "./requests";
 import { getVanityConfig } from "./config";
@@ -351,11 +351,16 @@ export function App() {
       position: "absolute" as const,
       top: `calc(50% + ${config.y}px)`,
       left: `calc(50% + ${config.x}px)`,
-      transform: `translate(-50%, -50%) rotate(${config.angle}deg)`,
+      transform: `translate(-35%, -50%) rotate(${config.angle}deg)`,
       width: "auto", height: "auto", maxWidth: "120px", maxHeight: "120px",
       pointerEvents: "none" as const, zIndex: 3,
     };
-    return <Picture avif={config.avif} webp={config.webp} alt="" style={style} />;
+    return (
+      <div className="vanity-overlay" style={style}>
+        <Picture avif={config.avif} webp={config.webp} />
+      </div>
+    );
+
   };
 
   const profileCard = (

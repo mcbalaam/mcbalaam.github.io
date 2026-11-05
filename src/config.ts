@@ -47,7 +47,7 @@ export interface VanityConfig {
 
 export const VANITY_CONFIG: Record<string, VanityConfig> = {
   christmas: { webp: santaWebp, avif: santaAvif, x: 15, y: -5, angle: 0 },
-  canopy: { webp: canopyWebp, x: 10, y: 50, angle: 0 },
+  canopy: { webp: canopyWebp, x: -10, y: 50, angle: 0 },
 };
 
 export function getVanityConfig(id: string): VanityConfig | null {

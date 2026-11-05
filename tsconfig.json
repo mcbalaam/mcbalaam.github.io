@@ -17,14 +17,19 @@
     // Best practices
     "strict": true,
     "skipLibCheck": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUncheckedIndexedAccess": true,
-    "noImplicitOverride": true,
-
+    "jsxImportSource": "preact",
+    "baseUrl": "./",
     "paths": {
+      "react": ["./node_modules/preact/compat/"],
+      "react/jsx-runtime": ["./node_modules/preact/jsx-runtime"],
+      "react-dom": ["./node_modules/preact/compat/"],
+      "react-dom/*": ["./node_modules/preact/compat/*"],
       "@/*": ["./src/*"],
       "@mcbalaam/razdor-ui": ["./node_modules/@mcbalaam/razdor-ui/dist/index.d.ts"]
     },
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
 
     "noUnusedLocals": true,
     "noUnusedParameters": true,
