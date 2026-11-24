@@ -12,6 +12,8 @@ runLiveDemo = "Запустить демо в браузере"
 myStack = "Мой стек"
 mailme = "Договориться о заказе"
 mailmeHover = "Продолжить в почте"
+showProfileBack = "Перевернуть карточку профиля"
+showProfileFront = "Вернуться к профилю"
 
 [auth]
 inProgress = "Аутентификация..."

@@ -12,6 +12,8 @@ myStack = "My stack"
 runLiveDemo = "Run live browser demo"
 mailme = "Disscuss a bounty"
 mailmeHover = "Continue in your mail"
+showProfileBack = "Flip profile card"
+showProfileFront = "Return to profile"
 
 [auth]
 inProgress = "Authenticating..."

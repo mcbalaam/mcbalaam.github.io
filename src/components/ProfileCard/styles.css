@@ -1,0 +1,186 @@
+:where(.card:has(> .card-content > .profile-card-front-banner)) {
+	.banner {
+		width: calc(100% + 40px);
+		margin: -20px -20px 30px -20px;
+		height: 100px;
+		background-image: url("/delta-rune-maker.webp");
+		background-image: image-set(
+			url("/delta-rune-maker.avif") type("image/avif"),
+			url("/delta-rune-maker.webp") type("image/webp")
+		);
+		background-position: center;
+		background-size: cover;
+		background-repeat: no-repeat;
+		position: relative;
+		border-radius: 15px 15px 0 0;
+		transition: 200ms ease-in-out;
+		display: flex;
+		z-index: 3;
+	}
+
+	.language-button {
+		position: absolute;
+		z-index: 2;
+		right: 10px;
+		top: 10px;
+		margin-left: auto;
+		background-color: var(--color-bg-transparent) !important;
+		border-color: var(--color-border-transparent) !important;
+	}
+
+	.language-button svg {
+		color: rgba(255, 255, 255, 0.87) !important;
+	}
+
+	.language-button:hover {
+		background-color: var(--color-bg-transparent-hover) !important;
+	}
+
+	.language-button:hover svg {
+		color: rgba(255, 255, 255, 0.87);
+	}
+
+	.banner:hover::before {
+		backdrop-filter: blur(2px);
+		z-index: 1;
+	}
+
+	.pfp {
+		position: relative;
+		height: 90px;
+		width: 90px;
+		z-index: 2;
+		border-radius: 50px;
+		border: 7px solid var(--color-bg-card);
+	}
+
+	.vanity-overlay {
+		position: absolute;
+		z-index: 3;
+		pointer-events: none;
+		margin-left: -5px;
+		margin-top: -10px;
+	}
+
+	.vanity-overlay img {
+		max-width: 120px;
+		max-height: 120px;
+	}
+
+	.avatar-container {
+		position: relative;
+		display: flex;
+		padding-top: 45px;
+		padding-left: 15px;
+	}
+
+	.name {
+		margin-top: 45px;
+	}
+
+	.nameplate {
+		font-size: 24px;
+		line-height: 36px;
+		margin-block-start: 2;
+		font-weight: 700;
+	}
+
+	.pnouns {
+		font-size: 13px;
+		margin-top: -6px;
+		width: fit-content;
+		font-weight: 500;
+	}
+
+	.pnouns svg {
+		vertical-align: middle;
+		position: relative;
+		top: -1px;
+	}
+
+	.connections {
+		display: flex;
+		gap: 5px;
+		flex-wrap: wrap;
+		width: fit-content;
+	}
+
+	.contact-buttons {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) 36px;
+		gap: 0.4em;
+	}
+
+	.contact-buttons > .fancy-button {
+		box-sizing: border-box;
+		width: 100%;
+	}
+
+	.mail-button .fancy-button-text {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		overflow: visible;
+	}
+
+	.mail-button .fancy-button-text > svg {
+		flex: 0 0 auto;
+	}
+
+	.mail-button-labels {
+		display: grid;
+		width: max-content;
+		height: 20px;
+		overflow: hidden;
+	}
+
+	.mail-button-label {
+		grid-area: 1 / 1;
+		min-width: max-content;
+		height: 20px;
+		line-height: 20px;
+		white-space: nowrap;
+		transition: transform 350ms cubic-bezier(0.22, 1, 0.36, 1);
+	}
+
+	.mail-button-label-default {
+		transform: translateY(0);
+	}
+
+	.mail-button-label-hover {
+		transform: translateY(100%);
+	}
+
+	.mail-button:hover .mail-button-label-default,
+	.mail-button:focus-visible .mail-button-label-default {
+		transform: translateY(-100%);
+	}
+
+	.mail-button:hover .mail-button-label-hover,
+	.mail-button:focus-visible .mail-button-label-hover {
+		transform: translateY(0);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.mail-button-label {
+			transition: none;
+		}
+	}
+
+	.name {
+		display: flex;
+		width: fit-content;
+	}
+
+	.desc {
+		line-height: 18px;
+		margin-top: 5px;
+		margin-bottom: 5px;
+		font-size: 15px;
+	}
+
+	.reactions {
+		display: inline-flex;
+		gap: 5px;
+	}
+}

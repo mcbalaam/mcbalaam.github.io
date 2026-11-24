@@ -1,0 +1,91 @@
+.master-container > .webring-bar,
+.master-container > .column > :not(.profile-card-slot) {
+	transition: opacity 350ms ease;
+}
+
+.master-container[data-profile-flipped] > .webring-bar,
+.master-container[data-profile-flipped] > .column > :not(.profile-card-slot) {
+	opacity: 0;
+}
+
+#root:has(.profile-flight[data-flight-active]) .profile-card-slot {
+	opacity: 0;
+}
+
+.profile-flight {
+	position: fixed;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	max-width: none;
+	max-height: none;
+	margin: 0;
+	border: 0;
+	padding: 0;
+	overflow: hidden;
+	overscroll-behavior: contain;
+	background: transparent;
+	color: inherit;
+}
+
+.profile-flight::backdrop {
+	background: transparent;
+}
+
+.profile-flight[data-interactive] {
+	overflow: auto;
+}
+
+.profile-flight-stage {
+	display: grid;
+	min-height: 100%;
+	padding: 12px;
+	box-sizing: border-box;
+}
+
+.profile-flight-frame {
+	width: min(var(--profile-width), 100%);
+	margin: auto;
+	perspective: 1200px;
+}
+
+.profile-flight-motion {
+	display: grid;
+	transform-style: preserve-3d;
+	transform: var(--flight-origin, none);
+	transition: transform 640ms cubic-bezier(0.25, 0.75, 0.25, 1);
+}
+
+.profile-flight[data-taking-off] .profile-flight-motion {
+	transition: none;
+}
+
+.profile-flight[data-centered] .profile-flight-motion {
+	transform: translate(0px, 0px) scale(1) rotateY(180deg);
+}
+
+.profile-flight-face {
+	grid-area: 1 / 1;
+	align-self: center;
+	backface-visibility: hidden;
+	min-width: 0;
+}
+
+.profile-flight-face > .card {
+	box-sizing: border-box;
+	margin: 0;
+	max-width: none;
+	min-width: 0;
+}
+
+.profile-flight-back {
+	transform: rotateY(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.master-container > .webring-bar,
+	.master-container > .column > :not(.profile-card-slot),
+	.profile-flight-motion {
+		transition: none;
+	}
+}

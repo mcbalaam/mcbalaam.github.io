@@ -1,29 +1,12 @@
-import { useState, useEffect } from "preact/hooks";
+import { useState, useEffect, useRef } from "preact/hooks";
 import { i18n, useT } from "./translate";
 import { getStatus, type UserStatus } from "./requests";
-import { getVanityConfig } from "./config";
 import { ReactionManager } from "./requests";
 import FingerprintJS from "@fingerprintjs/fingerprintjs";
-import {
-	Languages,
-	ArrowRight,
-	ArrowUpRight,
-	CircleCheck,
-	CircleX,
-	Mail,
-	QrCode,
-} from "lucide-react";
+import { CircleCheck, CircleX } from "lucide-react";
 
 import "@mcbalaam/razdor-ui/dist/index.css";
 
-import Picture from "./components/Picture";
-import github from "/github-tile.svg";
-import steam from "/steampowered-tile.svg";
-import robust from "/robust.webp";
-import soundcloud from "/soundcloud.webp";
-import kofi from "/kofi.webp";
-import cloudtips from "/cloudtips.png";
-import pfp from "/mcbalaam.webp";
 import react from "/react.webp";
 import typescript from "/typescript.webp";
 import docker from "/docker.webp";
@@ -32,27 +15,23 @@ import ansible from "/vscode-ansible.webp";
 import go from "/golang.webp";
 
 import {
-	Button,
 	ModalPopup,
 	type ModalControl,
 	useCreateToast,
-	Badge,
-	Tooltip,
 	Card,
-	Timestamp,
 } from "@mcbalaam/razdor-ui";
-import StatusBubble from "./components/StatusBubble";
 import AuthButtons from "./components/AccountBar/AccountBar";
 import SignList from "./components/SignList";
 import SignForm from "./components/SignForm/SignForm";
-import Reaction from "./components/Reaction";
 import RepoTab from "./components/RepoTab";
 import GitHubActivity from "./components/GitHubActivity";
 import StackInfo from "./components/StackInfo";
 import Balatro from "./components/Balatro";
 import RssFeed from "./components/RssFeed";
 import WebringBar from "./components/WebringBar";
-import ColorPicker from "./components/ColorPicker";
+import ProfileCard from "./components/ProfileCard";
+import ProfileCardBack from "./components/ProfileCardBack";
+import ProfileCardFlip from "./components/ProfileCardFlip";
 
 function hexToHsl(hex: string): [number, number, number] {
 	const h = hex.replace("#", "");
@@ -147,6 +126,8 @@ export function App() {
 	const [theme, setTheme] = useState<"dark" | "light">("dark");
 	const [seed, setSeed] = useState<string>("#5865f2");
 	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [isProfileFlipped, setProfileFlipped] = useState(false);
+	const profileSlot = useRef<HTMLDivElement>(null);
 	const { createSuccessToast, createErrorToast } = useCreateToast();
 	const [signsRefreshKey, setSignsRefreshKey] = useState(0);
 	const [userStatus, setUserStatus] = useState<UserStatus | null>(null);
@@ -396,158 +377,24 @@ export function App() {
 		});
 	};
 
-	const VanityOverlay = ({ vanityId }: { vanityId: string }) => {
-		const config = getVanityConfig(vanityId);
-		if (!config) return null;
-		const style = {
-			position: "absolute" as const,
-			top: `calc(50% + ${config.y}px)`,
-			left: `calc(50% + ${config.x}px)`,
-			transform: `translate(-35%, -50%) rotate(${config.angle}deg)`,
-			width: "auto",
-			height: "auto",
-			maxWidth: "120px",
-			maxHeight: "120px",
-			pointerEvents: "none" as const,
-			zIndex: 3,
-		};
-		return (
-			<div className="vanity-overlay" style={style}>
-				<Picture alt="Vanity picture" avif={config.avif} webp={config.webp} />
-			</div>
-		);
+	const profileProps = {
+		userStatus,
+		seed,
+		theme,
+		reactionCounts,
+		userReactions,
+		onToggleLocale: toggleLocale,
+		onToggleTheme: toggleTheme,
+		onSeedChange: handleSeedChange,
+		onReactionClick: handleReactionClick,
 	};
-
+	const openProfileBack = () => setProfileFlipped(true);
+	const closeProfileBack = () => setProfileFlipped(false);
+	const renderProfileFront = () => <ProfileCard {...profileProps} onFlip={openProfileBack} />;
 	const profileCard = (
-		<Card>
-			<div className="banner">
-				<Button
-					className="language-button"
-					icon={Languages}
-					onClick={toggleLocale}
-				/>
-
-				<ColorPicker
-					seed={seed}
-					onChange={handleSeedChange}
-					theme={theme}
-					onToggleTheme={toggleTheme}
-				/>
-				<div className="avatar-container">
-					<img className="pfp" src={pfp}></img>
-					{userStatus?.vanity_id && (
-						<VanityOverlay vanityId={userStatus.vanity_id} />
-					)}
-				</div>
-				<StatusBubble>
-					{(userStatus?.status || "\n").replace(/<br\s*\/?>/gi, "\n")}
-				</StatusBubble>
-			</div>
-			<div className="name">
-				<div className="nameplate">mcbalaam</div>
-				<Badge small src={robust}>
-					RBST
-				</Badge>
-			</div>
-			<div className="pnouns">
-				mcbalaam <ArrowRight size={14} /> эмсибалаам, балаам, макбаклак (he/him)
-			</div>
-			<p className="desc">{t("page.aboutMe")}</p>
-			<div
-				style={{
-					display: "flex",
-					height: "fit-content",
-					flexWrap: "wrap",
-					margin: "0px 5px 10px 0",
-				}}
-			>
-				<p>
-					{t("page.myMidniht")} <Timestamp ts="1764608400" />.{" "}
-					{t("page.active")}
-				</p>
-			</div>
-
-			<h1>{t("page.connections")}</h1>
-			<div className="connections">
-				<Badge href="https://www.github.com/mcbalaam" src={github}>
-					GitHub <ArrowUpRight size={12} />
-				</Badge>
-				<Badge href="https://steamcommunity.com/id/mcbalaam/" src={steam}>
-					Steam <ArrowUpRight size={12} />
-				</Badge>
-				<Badge href="https://soundcloud.com/mcbalaam" src={soundcloud}>
-					SoundСloud <ArrowUpRight size={12} />
-				</Badge>
-				<Badge href="https://ko-fi.com/mcbalaam" src={kofi}>
-					Ko-Fi <ArrowUpRight size={12} />
-				</Badge>
-				<Badge href="https://pay.cloudtips.ru/p/7ac675d4" src={cloudtips}>
-					CloudTips <ArrowUpRight size={12} />
-				</Badge>
-			</div>
-			<br></br>
-			<div className="contact-buttons">
-				<Button
-					className="mail-button"
-					color="secondary"
-					onClick={() => (window.location.href = "mailto:mcbalaam@proton.me")}
-					icon={Mail}
-				>
-					<span className="mail-button-labels">
-						<span className="mail-button-label mail-button-label-default">
-							{t("page.mailme")}
-						</span>
-						<span
-							className="mail-button-label mail-button-label-hover"
-							aria-hidden="true"
-						>
-							{t("page.mailmeHover")}
-						</span>
-					</span>
-					<ArrowUpRight size={12} />
-				</Button>
-				<Button color="primary" className="minimal" icon={QrCode} onClick={toggleLocale} />
-			</div>
-			<br></br>
-			<div className="reactions">
-				<Tooltip text=":pig2:">
-					<Reaction
-						count={reactionCounts["pig"] || 0}
-						reacted={userReactions.includes("pig")}
-						onClick={() => handleReactionClick("pig")}
-					>
-						🐖
-					</Reaction>
-				</Tooltip>
-				<Tooltip text=":dash:">
-					<Reaction
-						count={reactionCounts["dash"] || 0}
-						onClick={() => handleReactionClick("dash")}
-						reacted={userReactions.includes("dash")}
-					>
-						💨
-					</Reaction>
-				</Tooltip>
-				<Tooltip text=":heart:">
-					<Reaction
-						count={reactionCounts["heart"] || 0}
-						onClick={() => handleReactionClick("heart")}
-						reacted={userReactions.includes("heart")}
-					>
-						❤️
-					</Reaction>
-				</Tooltip>
-				<Tooltip text=":broken_heart:">
-					<Reaction
-						count={reactionCounts["broken_heart"] || 0}
-						onClick={() => handleReactionClick("broken_heart")}
-						reacted={userReactions.includes("broken_heart")}
-					>
-						💔
-					</Reaction>
-				</Tooltip>
-			</div>
-		</Card>
+		<div className="profile-card-slot" ref={profileSlot}>
+			{renderProfileFront()}
+		</div>
 	);
 
 	const accountCard = (
@@ -619,7 +466,7 @@ export function App() {
 				mouseInteraction={false}
 			></Balatro>
 			{layout === "triple" && (
-				<div className="master-container is-triple">
+				<div className="master-container is-triple" data-profile-flipped={isProfileFlipped || undefined}>
 					{webringBar}
 					<div className="column profile-column">
 						{profileCard}
@@ -634,7 +481,7 @@ export function App() {
 				</div>
 			)}
 			{layout === "double" && (
-				<div className="master-container is-double">
+				<div className="master-container is-double" data-profile-flipped={isProfileFlipped || undefined}>
 					{webringBar}
 					<div className="column primary-column">
 						{profileCard}
@@ -649,7 +496,7 @@ export function App() {
 				</div>
 			)}
 			{layout === "single" && (
-				<div className="master-container is-single">
+				<div className="master-container is-single" data-profile-flipped={isProfileFlipped || undefined}>
 					{webringBar}
 					<div className="column single-column">
 						{profileCard}
@@ -661,6 +508,13 @@ export function App() {
 					</div>
 				</div>
 			)}
+			<ProfileCardFlip
+				open={isProfileFlipped}
+				source={profileSlot}
+				onClose={closeProfileBack}
+				front={renderProfileFront}
+				back={() => <ProfileCardBack {...profileProps} onFlip={closeProfileBack} />}
+			/>
 			<ModalPopup control={modalLeaveSign}>
 				<SignForm
 					onSignCreated={handleSignFormSuccess}
