@@ -19,3 +19,7 @@
     font-size: 14px;
     line-height: 1.5;
 }
+
+.leader-line {
+    z-index: 20; /* Above cards, below popups. */
+}

@@ -188,67 +188,53 @@ export default function RssFeed({ locale }: { locale: string }) {
       });
   }, []);
 
-  if (loading) {
-    return (
-      <Card title="RSS">
-        <ContentLoader
-          speed={1}
-          width="100%"
-          height={110}
-          backgroundColor="#bbb1e34d"
-          foregroundColor="#a5a6bf99"
-          style={{ display: "block" }}
-        >
-          <rect x="0" y="0" rx="8" ry="8" width="100%" height="32" />
-          <rect x="0" y="40" rx="8" ry="8" width="100%" height="32" />
-          <rect x="0" y="80" rx="8" ry="8" width="100%" height="30" />
-        </ContentLoader>
-      </Card>
-    );
-  }
-
-  if (error) {
-    return (
-      <Card title={data?.channelTitle || "RSS"}>
-        <div className="rss-error">{t("rss.error")}: {error}</div>
-      </Card>
-    );
-  }
-
-  if (!data || data.items.length === 0) {
-    return (
-      <Card title={data?.channelTitle || "RSS"}>
-        <div className="rss-empty">{t("rss.empty")}</div>
-      </Card>
-    );
-  }
+  const title = (
+    <span style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}>
+      <span id="rss-title">{data?.channelTitle || "RSS"}</span>
+      {!loading && !error && !!data?.items.length && (
+        <Button
+          icon={copied ? Check : Link}
+          onClick={handleCopyLink}
+          tiny
+          style={{ padding: "2px 6px", minHeight: "22px", height: "22px" }}
+        />
+      )}
+    </span>
+  ) as unknown as string;
 
   return (
     <>
-      <Card
-        title={
-          (<span style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}>
-            {data.channelTitle}
-            <Button
-              icon={copied ? Check : Link}
-              onClick={handleCopyLink}
-              tiny
-              style={{ padding: "2px 6px", minHeight: "22px", height: "22px" }}
-            />
-          </span>) as unknown as string
-        }
-      >
-        <div className="rss-feed">
-          <div className="rss-tiles">
-            {data.items.map((item) => (
-              <div key={item.link || item.title} className="rss-tile" onClick={() => setSelected(item)}>
-                <div className="rss-tile-title">{item.title}</div>
-                <div className="rss-tile-date">{formatDate(item.pubDate, locale)}</div>
-                <div className="rss-tile-desc">{item.description}</div>
-              </div>
-            ))}
+      <Card title={title}>
+        {loading ? (
+          <ContentLoader
+            speed={1}
+            width="100%"
+            height={110}
+            backgroundColor="#bbb1e34d"
+            foregroundColor="#a5a6bf99"
+            style={{ display: "block" }}
+          >
+            <rect x="0" y="0" rx="8" ry="8" width="100%" height="32" />
+            <rect x="0" y="40" rx="8" ry="8" width="100%" height="30" />
+            <rect x="0" y="80" rx="8" ry="8" width="100%" height="30" />
+          </ContentLoader>
+        ) : error ? (
+          <div className="rss-error">{t("rss.error")}: {error}</div>
+        ) : !data?.items.length ? (
+          <div className="rss-empty">{t("rss.empty")}</div>
+        ) : (
+          <div className="rss-feed">
+            <div className="rss-tiles">
+              {data.items.map((item) => (
+                <div key={item.link || item.title} className="rss-tile" onClick={() => setSelected(item)}>
+                  <div className="rss-tile-title">{item.title}</div>
+                  <div className="rss-tile-date">{formatDate(item.pubDate, locale)}</div>
+                  <div className="rss-tile-desc">{item.description}</div>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </Card>
 
       <ModalPopup

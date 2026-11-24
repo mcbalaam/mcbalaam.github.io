@@ -483,7 +483,7 @@ export function App() {
 
   const workingCard = (
     <Card title={t("page.workingOn")}>
-      <RepoTab />
+      <RepoTab showUsageArrows={layout !== "single"} />
     </Card>
   );
 
