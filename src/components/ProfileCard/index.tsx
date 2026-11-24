@@ -1,4 +1,4 @@
-import { ArrowRight, ArrowUpRight, Languages, Mail, QrCode } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Languages, Mail, QrCode, Send } from "lucide-react";
 import { Badge, Button, Card, Timestamp, Tooltip } from "@mcbalaam/razdor-ui";
 import { useT } from "../../translate";
 import ColorPicker from "../ColorPicker";
@@ -82,6 +82,9 @@ export default function ProfileCard({
 				<Badge href="https://www.github.com/mcbalaam" src={github}>
 					GitHub <ArrowUpRight size={12} />
 				</Badge>
+				<Badge href="mailto:mcbalaam@proton.me">
+					<Mail size={14} aria-hidden="true" /> ProtonMail <ArrowUpRight size={12} />
+				</Badge>
 				<Badge href="https://steamcommunity.com/id/mcbalaam/" src={steam}>
 					Steam <ArrowUpRight size={12} />
 				</Badge>
@@ -98,20 +101,20 @@ export default function ProfileCard({
 			<br></br>
 			<div className="contact-buttons">
 				<Button
-					className="mail-button"
+					className="bounty-button"
 					color="secondary"
-					onClick={() => (window.location.href = "mailto:mcbalaam@proton.me")}
-					icon={Mail}
+					onClick={() => window.open("https://t.me/mcblmxyz", "_blank", "noopener,noreferrer")}
+					icon={Send}
 				>
-					<span className="mail-button-labels">
-						<span className="mail-button-label mail-button-label-default">
-							{t("page.mailme")}
+					<span className="bounty-button-labels">
+						<span className="bounty-button-label bounty-button-label-default">
+							{t("page.discussBounty")}
 						</span>
 						<span
-							className="mail-button-label mail-button-label-hover"
+							className="bounty-button-label bounty-button-label-hover"
 							aria-hidden="true"
 						>
-							{t("page.mailmeHover")}
+							{t("page.openTelegram")}
 						</span>
 					</span>
 					<ArrowUpRight size={12} />

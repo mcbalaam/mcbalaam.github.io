@@ -116,53 +116,56 @@
 		width: 100%;
 	}
 
-	.mail-button .fancy-button-text {
+	.bounty-button {
+		flex-wrap: nowrap;
+	}
+
+	.bounty-button .fancy-button-text {
 		display: flex;
 		align-items: center;
 		gap: 6px;
+		min-width: 0;
 		overflow: visible;
 	}
 
-	.mail-button .fancy-button-text > svg {
+	.bounty-button > svg,
+	.bounty-button .fancy-button-text > svg {
 		flex: 0 0 auto;
 	}
 
-	.mail-button-labels {
+	.bounty-button-labels {
 		display: grid;
-		width: max-content;
-		height: 20px;
+		min-width: 0;
 		overflow: hidden;
 	}
 
-	.mail-button-label {
+	.bounty-button-label {
 		grid-area: 1 / 1;
-		min-width: max-content;
-		height: 20px;
+		align-content: center;
 		line-height: 20px;
-		white-space: nowrap;
 		transition: transform 350ms cubic-bezier(0.22, 1, 0.36, 1);
 	}
 
-	.mail-button-label-default {
+	.bounty-button-label-default {
 		transform: translateY(0);
 	}
 
-	.mail-button-label-hover {
+	.bounty-button-label-hover {
 		transform: translateY(100%);
 	}
 
-	.mail-button:hover .mail-button-label-default,
-	.mail-button:focus-visible .mail-button-label-default {
+	.bounty-button:hover .bounty-button-label-default,
+	.bounty-button:focus-visible .bounty-button-label-default {
 		transform: translateY(-100%);
 	}
 
-	.mail-button:hover .mail-button-label-hover,
-	.mail-button:focus-visible .mail-button-label-hover {
+	.bounty-button:hover .bounty-button-label-hover,
+	.bounty-button:focus-visible .bounty-button-label-hover {
 		transform: translateY(0);
 	}
 
 	@media (prefers-reduced-motion: reduce) {
-		.mail-button-label {
+		.bounty-button-label {
 			transition: none;
 		}
 	}
