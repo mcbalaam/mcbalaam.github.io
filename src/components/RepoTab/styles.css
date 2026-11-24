@@ -20,6 +20,46 @@
     line-height: 1.5;
 }
 
-.leader-line {
+.project-usage-arrow {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
     z-index: 20; /* Above cards, below popups. */
+    pointer-events: none;
+    color: var(--color-text-primary);
+}
+
+.project-usage-line,
+.project-usage-tip,
+.project-usage-mask {
+    fill: none;
+}
+
+.project-usage-line,
+.project-usage-tip {
+    stroke: currentColor;
+    stroke-width: 2.5px;
+}
+
+.project-usage-line {
+    stroke-dasharray: 6 5;
+}
+
+.project-usage-tip {
+    stroke-linejoin: round;
+}
+
+.project-usage-mask {
+    stroke: white;
+    stroke-width: 48px; /* Reveal the label above the curve as well as the line. */
+}
+
+.project-usage-label {
+    fill: currentColor;
+    stroke: var(--color-bg-primary);
+    stroke-width: 2.5px;
+    stroke-linejoin: round;
+    paint-order: stroke;
+    font-size: 13px;
 }

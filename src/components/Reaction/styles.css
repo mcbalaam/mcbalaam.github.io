@@ -37,12 +37,12 @@
     display: inline-grid;
     align-items: center;
     min-height: 1em;
-    font-family: NunitoSans;
-    font-weight: 700;
+    font-weight: 400;
     font-size: 13px;
     font-variant-numeric: tabular-nums;
     position: relative;
-    top: -2px;
+    top: -3px;
+    font-family: Geologica;
 }
 
 .reaction-digit {
