@@ -103,7 +103,7 @@ export default function ProfileCard({
 				<Button
 					className="bounty-button"
 					color="secondary"
-					onClick={() => window.open("https://t.me/mcblmxyz", "_blank", "noopener,noreferrer")}
+					onClick={() => window.open("https://t.me/mcbalaam", "_blank", "noopener,noreferrer")}
 					icon={Send}
 				>
 					<span className="bounty-button-labels">
