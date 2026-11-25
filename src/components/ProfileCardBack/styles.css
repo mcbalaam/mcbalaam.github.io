@@ -1,3 +1,9 @@
+@font-face {
+	font-family: "Profile Mult";
+	src: url("/m6x11plus.ttf") format("truetype");
+	font-display: swap;
+}
+
 :where(.card:has(> .card-content > .profile-card-back-banner)) {
 	-webkit-user-select: none;
 	user-select: none;
@@ -92,6 +98,36 @@
 		stroke: var(--profile-qr-ink);
 		stroke-width: 1px;
 		vector-effect: non-scaling-stroke;
+	}
+
+	.profile-mult {
+		position: absolute;
+		inset-block-start: calc(100% + 8px);
+		inset-inline-start: 50%;
+		translate: -50% 0;
+		display: grid;
+		place-items: center;
+		width: max-content;
+		opacity: 0;
+		pointer-events: none;
+	}
+
+	.profile-mult > span {
+		grid-area: 1 / 1;
+	}
+
+	.profile-mult > :last-child {
+		position: relative;
+		color: #fff;
+		font: 62px / 1 "Profile Mult", monospace;
+		text-shadow: 2px 3px #231416;
+	}
+
+	.profile-mult-diamond {
+		width: 50px;
+		height: 50px;
+		rotate: 45deg;
+		background-color: #ef4444;
 	}
 
 	.connections {

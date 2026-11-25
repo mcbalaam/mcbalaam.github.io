@@ -18,18 +18,6 @@ export interface ProfileCardProps {
 export function VanityOverlay({ vanityId }: { vanityId: string }) {
 	const config = getVanityConfig(vanityId);
 	if (!config) return null;
-	// const style = {
-	// 	position: "absolute" as const,
-	// 	top: `calc(50% + ${config.y}px)`,
-	// 	left: `calc(50% + ${config.x}px)`,
-	// 	transform: `translate(-35%, -50%) rotate(${config.angle}deg)`,
-	// 	width: "auto",
-	// 	height: "auto",
-	// 	maxWidth: "120px",
-	// 	maxHeight: "120px",
-	// 	pointerEvents: "none" as const,
-	// 	zIndex: 3,
-	// };
 	return (
 		<div className="vanity-overlay">
 			<Picture alt="Vanity picture" avif={config.avif} webp={config.webp} />

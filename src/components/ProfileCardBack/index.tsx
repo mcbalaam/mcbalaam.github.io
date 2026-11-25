@@ -1,9 +1,6 @@
 import { useEffect, useRef } from "preact/hooks";
 import {
-	ArrowRight,
-	ArrowUpRight,
-	Languages,
-	Mail,
+	X,
 	QrCode,
 } from "lucide-react";
 import { Badge, Button, Card, Timestamp, Tooltip } from "@mcbalaam/razdor-ui";
@@ -36,6 +33,8 @@ export default function ProfileCardBack({
 }: ProfileCardProps) {
 	const t = useT();
 	const banner = useRef<HTMLDivElement>(null);
+	const multLabel = useRef<HTMLDivElement>(null);
+	const multDiamond = useRef<HTMLSpanElement>(null);
 
 	useEffect(() => {
 		const card = banner.current?.closest<HTMLElement>(".card");
@@ -46,6 +45,8 @@ export default function ProfileCardBack({
 		const hit = new Audio("/multhit1.ogg");
 		hit.preservesPitch = false;
 		let swing: Animation | undefined;
+		let multAnimation: Animation | undefined;
+		let diamondAnimation: Animation | undefined;
 		let frame: number | undefined;
 		let bounds: DOMRect | undefined;
 		let clientX = 0;
@@ -63,7 +64,7 @@ export default function ProfileCardBack({
 			const { left, top, width, height } = bounds ??= face.getBoundingClientRect();
 			const x = Math.max(-1, Math.min(1, (clientX - left) / width * 2 - 1));
 			const y = Math.max(-1, Math.min(1, (clientY - top) / height * 2 - 1));
-			card.style.transform = `perspective(900px) rotateX(${-y * 5}deg) rotateY(${x * 5}deg)`;
+			card.style.transform = `perspective(900px) rotateX(${-y * 5}deg) rotateY(${x * 5}deg) scale(1.05)`;
 		};
 		const tilt = (event: PointerEvent) => {
 			if (event.pointerType !== "mouse" || motionPreference.matches) return;
@@ -88,14 +89,41 @@ export default function ProfileCardBack({
 			hit.currentTime = 0;
 			hit.playbackRate = Math.min(3, hit.playbackRate * 1.02);
 			void hit.play().catch(() => {}); // The browser may block audio playback.
-			if (motionPreference.matches) return;
+
+			const reducedMotion = motionPreference.matches;
+			multAnimation?.cancel();
+			diamondAnimation?.cancel();
+			multAnimation = multLabel.current?.animate(
+				reducedMotion
+					? [{ opacity: 0 }, { opacity: 1, offset: 0.15 }, { opacity: 1, offset: 0.6 }, { opacity: 0 }]
+					: [
+						{ opacity: 0, transform: "translateY(-8px) rotate(-9deg) scale(.75)", easing: "ease-out" },
+						{ opacity: 1, transform: "translateY(0) rotate(6deg) scale(1.08)", offset: 0.2, easing: "ease-in-out" },
+						{ opacity: 1, transform: "translateY(3px) rotate(-3deg) scale(1)", offset: 0.45, easing: "ease-out" },
+						{ opacity: 1, transform: "translateY(6px) rotate(2deg) scale(1)", offset: 0.65, easing: "ease-in" },
+						{ opacity: 0, transform: "translateY(14px) rotate(0deg) scale(.95)" },
+					],
+				{ duration: 600 },
+			);
+			if (!reducedMotion) {
+				diamondAnimation = multDiamond.current?.animate(
+					[
+						{ rotate: "45deg", scale: "0.1", easing: "ease-out" },
+						{ scale: "1", offset: 0.2 },
+						{ rotate: "135deg", scale: "1" },
+					],
+					{ duration: 600 },
+				);
+			}
+			if (reducedMotion) return;
 
 			const start = swing?.playState === "running" ? getComputedStyle(card).rotate : "0deg";
 			swing?.cancel();
 			swing = card.animate(
 				[
-					{ rotate: start, easing: "ease-out" },
-					{ rotate: "15deg", offset: 0.4, easing: "ease-in" },
+					{ rotate: "-3deg", easing: "ease-out" },
+					{ scale: "0.9", },
+					{ rotate: "15deg", offset: 0.4, easing: "ease-in", },
 					{ rotate: "-3deg", offset: 0.8, easing: "ease-out" },
 					{ rotate: "0deg" },
 				],
@@ -116,6 +144,8 @@ export default function ProfileCardBack({
 			window.removeEventListener("resize", invalidateBounds);
 			resizeObserver.disconnect();
 			swing?.cancel();
+			multAnimation?.cancel();
+			diamondAnimation?.cancel();
 			hit.pause();
 			resetTilt();
 		};
@@ -130,7 +160,7 @@ export default function ProfileCardBack({
 					aria-label={t("page.showProfileFront")}
 					onClick={onFlip}
 				>
-					<QrCode className="button-img icon" size={20} aria-hidden="true" />
+					<X className="button-img icon" size={20} aria-hidden="true" />
 				</button>
 				<div className="avatar-container">
 					<img className="pfp" src={pfp}></img>
@@ -174,6 +204,10 @@ export default function ProfileCardBack({
 				level="L"
 			/>
 			<br></br>
+			<div ref={multLabel} className="profile-mult" aria-hidden="true">
+				<span ref={multDiamond} className="profile-mult-diamond" />
+				<span>+4 Mult</span>
+			</div>
 		</Card>
 	);
 }
